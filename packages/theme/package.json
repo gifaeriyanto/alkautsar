@@ -1,0 +1,16 @@
+{
+  "name": "theme",
+  "main": "index.ts",
+  "types": "index.ts",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "lint": "yarn eslint --fix --ext .tsx --ext .ts ./**/*"
+  },
+  "devDependencies": {
+    "tsconfig": "*"
+  },
+  "peerDependencies": {
+    "@chakra-ui/react": "^2.8.2"
+  }
+}

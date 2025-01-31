@@ -1,0 +1,78 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "lint": {},
+    "build:check": {},
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^supabase:gen:types"]
+    },
+    "supabase:gen:types": {
+      "cache": false
+    },
+    "supabase:gen:types:ci": {
+      "cache": false
+    },
+    "supabase:start": {},
+    "supabase:stop": {},
+    "supabase:login": {},
+    "supabase:link": {},
+    "supabase:db:diff": {},
+    "supabase:db:pull": {},
+    "supabase:db:push": {},
+    "supabase:db:local:new": {},
+    "supabase:db:local:up": {},
+    "supabase:db:local:reset": {},
+    "superadmin#build": {
+      "dependsOn": ["^supabase:gen:types:ci"],
+      "env": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "RESEND_API_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "CLOUDINARY_URL",
+        "NEXT_PUBLIC_IMAGEKIT_URL",
+        "NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY",
+        "IMAGEKIT_PRIVATE_KEY",
+        "NODE_ENV"
+      ],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "admin#build": {
+      "dependsOn": ["^supabase:gen:types:ci"],
+      "env": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "RESEND_API_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "CLOUDINARY_URL",
+        "NEXT_PUBLIC_IMAGEKIT_URL",
+        "NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY",
+        "IMAGEKIT_PRIVATE_KEY",
+        "NODE_ENV"
+      ],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "member#build": {
+      "dependsOn": ["^supabase:gen:types:ci"],
+      "env": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "RESEND_API_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "CLOUDINARY_URL",
+        "NEXT_PUBLIC_IMAGEKIT_URL",
+        "NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY",
+        "IMAGEKIT_PRIVATE_KEY",
+        "NODE_ENV"
+      ],
+      "outputs": [".next/**", "!.next/cache/**"]
+    }
+  }
+}

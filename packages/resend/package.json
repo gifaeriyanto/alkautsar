@@ -1,0 +1,12 @@
+{
+  "name": "@client/resend",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build:check": "tsc",
+    "lint": "yarn eslint --fix --ext .tsx --ext .ts ."
+  },
+  "devDependencies": {
+    "tsconfig": "*"
+  }
+}

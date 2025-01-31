@@ -1,0 +1,31 @@
+{
+  "name": "@client/supabase",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "lint": "yarn eslint --fix --ext .tsx --ext .ts **/*",
+    "supabase:gen:types": "bash ./scripts/gen-types.sh",
+    "supabase:gen:types:ci": "npx supabase gen types typescript --project-id $PROJECT_ID > types/database.ts",
+    "supabase:start": "npx supabase start",
+    "supabase:stop": "npx supabase stop",
+    "supabase:login": "npx supabase login",
+    "supabase:link": "npx supabase link --project-ref $PROJECT_ID",
+    "supabase:db:diff": "npx supabase db diff --schema public",
+    "supabase:db:pull": "npx supabase db pull --linked --password $SUPABASE_DB_PASS",
+    "supabase:db:push": "npx supabase db push",
+    "supabase:db:local:new": "npx supabase migration new",
+    "supabase:db:local:up": "npx supabase migration up",
+    "supabase:db:local:reset": "npx supabase db reset"
+  },
+  "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.8.7",
+    "@supabase/ssr": "^0.0.10",
+    "@supabase/supabase-js": "^2.38.4"
+  },
+  "devDependencies": {
+    "tsconfig": "*"
+  },
+  "peerDependencies": {
+    "@client/resend": "*"
+  }
+}

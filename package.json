@@ -1,0 +1,42 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --concurrency 12",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prepare": "husky install",
+    "supabase:gen:types": "turbo run supabase:gen:types",
+    "supabase:start": "turbo run supabase:start",
+    "supabase:stop": "turbo run supabase:stop",
+    "supabase:login": "turbo run supabase:login",
+    "supabase:link": "turbo run supabase:link",
+    "supabase:db:diff": "turbo run supabase:db:diff",
+    "supabase:db:pull": "turbo run supabase:db:pull",
+    "supabase:db:push": "turbo run supabase:db:push",
+    "supabase:db:local:new": "turbo run supabase:db:local:new",
+    "supabase:db:local:up": "turbo run supabase:db:local:up",
+    "supabase:db:local:reset": "turbo run supabase:db:local:reset"
+  },
+  "devDependencies": {
+    "eslint": "^8.48.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.1.0",
+    "prettier": "^3.0.3",
+    "turbo": "latest"
+  },
+  "name": "next-supabase-template",
+  "packageManager": "yarn@1.22.19",
+  "repository": "https://github.com/gifaeriyanto/next-supabase-template.git",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "@tanstack/react-query": "^5.10.0",
+    "@types/chroma-js": "^2.4.3",
+    "chroma-js": "^2.4.2",
+    "date-fns": "^2.30.0",
+    "react-select": "^5.8.0"
+  }
+}
