@@ -10,7 +10,7 @@ const noto = Noto_Sans_JP({
 
 export const metadata: Metadata = {
   title: 'Logo',
-  description: 'Wahdah Islamiyah',
+  description: 'Masjid Al-Kautsar CLTC',
   generator: 'Next.js',
   manifest: '/manifest.json',
   keywords: ['nextjs', 'nextjs13', 'next13', 'pwa', 'next-pwa'],

@@ -97,7 +97,7 @@ export const Search = <T extends GeneralDatabaseTable>({
               ascending: item.ascending,
             })
           }}
-          bgColor={isActive ? 'green.500' : undefined}
+          bgColor={isActive ? 'orange.500' : undefined}
           color={isActive ? 'white' : undefined}
         >
           {item.label}

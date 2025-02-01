@@ -70,7 +70,7 @@ const Page = () => {
     >
       <FormProvider {...formMethods}>
         <Box as="form" onSubmit={handleSubmit(handleForgotPassword)} w="full">
-          <Heading color="green.500" fontSize="40px" mb="30px">
+          <Heading color="orange.500" fontSize="40px" mb="30px">
             Lupa kata sandi
           </Heading>
 

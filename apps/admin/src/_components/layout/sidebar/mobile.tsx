@@ -52,7 +52,7 @@ export const MobileMenu: React.FC<{ onLogout: () => void }> = ({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader color="green.500">logo</DrawerHeader>
+          <DrawerHeader color="orange.500">logo</DrawerHeader>
 
           <DrawerBody>
             {menus.map((menu) => (
@@ -64,7 +64,7 @@ export const MobileMenu: React.FC<{ onLogout: () => void }> = ({
                   my={2}
                   mx={-2}
                   borderRadius="md"
-                  bgColor={menu.isActive ? 'green.500' : undefined}
+                  bgColor={menu.isActive ? 'orange.500' : undefined}
                   color={menu.isActive ? 'white' : undefined}
                   onClick={onClose}
                 >

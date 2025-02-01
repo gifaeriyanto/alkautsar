@@ -103,7 +103,7 @@ const Page = () => {
     >
       <FormProvider {...formMethods}>
         <Box as="form" onSubmit={handleSubmit(handleLogin)} w="full">
-          <Heading color="green.500" fontSize="40px" mb="30px">
+          <Heading color="orange.500" fontSize="40px" mb="30px">
             logo
           </Heading>
 

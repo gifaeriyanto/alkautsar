@@ -30,11 +30,16 @@ CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
-CREATE TYPE "public"."access_role" AS ENUM (
-    'superadmin',
-    'admin',
-    'member'
-);
+DO $$ 
+BEGIN 
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'access_role') THEN
+        CREATE TYPE "public"."access_role" AS ENUM (
+            'superadmin',
+            'admin',
+            'member'
+        );
+    END IF;
+END $$;
 
 ALTER TYPE "public"."access_role" OWNER TO "postgres";
 
@@ -53,7 +58,7 @@ CREATE OR REPLACE FUNCTION "public"."handle_new_user"() RETURNS "trigger"
         new.id, 
         new.raw_user_meta_data ->> 'name', 
         new.email,
-        new.avatar,
+        new.raw_user_meta_data ->> 'avatar',
         new.raw_user_meta_data ->> 'phone',
         CAST(new.raw_user_meta_data ->> 'organization_id' as uuid)
     );
@@ -160,7 +165,7 @@ CREATE TABLE IF NOT EXISTS "public"."profiles" (
     "email" "text" NOT NULL,
     "avatar" "text" NOT NULL,
     "phone" "text" NOT NULL,
-    "updated_at" timestamp with time zone NOT NULL,
+    "updated_at" timestamp with time zone,
     "deleted_at" timestamp with time zone,
     "id" "uuid" NOT NULL,
     "organization_id" "uuid" NOT NULL,
@@ -291,6 +296,20 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TAB
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES  TO "service_role";
 
 RESET ALL;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+
+CREATE TRIGGER on_auth_user_created
+AFTER INSERT ON auth.users
+FOR EACH ROW
+EXECUTE FUNCTION public.handle_new_user();
+
+DROP TRIGGER IF EXISTS on_auth_user_updated ON auth.users;
+
+CREATE TRIGGER on_auth_user_updated
+AFTER UPDATE ON auth.users
+FOR EACH ROW
+EXECUTE FUNCTION public.handle_updated_user();
 
 --
 -- Dumped schema changes for auth and storage

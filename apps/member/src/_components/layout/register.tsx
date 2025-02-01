@@ -13,7 +13,7 @@ const RegisterLayout = ({ children }: { children: ReactNode }) => {
 
         {isLargerThan1140 ? (
           <Box color="blackAlpha.500" mt={6} textAlign="center">
-            &copy; Wahdah Islamiyah {new Date().getFullYear()}
+            &copy; Masjid Al-Kautsar CLTC {new Date().getFullYear()}
           </Box>
         ) : null}
       </Container>

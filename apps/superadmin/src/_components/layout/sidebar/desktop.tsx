@@ -37,7 +37,7 @@ export const DesktopMenu: React.FC<{
       left={6}
       top={0}
     >
-      <Heading as="h2" fontSize="3xl" fontWeight="bold" color="green.500">
+      <Heading as="h2" fontSize="3xl" fontWeight="bold" color="orange.500">
         S.
       </Heading>
       <VStack>

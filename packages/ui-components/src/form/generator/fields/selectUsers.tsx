@@ -162,7 +162,7 @@ const FormFieldSelectUsersList: React.FC<
                   ? '5px solid'
                   : '0px solid'
               }
-              borderColor="green.500!important"
+              borderColor="orange.500!important"
             />
             <Text
               textAlign="center"
@@ -198,7 +198,7 @@ const FormFieldSelectUsersList: React.FC<
         {selectedIDs.map((item) => (
           <Flex
             key={item.id}
-            bgColor="green.100"
+            bgColor="orange.100"
             p="0.5rem"
             pl="1rem"
             borderRadius="lg"
@@ -207,7 +207,7 @@ const FormFieldSelectUsersList: React.FC<
           >
             <Box>
               <Text fontWeight="bold">{item.name}</Text>
-              <Text fontSize="sm" color="green.500">
+              <Text fontSize="sm" color="orange.500">
                 {item.role ? capitalizeFirstLetter(item.role) : null}
               </Text>
             </Box>

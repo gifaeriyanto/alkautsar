@@ -26,9 +26,9 @@ export const RadioButton = (
         borderWidth="1px"
         borderRadius="md"
         _checked={{
-          bg: 'green.500',
+          bg: 'orange.500',
           color: 'white',
-          borderColor: 'green.500',
+          borderColor: 'orange.500',
         }}
         px={4}
         py={1}

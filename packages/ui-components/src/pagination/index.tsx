@@ -36,7 +36,7 @@ export const Pagination = ({
         ) {
           return (
             <Button
-              colorScheme={currentPage === number ? 'green' : 'gray'}
+              colorScheme={currentPage === number ? 'orange' : 'gray'}
               key={number}
               onClick={() => {
                 onPageChange?.(number)

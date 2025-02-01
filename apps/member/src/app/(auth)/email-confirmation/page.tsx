@@ -13,7 +13,7 @@ const Page = () => {
       w="full"
       direction="column"
     >
-      <Heading color="green.500" fontSize="40px" mb="30px">
+      <Heading color="orange.500" fontSize="40px" mb="30px">
         Cek email Anda
       </Heading>
       <Text>Kami telah mengirimkan link reset kata sandi di email Anda</Text>
