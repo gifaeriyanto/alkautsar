@@ -12,7 +12,7 @@ const StoreInit: React.FC<PropsWithChildren> = ({ children }) => {
     }
 
     getClient()
-      .from('kaders')
+      .from('profiles')
       .select('organization_id')
       .eq('id', session.data.session.user.id)
       .single()

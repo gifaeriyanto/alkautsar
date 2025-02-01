@@ -25,7 +25,11 @@ import {
   ModalOverlay,
   Portal,
   Spinner,
+  Table,
+  TableContainer,
+  Td,
   Text,
+  Tr,
   VStack,
   useMediaQuery,
 } from '@chakra-ui/react'
@@ -39,6 +43,7 @@ import {
   GeneralDatabaseTable,
   Pagination,
   capitalizeEachLetter,
+  currency,
   dateFormat,
   number,
   timeFormat,
@@ -46,7 +51,7 @@ import {
 } from '../..'
 
 interface FieldData {
-  type: 'avatar' | 'photo' | 'date' | 'time' | 'text'
+  type: 'avatar' | 'photo' | 'date' | 'time' | 'text' | 'currency'
   name: string
   capitalize?: boolean
   width?: BoxProps['w']
@@ -75,6 +80,7 @@ export interface CRUDTable<T extends GeneralDatabaseTable> {
   sort?: PaginationParams<T>['sort']
   onDelete?: (data: any) => Promise<any>
   renderSearch?: React.ReactNode
+  variant?: 'standard' | 'table'
 }
 
 export const CRUDTable = <T extends GeneralDatabaseTable>({
@@ -95,6 +101,7 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
   sort,
   onDelete,
   renderSearch,
+  variant,
 }: CRUDTable<T>) => {
   const [isLargerThan1140] = useMediaQuery('(min-width: 1140px)')
   const [itemIdToDelete, setItemIdToDelete] = useState<number | null>(null)
@@ -165,6 +172,7 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
     [isLargerThan1140]
   )
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const renderItem = (
     type: FieldData['type'],
     value: any,
@@ -232,6 +240,18 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
           </Text>
         )
 
+      case 'currency':
+        return (
+          <Text
+            display="inline-block"
+            fontWeight={bold ? 'bold' : undefined}
+            w={width}
+            isTruncated
+          >
+            {currency(value)}
+          </Text>
+        )
+
       case 'text':
         return (
           <Text
@@ -260,7 +280,11 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
     return `${baseUrl}/${item.id}`
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const rowWrapper = (item: any, children: React.ReactNode) => {
+    if (variant === 'table') {
+      return <>{children}</>
+    }
     if (disableDetail) {
       return <Box>{children}</Box>
     }
@@ -313,6 +337,156 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
     return null
   }, [isLoading, totalData])
 
+  const renderList = useMemo(() => {
+    switch (variant) {
+      case 'table':
+        return (
+          <>
+            {renderEmptyState || (
+              <TableContainer bgColor="white" borderRadius="10px">
+                <Table variant="simple">
+                  {data.map((item: any, index) => (
+                    <Tr key={item?.id || index}>
+                      {rowWrapper(
+                        item,
+                        <>
+                          {React.Children.toArray(
+                            fields.map((field) => (
+                              <Td>
+                                {field.render
+                                  ? renderCustomItem(item, field)
+                                  : renderItem(
+                                      field.type,
+                                      getFieldValue(field.name, item),
+                                      {
+                                        capitalize: field.capitalize,
+                                        width: field.width,
+                                        bold: field.bold,
+                                        noImage: field.noImage,
+                                        hideOnMobile: field.hideOnMobile,
+                                        avatarIcon: field.avatarIcon,
+                                      }
+                                    )}
+                              </Td>
+                            ))
+                          )}
+                        </>
+                      )}
+
+                      {disableEdit &&
+                      disableDelete &&
+                      !moreActions?.(item) ? null : (
+                        <Td w="70px">
+                          <Menu>
+                            <IconButton
+                              as={MenuButton}
+                              ml="auto"
+                              variant="ghost"
+                              icon={<BiDotsVertical />}
+                              aria-label="action"
+                              fontSize="lg"
+                              textAlign="center"
+                              sx={{
+                                span: {
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                },
+                              }}
+                            />
+                            <Portal>
+                              <MenuList>{actions(item, index)}</MenuList>
+                            </Portal>
+                          </Menu>
+                        </Td>
+                      )}
+                    </Tr>
+                  ))}
+                </Table>
+              </TableContainer>
+            )}
+          </>
+        )
+
+      default:
+        return (
+          <VStack spacing={4} w="full">
+            {renderEmptyState ||
+              data.map((item: any, index) => (
+                <Flex
+                  key={item.id}
+                  bgColor="white"
+                  w="full"
+                  borderRadius="md"
+                  p={4}
+                  align="center"
+                >
+                  {rowWrapper(
+                    item,
+                    <Flex align="center">
+                      {React.Children.toArray(
+                        fields.map((field) =>
+                          field.render
+                            ? renderCustomItem(item, field)
+                            : renderItem(
+                                field.type,
+                                getFieldValue(field.name, item),
+                                {
+                                  capitalize: field.capitalize,
+                                  width: field.width,
+                                  bold: field.bold,
+                                  noImage: field.noImage,
+                                  hideOnMobile: field.hideOnMobile,
+                                  avatarIcon: field.avatarIcon,
+                                }
+                              )
+                        )
+                      )}
+                    </Flex>
+                  )}
+
+                  {disableEdit &&
+                  disableDelete &&
+                  !moreActions?.(item) ? null : (
+                    <Menu>
+                      <IconButton
+                        as={MenuButton}
+                        ml="auto"
+                        variant="ghost"
+                        icon={<BiDotsVertical />}
+                        aria-label="action"
+                        fontSize="lg"
+                        textAlign="center"
+                        sx={{
+                          span: {
+                            display: 'flex',
+                            justifyContent: 'center',
+                          },
+                        }}
+                      />
+                      <Portal>
+                        <MenuList>{actions(item, index)}</MenuList>
+                      </Portal>
+                    </Menu>
+                  )}
+                </Flex>
+              ))}
+          </VStack>
+        )
+    }
+  }, [
+    actions,
+    data,
+    disableDelete,
+    disableEdit,
+    fields,
+    moreActions,
+    renderCustomItem,
+    renderEmptyState,
+    renderItem,
+    rowWrapper,
+    variant,
+  ])
+
   return (
     <>
       <Flex mb={4} justify="space-between">
@@ -345,66 +519,7 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
       </Flex>
       <VStack spacing={4} align="normal">
         {renderSearch}
-        <VStack spacing={4} w="full">
-          {renderEmptyState ||
-            data.map((item: any, index) => (
-              <Flex
-                key={item.id}
-                bgColor="white"
-                w="full"
-                borderRadius="md"
-                p={4}
-                align="center"
-              >
-                {rowWrapper(
-                  item,
-                  <Flex align="center">
-                    {React.Children.toArray(
-                      fields.map((field) =>
-                        field.render
-                          ? renderCustomItem(item, field)
-                          : renderItem(
-                              field.type,
-                              getFieldValue(field.name, item),
-                              {
-                                capitalize: field.capitalize,
-                                width: field.width,
-                                bold: field.bold,
-                                noImage: field.noImage,
-                                hideOnMobile: field.hideOnMobile,
-                                avatarIcon: field.avatarIcon,
-                              }
-                            )
-                      )
-                    )}
-                  </Flex>
-                )}
-
-                {disableEdit && disableDelete && !moreActions?.(item) ? null : (
-                  <Menu>
-                    <IconButton
-                      as={MenuButton}
-                      ml="auto"
-                      variant="ghost"
-                      icon={<BiDotsVertical />}
-                      aria-label="action"
-                      fontSize="lg"
-                      textAlign="center"
-                      sx={{
-                        span: {
-                          display: 'flex',
-                          justifyContent: 'center',
-                        },
-                      }}
-                    />
-                    <Portal>
-                      <MenuList>{actions(item, index)}</MenuList>
-                    </Portal>
-                  </Menu>
-                )}
-              </Flex>
-            ))}
-        </VStack>
+        {renderList}
 
         {totalPages > 1 ? (
           <Pagination

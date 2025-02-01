@@ -6,6 +6,7 @@ import { FormGeneratorProps } from '../..'
 
 export interface UseSearchParams {
   searchNameKey?: string
+  defaultSortKey?: string
   formFilterPreset?: FormGeneratorProps['data']
   ilikeFilterKeys?: string[]
 }
@@ -13,10 +14,11 @@ export interface UseSearchParams {
 export const useSearch = <T extends GeneralDatabaseTable>(
   options?: UseSearchParams
 ) => {
-  const { searchNameKey, formFilterPreset, ilikeFilterKeys } = options || {}
+  const { searchNameKey, formFilterPreset, ilikeFilterKeys, defaultSortKey } =
+    options || {}
   const [filter, setFilter] = useState<SearchFilter<T>>({})
   const [sort, setSort] = useState<PaginationParams<T>['sort']>({
-    column: 'created_at',
+    column: defaultSortKey || 'created_at',
     ascending: false,
   })
 
