@@ -9,7 +9,7 @@ const noto = Noto_Sans_JP({
 })
 
 export const metadata: Metadata = {
-  title: 'Logo',
+  title: 'Masjid Al-Kautsar CLTC',
   description: 'Masjid Al-Kautsar CLTC',
   generator: 'Next.js',
   manifest: '/manifest.json',

@@ -91,7 +91,7 @@ export const MobileMenu: React.FC<{ onLogout: () => void }> = ({
                 borderRadius="md"
                 onClick={onClose}
               >
-                <Text as="span">Logout</Text>
+                <Text as="span">Keluar</Text>
                 <Text as="span" fontSize="lg">
                   <BiLogOut />
                 </Text>

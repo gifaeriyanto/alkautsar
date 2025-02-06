@@ -63,7 +63,7 @@ export const DesktopMenu: React.FC<{
         ))}
       </VStack>
       <Box>
-        <Tooltip label="Logout" placement="right">
+        <Tooltip label="Keluar" placement="right">
           <IconButton
             fontSize="3xl"
             icon={<BiLogOut />}

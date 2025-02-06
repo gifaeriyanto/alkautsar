@@ -104,7 +104,7 @@ const Page = () => {
       <FormProvider {...formMethods}>
         <Box as="form" onSubmit={handleSubmit(handleLogin)} w="full">
           <Heading color="orange.500" fontSize="40px" mb="30px">
-            logo
+            alkautsar
           </Heading>
 
           <Box mb="3rem">
