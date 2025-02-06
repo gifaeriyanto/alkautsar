@@ -32,6 +32,7 @@ export type FieldType =
   | 'select_multiple_users'
   | 'quran'
   | 'upload'
+  | 'multiple-upload'
   | 'collapse'
   | 'radio_button'
 

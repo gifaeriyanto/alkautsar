@@ -21,6 +21,7 @@ import PasswordInput from './password'
 import FormFieldSelectUsersList from './selectUsers'
 import { FormFieldTime } from './time'
 import FormFieldUpload from './upload'
+import FormMultipleFieldUpload from './multipleUpload'
 import { FormFieldRadioButton } from '.'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -115,6 +116,9 @@ export const GeneralField: React.FC<FieldData> = (props) => {
 
         case 'upload':
           return <FormFieldUpload {...rest} />
+
+        case 'multiple-upload':
+          return <FormMultipleFieldUpload {...rest} />
 
         case 'radio_button':
           return <FormFieldRadioButton {...rest} />

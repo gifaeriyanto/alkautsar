@@ -58,6 +58,11 @@ const Page = () => {
             label: 'Catatan',
           },
           {
+            name: 'photos',
+            type: 'multiple-upload',
+            label: 'Bukti pembayaran',
+          },
+          {
             name: 'organization_id',
             type: 'organization_id',
           },

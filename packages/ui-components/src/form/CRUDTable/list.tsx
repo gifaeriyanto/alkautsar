@@ -49,6 +49,7 @@ import {
   timeFormat,
   transformImage,
 } from '../..'
+import { useRouter } from 'next/navigation'
 
 interface FieldData {
   type: 'avatar' | 'photo' | 'date' | 'time' | 'text' | 'currency'
@@ -114,6 +115,7 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
     isLoading,
     refetch,
   } = useList((view as any) || table, { select, filters, sort })
+  const router = useRouter()
 
   const { deleteById, softDeleteById } = getCRUDBase(table)
 
@@ -346,7 +348,16 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
               <TableContainer bgColor="white" borderRadius="10px">
                 <Table variant="simple">
                   {data.map((item: any, index) => (
-                    <Tr key={item?.id || index}>
+                    <Tr
+                      key={item?.id || index}
+                      onClick={() => {
+                        if (disableDetail) {
+                          return
+                        }
+                        router.push(getDetailUrl(item))
+                      }}
+                      cursor="pointer"
+                    >
                       {rowWrapper(
                         item,
                         <>
@@ -376,7 +387,12 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
                       {disableEdit &&
                       disableDelete &&
                       !moreActions?.(item) ? null : (
-                        <Td w="70px">
+                        <Td
+                          w="70px"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                          }}
+                        >
                           <Menu>
                             <IconButton
                               as={MenuButton}
