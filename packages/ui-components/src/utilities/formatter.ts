@@ -1,4 +1,6 @@
+/* eslint-disable import/no-duplicates */
 import { format } from 'date-fns'
+import { id } from 'date-fns/locale'
 
 export const number = (value: number) =>
   new Intl.NumberFormat('de-DE').format(value)
@@ -29,8 +31,8 @@ export const capitalizeEachLetter = (string: string) => {
   return capitalized.join(' ')
 }
 
-export const dateFormat = (date: Date) => {
-  return format(date, 'dd MMM yyyy')
+export const dateFormat = (date: Date, pattern?: string) => {
+  return format(date, pattern || 'dd MMM yyyy', { locale: id })
 }
 
 export const dateFormFormat = (date: Date) => {

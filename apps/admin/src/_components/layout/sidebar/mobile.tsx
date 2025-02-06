@@ -41,6 +41,11 @@ export const MobileMenu: React.FC<{ onLogout: () => void }> = ({
         zIndex="1"
         onClick={onOpen}
         ref={navToggleRef}
+        sx={{
+          '@media print': {
+            display: 'none',
+          },
+        }}
       />
 
       <Drawer

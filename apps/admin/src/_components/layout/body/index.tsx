@@ -3,16 +3,20 @@ import type { ReactNode } from 'react'
 
 export interface LayoutBodyProps {
   children?: ReactNode
-  title: string
+  title?: string
+  actionArea?: ReactNode
 }
 
-const LayoutBody = ({ children, title }: LayoutBodyProps) => {
+const LayoutBody = ({ children, title, actionArea }: LayoutBodyProps) => {
   return (
     <>
       <Flex justify="space-between">
-        <Heading fontSize="3xl" as="h1" mb={8}>
-          {title}
-        </Heading>
+        {title ? (
+          <Heading fontSize="3xl" as="h1" mb={8}>
+            {title}
+          </Heading>
+        ) : null}
+        {actionArea}
       </Flex>
       {children}
     </>

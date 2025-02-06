@@ -36,6 +36,11 @@ export const DesktopMenu: React.FC<{
       pos="fixed"
       left={6}
       top={0}
+      sx={{
+        '@media print': {
+          display: 'none',
+        },
+      }}
     >
       <Heading as="h2" fontSize="3xl" fontWeight="bold" color="orange.500">
         A.
