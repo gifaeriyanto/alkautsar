@@ -69,7 +69,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             </CardHeader>
             <CardBody>
               <VStack align="flex-start" spacing={4}>
-                {reportData.photos?.map((photo, index) => (
+                {reportData.photos.map((photo, index) => (
                   <Box
                     // eslint-disable-next-line react/no-array-index-key
                     key={index}
