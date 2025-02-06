@@ -100,8 +100,9 @@ const Page = () => {
   const [isLargerThan1140] = useMediaQuery('(min-width: 1140px)')
 
   const handleTabsChange = (index: number) => {
-    if (walletsData[index]) {
-      setWallet(walletsData[index])
+    const wallet = walletsData[index]
+    if (wallet) {
+      setWallet(wallet)
     }
   }
 
