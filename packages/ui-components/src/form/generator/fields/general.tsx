@@ -137,11 +137,11 @@ export const GeneralField: React.FC<FieldData> = (props) => {
 
         case 'checkbox':
           return (
-            <>
-              {rest.options?.map((item: FieldOption) =>
+            <VStack align="flex-start">
+              {rest.options?.map((item: FieldOption, index) =>
                 typeof item === 'string' ? (
                   <Checkbox
-                    {...register(rest.name, rest.rules)}
+                    {...register(`${rest.name}_${index}`, rest.rules)}
                     key={item}
                     value={item}
                     isChecked={currentValue}
@@ -150,7 +150,7 @@ export const GeneralField: React.FC<FieldData> = (props) => {
                   </Checkbox>
                 ) : (
                   <Checkbox
-                    {...register(rest.name, rest.rules)}
+                    {...register(`${rest.name}_${index}`, rest.rules)}
                     key={item.value}
                     value={item.value}
                     isChecked={currentValue}
@@ -159,7 +159,7 @@ export const GeneralField: React.FC<FieldData> = (props) => {
                   </Checkbox>
                 )
               )}
-            </>
+            </VStack>
           )
 
         case 'number':

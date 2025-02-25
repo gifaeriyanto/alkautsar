@@ -18,6 +18,13 @@ const Page = ({ params }: { params: { id: string } }) => {
             rules: { required: 'Mohon diisi' },
           },
           {
+            name: 'type',
+            type: 'select',
+            label: 'Jenis transaksi',
+            options: ['Pemasukan', 'Pengeluaran'],
+            rules: { required: 'Mohon diisi' },
+          },
+          {
             name: 'amount',
             type: 'number',
             label: 'Jumlah',
@@ -58,6 +65,27 @@ const Page = ({ params }: { params: { id: string } }) => {
         type="edit"
         redirectTo="/laporan-keuangan"
         dataId={params.id}
+        mapperDefaultValues={(values) => {
+          if (values?.amount >= 0) {
+            return {
+              ...values,
+              type: 'Pemasukan',
+            }
+          }
+          return {
+            ...values,
+            amount: Math.abs(values?.amount),
+            type: 'Pengeluaran',
+          }
+        }}
+        mapperData={(values) => {
+          const { type, ...newValues } = values
+          if (type === 'Pengeluaran') {
+            newValues.amount = newValues.amount * -1
+            return newValues
+          }
+          return newValues
+        }}
       />
     </Layout.Body>
   )
