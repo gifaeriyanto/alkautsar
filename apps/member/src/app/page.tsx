@@ -4,6 +4,13 @@ import type { FieldData } from '@client/ui-components'
 import { ActionForm } from '@client/ui-components'
 import Layout from '@/_components/layout'
 
+const socialAssistance = [
+  { label: 'PKH', value: 'pkh' },
+  { label: 'BPNT', value: 'bpnt' },
+  { label: 'BLT', value: 'blt' },
+  { label: 'Bansos Lainnya', value: 'other' },
+]
+
 const formFields: FieldData[] = [
   {
     name: 'full_name',
@@ -14,14 +21,20 @@ const formFields: FieldData[] = [
   {
     name: 'whatsapp_number',
     label: 'Nomor WhatsApp',
-    type: 'text',
+    type: 'phone',
     rules: { required: 'Nomor WhatsApp wajib diisi' },
   },
   {
-    name: 'birth_place_date',
-    label: 'Tempat, Tanggal Lahir',
+    name: 'birth_place',
+    label: 'Tempat Lahir',
     type: 'text',
-    rules: { required: 'Tempat dan Tanggal Lahir wajib diisi' },
+    rules: { required: 'Tempat Lahir wajib diisi' },
+  },
+  {
+    name: 'birth_date',
+    label: 'Tanggal Lahir',
+    type: 'date',
+    rules: { required: 'Tanggal Lahir wajib diisi' },
   },
   {
     name: 'gender',
@@ -94,12 +107,11 @@ const formFields: FieldData[] = [
     name: 'social_assistance',
     label: 'Bantuan Sosial yang Pernah Diterima',
     type: 'checkbox',
-    options: [
-      { label: 'PKH', value: 'pkh' },
-      { label: 'BPNT', value: 'bpnt' },
-      { label: 'BLT', value: 'blt' },
-      { label: 'Bansos Lainnya', value: 'other' },
-    ],
+    options: socialAssistance,
+  },
+  {
+    name: 'organization_id',
+    type: 'organization_id',
   },
 ]
 
@@ -108,8 +120,22 @@ const Page = () => {
     <Layout.Body title="Form Pendaftaran">
       <ActionForm
         formFields={formFields}
-        table={'bansos_members' as any}
+        table="bansos_members"
         type="create"
+        mapperData={(values) => {
+          const filteredValues = { ...values }
+          const socialAssistanceValue = socialAssistance
+            .map((_item, index) => {
+              // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+              delete filteredValues[`social_assistance_${index}`]
+              return values[`social_assistance_${index}`]
+            })
+            .filter(Boolean)
+          return {
+            ...filteredValues,
+            social_assistance: socialAssistanceValue,
+          }
+        }}
       />
     </Layout.Body>
   )

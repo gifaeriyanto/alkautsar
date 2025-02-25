@@ -36,6 +36,7 @@ export type FieldType =
   | 'multiple-upload'
   | 'collapse'
   | 'radio_button'
+  | 'phone'
 
 export type FieldOption = string | { label: string; value: any }
 

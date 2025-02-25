@@ -172,6 +172,24 @@ export const GeneralField: React.FC<FieldData> = (props) => {
             />
           )
 
+        case 'phone':
+          return (
+            <Input
+              {...register(rest.name, {
+                ...rest.rules,
+                pattern: {
+                  // eslint-disable-next-line prefer-named-capture-group
+                  value: /^(\+62|62|0)8[1-9][0-9]{6,9}$/,
+                  message: 'Nomor telepon tidak valid',
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                } as any,
+              })}
+              placeholder={rest.placeholder || 'Masukkan nomor telepon'}
+              type="tel"
+              {...componentProps}
+            />
+          )
+
         case 'textarea':
           return (
             <Textarea
