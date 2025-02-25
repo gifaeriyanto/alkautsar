@@ -15,7 +15,7 @@ import {
 import { useDetail } from '@client/supabase'
 import { currency, dateFormat } from '@client/ui-components'
 import { TextStyle } from 'theme/client'
-import { BiCalendar, BiWallet } from 'react-icons/bi'
+import { BiCalendar, BiPencil, BiWallet } from 'react-icons/bi'
 import Layout from '@/_components/layout'
 
 const Page = ({ params }: { params: { id: string } }) => {
@@ -57,6 +57,10 @@ const Page = ({ params }: { params: { id: string } }) => {
               <HStack>
                 <Icon as={BiWallet} />
                 <Text>{(reportData as any).wallets.name}</Text>
+              </HStack>
+              <HStack align="baseline">
+                <Icon as={BiPencil} />
+                <Text whiteSpace="pre">{(reportData as any).notes}</Text>
               </HStack>
             </VStack>
           </CardBody>

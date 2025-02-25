@@ -68,9 +68,15 @@ const formFields: FieldData[] = [
     type: 'text',
   },
   {
-    name: 'income_dependents',
-    label: 'Penghasilan per Bulan & Tanggungan',
+    name: 'income_per_month',
+    label: 'Penghasilan per Bulan',
     type: 'text',
+    rules: { required: 'Isi penghasilan dan jumlah tanggungan' },
+  },
+  {
+    name: 'dependents',
+    label: 'Tanggungan',
+    type: 'number',
     rules: { required: 'Isi penghasilan dan jumlah tanggungan' },
   },
   {
@@ -83,26 +89,6 @@ const formFields: FieldData[] = [
       { label: 'Menumpang', value: 'staying_with_family' },
     ],
     rules: { required: 'Pilih status tempat tinggal' },
-  },
-  {
-    name: 'water_source',
-    label: 'Sumber Air Minum',
-    type: 'select',
-    options: [
-      { label: 'Sumur', value: 'well' },
-      { label: 'PAM', value: 'pam' },
-      { label: 'Sungai', value: 'river' },
-    ],
-  },
-  {
-    name: 'electricity_access',
-    label: 'Akses Listrik',
-    type: 'select',
-    options: [
-      { label: 'PLN', value: 'pln' },
-      { label: 'Non-PLN', value: 'non_pln' },
-      { label: 'Tidak Ada', value: 'no_electricity' },
-    ],
   },
   {
     name: 'social_assistance',
