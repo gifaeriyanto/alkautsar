@@ -65,7 +65,7 @@ const Report = ({ walletId }: { walletId: string }) => {
                 textStyle={TextStyle.H4}
                 color={walletSummary.isPositive ? 'green.500' : 'red.500'}
                 _before={{
-                  content: walletSummary.isPositive ? '"+"' : '"-"',
+                  content: walletSummary.isPositive ? '"+"' : '""',
                 }}
               >
                 {currency(walletSummary.comparation)}

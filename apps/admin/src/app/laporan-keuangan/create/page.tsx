@@ -31,6 +31,13 @@ const Page = () => {
             rules: { required: 'Mohon diisi' },
           },
           {
+            name: 'type',
+            type: 'select',
+            label: 'Jenis transaksi',
+            options: ['Pemasukan', 'Pengeluaran'],
+            rules: { required: 'Mohon diisi' },
+          },
+          {
             name: 'amount',
             type: 'number',
             label: 'Jumlah',
@@ -54,7 +61,7 @@ const Page = () => {
           },
           {
             name: 'notes',
-            type: 'text',
+            type: 'textarea',
             label: 'Catatan',
           },
           {
@@ -70,6 +77,14 @@ const Page = () => {
         table="financial_reports"
         type="create"
         redirectTo="/laporan-keuangan"
+        mapperData={(values) => {
+          const { type, ...newValues } = values
+          if (type === 'Pengeluaran') {
+            newValues.amount = newValues.amount * -1
+            return newValues
+          }
+          return newValues
+        }}
       />
     </Layout.Body>
   )

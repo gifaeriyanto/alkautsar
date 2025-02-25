@@ -10,6 +10,7 @@ export type FieldType =
   | 'hidden'
   | 'checkbox'
   | 'text'
+  | 'textarea'
   | 'number'
   | 'email'
   | 'password'

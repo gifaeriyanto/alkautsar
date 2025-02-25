@@ -41,7 +41,7 @@ const Page = ({ params }: { params: { id: string } }) => {
           },
           {
             name: 'notes',
-            type: 'text',
+            type: 'textarea',
             label: 'Catatan',
           },
           {

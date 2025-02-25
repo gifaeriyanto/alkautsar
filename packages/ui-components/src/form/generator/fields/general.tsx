@@ -9,6 +9,7 @@ import {
   Input,
   Select,
   Text,
+  Textarea,
   VStack,
 } from '@chakra-ui/react'
 import { useUser } from '@client/supabase'
@@ -167,6 +168,15 @@ export const GeneralField: React.FC<FieldData> = (props) => {
               {...register(rest.name, rest.rules)}
               placeholder={rest.placeholder}
               type={type}
+              {...componentProps}
+            />
+          )
+
+        case 'textarea':
+          return (
+            <Textarea
+              {...register(rest.name, rest.rules)}
+              placeholder={rest.placeholder}
               {...componentProps}
             />
           )

@@ -57,7 +57,7 @@ export const MobileMenu: React.FC<{ onLogout: () => void }> = ({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader color="orange.500">logo</DrawerHeader>
+          <DrawerHeader color="orange.500">alkautsar</DrawerHeader>
 
           <DrawerBody>
             {menus.map((menu) => (

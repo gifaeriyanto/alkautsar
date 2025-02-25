@@ -87,16 +87,7 @@ export const ActionForm = <T extends GeneralDatabaseTable>({
     Object.entries(defaultValues)
       .filter(
         ([key]) =>
-          ![
-            'id',
-            'created_at',
-            'updated_at',
-            'deleted_at',
-            'province_id',
-            'city_id',
-            'district_id',
-            'village_id',
-          ].includes(key)
+          !['id', 'created_at', 'updated_at', 'deleted_at'].includes(key)
       )
       .forEach(([key, value]) => {
         formMethods.setValue(key, value)
