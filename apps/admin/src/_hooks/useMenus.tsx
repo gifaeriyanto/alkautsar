@@ -1,6 +1,7 @@
 import { usePathname } from 'next/navigation'
 import { useMemo } from 'react'
 import { BiHomeAlt2, BiWallet } from 'react-icons/bi'
+import { RiHandHeartLine } from 'react-icons/ri'
 
 const MENUS = [
   {
@@ -12,6 +13,11 @@ const MENUS = [
     label: 'Laporan Keuangan',
     link: '/laporan-keuangan',
     icon: <BiWallet />,
+  },
+  {
+    label: 'Bansos',
+    link: '/bansos',
+    icon: <RiHandHeartLine />,
   },
 ]
 

@@ -8,7 +8,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const { data: walletsData } = useList('wallets')
 
   return (
-    <Layout.Body title="Tambah Transaksi">
+    <Layout.Body title="Edit Transaksi">
       <ActionForm
         formFields={[
           {

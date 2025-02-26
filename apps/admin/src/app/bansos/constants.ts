@@ -1,17 +1,33 @@
-'use client'
-
 import type { FieldData } from '@client/ui-components'
-import { ActionForm } from '@client/ui-components'
-import Layout from '@/_components/layout'
 
-const socialAssistance = [
+export const socialAssistance = [
   { label: 'PKH', value: 'pkh' },
   { label: 'BPNT', value: 'bpnt' },
   { label: 'BLT', value: 'blt' },
   { label: 'Bansos Lainnya', value: 'other' },
 ]
 
-const formFields: FieldData[] = [
+export const maritalStatus = [
+  { label: 'Belum Menikah', value: 'single' },
+  { label: 'Menikah', value: 'married' },
+  { label: 'Cerai', value: 'divorced' },
+]
+
+export const education = [
+  { label: 'Tidak Sekolah', value: 'none' },
+  { label: 'SD', value: 'sd' },
+  { label: 'SMP', value: 'smp' },
+  { label: 'SMA', value: 'sma' },
+  { label: 'Perguruan Tinggi', value: 'college' },
+]
+
+export const houseStatus = [
+  { label: 'Milik Sendiri', value: 'owned' },
+  { label: 'Kontrak', value: 'rented' },
+  { label: 'Menumpang', value: 'staying_with_family' },
+]
+
+export const bansosMembersFormFields: FieldData[] = [
   {
     name: 'full_name',
     label: 'Nama Lengkap',
@@ -50,11 +66,7 @@ const formFields: FieldData[] = [
     name: 'marital_status',
     label: 'Status Pernikahan',
     type: 'select',
-    options: [
-      { label: 'Belum Menikah', value: 'single' },
-      { label: 'Menikah', value: 'married' },
-      { label: 'Cerai', value: 'divorced' },
-    ],
+    options: maritalStatus,
     rules: { required: 'Pilih status pernikahan' },
   },
   {
@@ -67,13 +79,7 @@ const formFields: FieldData[] = [
     name: 'education',
     label: 'Pendidikan Terakhir',
     type: 'select',
-    options: [
-      { label: 'Tidak Sekolah', value: 'none' },
-      { label: 'SD', value: 'sd' },
-      { label: 'SMP', value: 'smp' },
-      { label: 'SMA', value: 'sma' },
-      { label: 'Perguruan Tinggi', value: 'college' },
-    ],
+    options: education,
   },
   {
     name: 'job',
@@ -84,23 +90,19 @@ const formFields: FieldData[] = [
     name: 'income_per_month',
     label: 'Penghasilan per Bulan',
     type: 'text',
-    rules: { required: 'Isi penghasilan dan jumlah tanggungan' },
+    rules: { required: 'Isi penghasilan' },
   },
   {
     name: 'dependents',
-    label: 'Tanggungan',
+    label: 'Jumlah Tanggungan',
     type: 'number',
-    rules: { required: 'Isi penghasilan dan jumlah tanggungan' },
+    rules: { required: 'Isi jumlah tanggungan' },
   },
   {
     name: 'house_status',
     label: 'Status Tempat Tinggal',
     type: 'select',
-    options: [
-      { label: 'Milik Sendiri', value: 'owned' },
-      { label: 'Kontrak', value: 'rented' },
-      { label: 'Menumpang', value: 'staying_with_family' },
-    ],
+    options: houseStatus,
     rules: { required: 'Pilih status tempat tinggal' },
   },
   {
@@ -119,17 +121,3 @@ const formFields: FieldData[] = [
     type: 'organization_id',
   },
 ]
-
-const Page = () => {
-  return (
-    <Layout.Body title="Form Pendaftaran">
-      <ActionForm
-        formFields={formFields}
-        table="bansos_members"
-        type="create"
-      />
-    </Layout.Body>
-  )
-}
-
-export default Page

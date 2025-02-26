@@ -57,6 +57,7 @@ export const GeneralField: React.FC<FieldData> = (props) => {
     formState: { errors },
     control,
     watch,
+    setValue,
   } = useFormContext()
   const { data: userData } = useUser()
 
@@ -138,22 +139,36 @@ export const GeneralField: React.FC<FieldData> = (props) => {
         case 'checkbox':
           return (
             <VStack align="flex-start">
-              {rest.options?.map((item: FieldOption, index) =>
+              {rest.options?.map((item: FieldOption) =>
                 typeof item === 'string' ? (
                   <Checkbox
-                    {...register(`${rest.name}_${index}`, rest.rules)}
+                    {...register(rest.name)}
                     key={item}
                     value={item}
-                    isChecked={currentValue}
+                    isChecked={(currentValue || [])?.includes(item)}
+                    onChange={(e) => {
+                      const newValue = e.target.checked
+                        ? [...(currentValue || []), item]
+                        : (currentValue || []).filter((v: string) => v !== item)
+                      setValue(name, newValue)
+                    }}
                   >
                     {item}
                   </Checkbox>
                 ) : (
                   <Checkbox
-                    {...register(`${rest.name}_${index}`, rest.rules)}
+                    {...register(rest.name)}
                     key={item.value}
                     value={item.value}
-                    isChecked={currentValue}
+                    isChecked={(currentValue || [])?.includes(item.value)}
+                    onChange={(e) => {
+                      const newValue = e.target.checked
+                        ? [...(currentValue || []), item.value]
+                        : (currentValue || []).filter(
+                            (v: string) => v !== item.value
+                          )
+                      setValue(name, newValue)
+                    }}
                   >
                     {item.label}
                   </Checkbox>

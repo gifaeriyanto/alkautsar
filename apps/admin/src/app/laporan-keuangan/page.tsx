@@ -107,6 +107,17 @@ const Page = () => {
   }
 
   useEffect(() => {
+    if (walletId) {
+      return
+    }
+
+    const defaultWalletData = walletsData[0]
+    if (defaultWalletData) {
+      setWallet(defaultWalletData)
+    }
+  }, [setWallet, walletId, walletsData])
+
+  useEffect(() => {
     setTabIndex(activeTab)
   }, [activeTab])
 
