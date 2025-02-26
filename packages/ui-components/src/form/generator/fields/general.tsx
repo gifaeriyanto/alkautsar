@@ -129,9 +129,7 @@ export const GeneralField: React.FC<FieldData> = (props) => {
           return userData?.user_metadata.organization_id ? (
             <Input
               {...register(rest.name, {
-                value:
-                  userData.user_metadata.organization_id ||
-                  '123e4567-e89b-12d3-a456-426614174000',
+                value: userData.user_metadata.organization_id,
               })}
               {...componentProps}
               type="hidden"
