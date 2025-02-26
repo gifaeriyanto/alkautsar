@@ -48,7 +48,8 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </Text>
                 <Text fontWeight="bold">
                   {bansosMemberData.birth_place},{' '}
-                  {dateFormat(new Date(bansosMemberData.birth_date as string))}
+                  {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
+                  {dateFormat(new Date(bansosMemberData.birth_date!))}
                 </Text>
               </VStack>
               <VStack align="flex-start" spacing={0}>
