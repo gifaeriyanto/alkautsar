@@ -12,19 +12,19 @@ import {
   useMediaQuery,
   VStack,
 } from '@chakra-ui/react'
-import { useList } from '@client/supabase'
+import { useList, useProfileData } from '@client/supabase'
 import {
   CRUDTable,
   currency,
   dateFormat,
   useSearch,
 } from '@client/ui-components'
-import { BiPrinter } from 'react-icons/bi'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { BiPrinter } from 'react-icons/bi'
 import { TextStyle } from 'theme/client'
-import Layout from '@/_components/layout'
 import { useWallet } from '@/_store/wallet'
+import Layout from '@/_components/layout'
 
 const ListData = ({ walletId }: { walletId: string }) => {
   const [isLargerThan1140] = useMediaQuery('(min-width: 1140px)')
@@ -93,11 +93,18 @@ const ListData = ({ walletId }: { walletId: string }) => {
 }
 
 const Page = () => {
-  const { data: walletsData } = useList('wallets')
   const { id: walletId, setWallet } = useWallet()
-  const activeTab = walletsData.findIndex((item) => item.id === walletId)
   const [tabIndex, setTabIndex] = useState(0)
   const [isLargerThan1140] = useMediaQuery('(min-width: 1140px)')
+  const { data: profileData } = useProfileData()
+
+  const isAdminRamadhan = useMemo(() => {
+    return profileData?.role === 'admin-ramadhan'
+  }, [profileData])
+  const { data: walletsData } = useList('wallets', {
+    filters: [[isAdminRamadhan ? 'eq' : 'neq', 'name', 'Kas Ramadhan']],
+  })
+  const activeTab = walletsData.findIndex((item) => item.id === walletId)
 
   const handleTabsChange = (index: number) => {
     const wallet = walletsData[index]
@@ -128,13 +135,17 @@ const Page = () => {
         isLargerThan1140 ? (
           <Button
             as={Link}
-            href="/laporan-keuangan/print"
+            href={
+              isAdminRamadhan
+                ? '/laporan-keuangan/ramadhan/print'
+                : '/laporan-keuangan/print'
+            }
             ml="auto"
             rightIcon={<BiPrinter />}
             bgColor="white"
             colorScheme="gray"
           >
-            Cetak laporan
+            {isAdminRamadhan ? 'Cetak Laporan Ramadhan' : 'Cetak Laporan'}
           </Button>
         ) : (
           <IconButton

@@ -9,13 +9,26 @@ import {
   VStack,
   Box,
 } from '@chakra-ui/react'
-import { getClient, useList } from '@client/supabase'
-import { currency, dateFormat, getDateRange } from '@client/ui-components'
+import { getClient, useList, useProfileData } from '@client/supabase'
+import {
+  currency,
+  dateFormat,
+  getDateRange,
+  getDateRangeRamadhan,
+} from '@client/ui-components'
 import { useState, useEffect, useMemo } from 'react'
 import { TextStyle } from 'theme/client'
 import Layout from '@/_components/layout'
 
-const Report = ({ walletId }: { walletId: string }) => {
+const Report = ({
+  walletId,
+  startDate,
+  endDate,
+}: {
+  walletId: string
+  startDate: string
+  endDate: string
+}) => {
   const supabase = getClient()
   const [walletSummary, setWalletSummary] = useState<
     | {
@@ -29,11 +42,10 @@ const Report = ({ walletId }: { walletId: string }) => {
   >(undefined)
 
   useEffect(() => {
-    const { start_date, end_date } = getDateRange()
     supabase
       .rpc('get_wallet_summary', {
-        start_date,
-        end_date,
+        start_date: startDate,
+        end_date: endDate,
         wallet_id: walletId,
       })
       .then((res) => {
@@ -49,7 +61,7 @@ const Report = ({ walletId }: { walletId: string }) => {
           }
         }
       })
-  }, [supabase, walletId])
+  }, [endDate, startDate, supabase, walletId])
 
   return (
     <>
@@ -97,6 +109,13 @@ const Report = ({ walletId }: { walletId: string }) => {
 const Page = () => {
   const { data: walletsData } = useList('wallets')
   const { start_date, end_date } = useMemo(getDateRange, [])
+  const { start_date: startDateRamadhan, end_date: endDateRamadhan } = useMemo(
+    getDateRangeRamadhan,
+    []
+  )
+
+  const { data: profileData } = useProfileData()
+  const isAdminRamadhan = profileData?.role === 'admin-ramadhan'
 
   return (
     <Layout.Body title="Beranda">
@@ -107,10 +126,19 @@ const Page = () => {
               {wallet.name}
             </Text>
             <Text textStyle={TextStyle.H4} mb={6} color="gray.500">
-              {dateFormat(new Date(start_date))} -{' '}
-              {dateFormat(new Date(end_date))}
+              {dateFormat(
+                new Date(isAdminRamadhan ? startDateRamadhan : start_date)
+              )}{' '}
+              -{' '}
+              {dateFormat(
+                new Date(isAdminRamadhan ? endDateRamadhan : end_date)
+              )}
             </Text>
-            <Report walletId={wallet.id} />
+            <Report
+              walletId={wallet.id}
+              startDate={isAdminRamadhan ? startDateRamadhan : start_date}
+              endDate={isAdminRamadhan ? endDateRamadhan : end_date}
+            />
           </Box>
         ))}
       </VStack>

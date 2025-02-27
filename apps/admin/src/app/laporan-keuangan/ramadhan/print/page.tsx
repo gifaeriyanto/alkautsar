@@ -14,21 +14,26 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { getClient, useList } from '@client/supabase'
-import { currency, dateFormat, getDateRange } from '@client/ui-components'
+import {
+  currency,
+  dateFormat,
+  getDateRangeRamadhan,
+} from '@client/ui-components'
 import Image from 'next/image'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TextStyle } from 'theme/client'
+import { format, startOfYesterday } from 'date-fns'
+import ImageStamp from 'public/static/stamp.png'
 import ImageTtdBendahara from 'public/static/ttd-bendahara.png'
 import ImageTtdKetua from 'public/static/ttd-ketua.png'
-import ImageStamp from 'public/static/stamp.png'
 import Layout from '@/_components/layout'
 
 const Page = () => {
   const supabase = getClient()
   const { data: walletsData } = useList('wallets', {
-    filters: [['neq', 'name', 'Kas Ramadhan']],
+    filters: [['eq', 'name', 'Kas Ramadhan']],
   })
-  const { start_date, end_date } = useMemo(getDateRange, [])
+  const { start_date, end_date } = useMemo(getDateRangeRamadhan, [])
   const { data: financialReportsData } = useList('financial_reports', {
     filters: [
       ['gte', 'date', start_date],
@@ -89,7 +94,7 @@ const Page = () => {
       <VStack align="stretch" spacing={8}>
         <VStack mb={8}>
           <Text textStyle={TextStyle.H1}>
-            Laporan Keuangan Masjid Al-Kautsar CitraLand Tallasa City
+            Laporan Keuangan Ramadhan Masjid Al-Kautsar CitraLand Tallasa City
           </Text>
           <Text textStyle={TextStyle.H2}>
             {dateFormat(new Date(start_date), 'dd MMMM yyyy')} -{' '}
@@ -100,9 +105,6 @@ const Page = () => {
           const summary = walletSummary?.[wallet.id]
           return (
             <Box key={wallet.id}>
-              <Text textStyle={TextStyle.H3} mb={4}>
-                {wallet.name}
-              </Text>
               <TableContainer
                 bgColor="white"
                 sx={{
@@ -126,7 +128,9 @@ const Page = () => {
                   <Thead>
                     {summary ? (
                       <Tr fontWeight="bold" bgColor="yellow.100">
-                        <Td>Saldo pekan sebelumnya</Td>
+                        <Td>
+                          Saldo {format(startOfYesterday(), 'dd MMM yyyy')}
+                        </Td>
                         <Td isNumeric colSpan={2}>
                           {currency(summary.balance - summary.comparation)}
                         </Td>
@@ -216,9 +220,9 @@ const Page = () => {
                 height={150}
               />
               <Text fontWeight="bold" borderBottom="1px solid" mt="-40px">
-                Dr. Taufan Kurniawan, S.E., M.M.
+                dr. A. Irwansyah Achmad, Sp.B.
               </Text>
-              <Text>Ketua</Text>
+              <Text>Ketua Panitia Ramadhan</Text>
             </VStack>
           </Box>
 
@@ -234,9 +238,9 @@ const Page = () => {
                 <Image {...ImageStamp} alt="Stempel" width={150} height={150} />
               </Box>
               <Text fontWeight="bold" borderBottom="1px solid" mt="-40px">
-                Hj. Andi Erni Novianty
+                A. Irdiansyah Achmad, A.Md
               </Text>
-              <Text>Bendahara</Text>
+              <Text>Bendahara Panitia Ramadhan</Text>
             </VStack>
           </Box>
         </Box>

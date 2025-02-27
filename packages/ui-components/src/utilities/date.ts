@@ -1,4 +1,10 @@
-import { subDays, startOfWeek, addDays, format } from 'date-fns'
+import {
+  subDays,
+  startOfWeek,
+  addDays,
+  format,
+  startOfYesterday,
+} from 'date-fns'
 
 export const getDateRange = () => {
   const today = new Date()
@@ -8,5 +14,12 @@ export const getDateRange = () => {
   return {
     start_date: format(lastFriday, 'yyyy/MM/dd'),
     end_date: format(thisThursday, 'yyyy/MM/dd'),
+  }
+}
+
+export const getDateRangeRamadhan = () => {
+  return {
+    start_date: format(startOfYesterday(), 'yyyy/MM/dd'),
+    end_date: format(new Date(), 'yyyy/MM/dd'),
   }
 }

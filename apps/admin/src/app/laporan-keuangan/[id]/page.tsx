@@ -58,9 +58,11 @@ const Page = ({ params }: { params: { id: string } }) => {
                 <Icon as={BiWallet} />
                 <Text>{(reportData as any).wallets.name}</Text>
               </HStack>
-              <HStack align="baseline">
+              <HStack align="baseline" hidden={!reportData.notes}>
                 <Icon as={BiPencil} />
-                <Text whiteSpace="pre">{(reportData as any).notes}</Text>
+                <Text whiteSpace="pre" sx={{ textWrap: 'auto' }}>
+                  {reportData.notes}
+                </Text>
               </HStack>
             </VStack>
           </CardBody>
