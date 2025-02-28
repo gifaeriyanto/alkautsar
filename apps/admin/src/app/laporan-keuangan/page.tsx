@@ -157,7 +157,11 @@ const Page = () => {
             icon={<BiPrinter />}
             aria-label="print"
             as={Link}
-            href="/laporan-keuangan/print"
+            href={
+              isAdminRamadhan
+                ? '/laporan-keuangan/ramadhan/print'
+                : '/laporan-keuangan/print'
+            }
             mr="50px"
             borderRadius="lg"
             colorScheme="gray"
