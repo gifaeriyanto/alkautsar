@@ -24,7 +24,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TextStyle } from 'theme/client'
 import { format, startOfYesterday } from 'date-fns'
 import ImageStamp from 'public/static/stamp.png'
-import ImageTtdBendahara from 'public/static/ttd-bendahara.png'
+import ImageTtdBendaharaRamadhan from 'public/static/ttd-bendahara-ramadhan.png'
 import ImageTtdKetua from 'public/static/ttd-ketua.png'
 import Layout from '@/_components/layout'
 
@@ -220,6 +220,21 @@ const Page = () => {
                 height={150}
               />
               <Text fontWeight="bold" borderBottom="1px solid" mt="-40px">
+                Dr. Taufan Kurniawan, S.E., M.M.
+              </Text>
+              <Text>Ketua Pengurus</Text>
+            </VStack>
+          </Box>
+
+          <Box textAlign="center">
+            <VStack mt={6}>
+              <Image
+                {...ImageTtdKetua}
+                alt="Ttd Ketua"
+                width={150}
+                height={150}
+              />
+              <Text fontWeight="bold" borderBottom="1px solid" mt="-40px">
                 dr. A. Irwansyah Achmad, Sp.B.
               </Text>
               <Text>Ketua Panitia Ramadhan</Text>
@@ -229,7 +244,7 @@ const Page = () => {
           <Box textAlign="center">
             <VStack mt={6} pos="relative">
               <Image
-                {...ImageTtdBendahara}
+                {...ImageTtdBendaharaRamadhan}
                 alt="Ttd Bendahara"
                 width={150}
                 height={150}

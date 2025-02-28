@@ -93,6 +93,7 @@ const ListData = ({ walletId }: { walletId: string }) => {
 }
 
 const Page = () => {
+  const { data: walletsData } = useList('wallets')
   const { id: walletId, setWallet } = useWallet()
   const [tabIndex, setTabIndex] = useState(0)
   const [isLargerThan1140] = useMediaQuery('(min-width: 1140px)')
@@ -101,13 +102,17 @@ const Page = () => {
   const isAdminRamadhan = useMemo(() => {
     return profileData?.role === 'admin-ramadhan'
   }, [profileData])
-  const { data: walletsData } = useList('wallets', {
-    filters: [[isAdminRamadhan ? 'eq' : 'neq', 'name', 'Kas Ramadhan']],
-  })
-  const activeTab = walletsData.findIndex((item) => item.id === walletId)
+
+  const filteredWallets = useMemo(() => {
+    if (isAdminRamadhan) {
+      return walletsData.filter((wallet) => wallet.name === 'Kas Ramadhan')
+    }
+    return walletsData.filter((wallet) => wallet.name !== 'Kas Ramadhan')
+  }, [isAdminRamadhan, walletsData])
+  const activeTab = filteredWallets.findIndex((item) => item.id === walletId)
 
   const handleTabsChange = (index: number) => {
-    const wallet = walletsData[index]
+    const wallet = filteredWallets[index]
     if (wallet) {
       setWallet(wallet)
     }
@@ -118,11 +123,11 @@ const Page = () => {
       return
     }
 
-    const defaultWalletData = walletsData[0]
+    const defaultWalletData = filteredWallets[0]
     if (defaultWalletData) {
       setWallet(defaultWalletData)
     }
-  }, [setWallet, walletId, walletsData])
+  }, [setWallet, walletId, filteredWallets])
 
   useEffect(() => {
     setTabIndex(activeTab)
@@ -164,13 +169,13 @@ const Page = () => {
     >
       <Tabs index={tabIndex} onChange={handleTabsChange}>
         <TabList>
-          {walletsData.map((wallet) => (
+          {filteredWallets.map((wallet) => (
             <Tab key={wallet.id}>{wallet.name}</Tab>
           ))}
         </TabList>
 
         <TabPanels>
-          {walletsData.map((wallet) => (
+          {filteredWallets.map((wallet) => (
             <TabPanel key={wallet.id}>
               <ListData walletId={wallet.id} />
             </TabPanel>
