@@ -26,6 +26,7 @@ import { format, startOfYesterday } from 'date-fns'
 import ImageStamp from 'public/static/stamp.png'
 import ImageTtdBendaharaRamadhan from 'public/static/ttd-bendahara-ramadhan.png'
 import ImageTtdKetua from 'public/static/ttd-ketua.png'
+import ImageTtdKetuaRamadhan from 'public/static/ttd-ketua-ramadhan.png'
 import Layout from '@/_components/layout'
 
 const Page = () => {
@@ -229,7 +230,7 @@ const Page = () => {
           <Box textAlign="center">
             <VStack mt={6}>
               <Image
-                {...ImageTtdKetua}
+                {...ImageTtdKetuaRamadhan}
                 alt="Ttd Ketua"
                 width={150}
                 height={150}
