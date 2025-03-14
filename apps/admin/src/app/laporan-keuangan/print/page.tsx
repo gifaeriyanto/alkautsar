@@ -19,11 +19,11 @@ import { currency, dateFormat, getDateRange } from '@client/ui-components'
 import Image from 'next/image'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TextStyle } from 'theme/client'
+import { orderBy } from 'lodash'
 import ImageTtdBendahara from 'public/static/ttd-bendahara.png'
 import ImageTtdKetua from 'public/static/ttd-ketua.png'
 import ImageStamp from 'public/static/stamp.png'
 import Layout from '@/_components/layout'
-import { orderBy } from 'lodash'
 
 const Page = () => {
   const supabase = getClient()
@@ -56,7 +56,7 @@ const Page = () => {
     if (!walletSummary) {
       return 0
     }
-    return Object.entries(walletSummary).reduce((prev, [key, value]) => {
+    return Object.entries(walletSummary).reduce((prev, [_key, value]) => {
       return prev + value.balance
     }, 0)
   }, [walletSummary])
