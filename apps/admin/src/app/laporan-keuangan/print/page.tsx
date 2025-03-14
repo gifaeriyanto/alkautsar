@@ -2,6 +2,7 @@
 
 import {
   Box,
+  Flex,
   Table,
   TableContainer,
   Tbody,
@@ -22,6 +23,7 @@ import ImageTtdBendahara from 'public/static/ttd-bendahara.png'
 import ImageTtdKetua from 'public/static/ttd-ketua.png'
 import ImageStamp from 'public/static/stamp.png'
 import Layout from '@/_components/layout'
+import { orderBy } from 'lodash'
 
 const Page = () => {
   const supabase = getClient()
@@ -49,6 +51,15 @@ const Page = () => {
       >
     | undefined
   >(undefined)
+
+  const totalBalance = useMemo(() => {
+    if (!walletSummary) {
+      return 0
+    }
+    return Object.entries(walletSummary).reduce((prev, [key, value]) => {
+      return prev + value.balance
+    }, 0)
+  }, [walletSummary])
 
   const getWalletSummary = useCallback(
     (walletId: string) => {
@@ -139,38 +150,42 @@ const Page = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {financialReportsData
-                      .filter(
+                    {orderBy(
+                      financialReportsData.filter(
                         (item) =>
                           item.wallet_id === wallet.id && item.amount >= 0
-                      )
-                      .map((item) => (
-                        <Tr key={item.id}>
-                          <Td>{item.description}</Td>
-                          <Td isNumeric>
-                            {item.amount >= 0 ? currency(item.amount) : null}
-                          </Td>
-                          <Td isNumeric>
-                            {item.amount < 0 ? currency(item.amount) : null}
-                          </Td>
-                        </Tr>
-                      ))}
-                    {financialReportsData
-                      .filter(
+                      ),
+                      ['description'],
+                      ['asc']
+                    ).map((item) => (
+                      <Tr key={item.id}>
+                        <Td>{item.description}</Td>
+                        <Td isNumeric>
+                          {item.amount >= 0 ? currency(item.amount) : null}
+                        </Td>
+                        <Td isNumeric>
+                          {item.amount < 0 ? currency(item.amount) : null}
+                        </Td>
+                      </Tr>
+                    ))}
+                    {orderBy(
+                      financialReportsData.filter(
                         (item) =>
                           item.wallet_id === wallet.id && item.amount < 0
-                      )
-                      .map((item) => (
-                        <Tr key={item.id}>
-                          <Td>{item.description}</Td>
-                          <Td isNumeric>
-                            {item.amount >= 0 ? currency(item.amount) : null}
-                          </Td>
-                          <Td isNumeric>
-                            {item.amount < 0 ? currency(item.amount) : null}
-                          </Td>
-                        </Tr>
-                      ))}
+                      ),
+                      ['description'],
+                      ['asc']
+                    ).map((item) => (
+                      <Tr key={item.id}>
+                        <Td>{item.description}</Td>
+                        <Td isNumeric>
+                          {item.amount >= 0 ? currency(item.amount) : null}
+                        </Td>
+                        <Td isNumeric>
+                          {item.amount < 0 ? currency(item.amount) : null}
+                        </Td>
+                      </Tr>
+                    ))}
                   </Tbody>
                   {summary ? (
                     <Tfoot
@@ -200,6 +215,18 @@ const Page = () => {
             </Box>
           )
         })}
+        <Flex
+          justify="space-between"
+          border="1px solid"
+          borderColor="gray.500"
+          p={4}
+          bgColor="green.100"
+        >
+          <Text textStyle={TextStyle.H3}>Total Saldo Seluruh Kas</Text>
+          <Text textStyle={TextStyle.H1} color="green.500">
+            {currency(totalBalance)}
+          </Text>
+        </Flex>
       </VStack>
 
       <Box mt={8}>

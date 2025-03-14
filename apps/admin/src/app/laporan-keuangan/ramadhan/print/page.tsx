@@ -28,6 +28,7 @@ import Image from 'next/image'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TextStyle } from 'theme/client'
 import { format, startOfYesterday } from 'date-fns'
+import { orderBy } from 'lodash'
 import ImageStamp from 'public/static/stamp.png'
 import ImageTtdBendaharaRamadhan from 'public/static/ttd-bendahara-ramadhan.png'
 import ImageTtdKetua from 'public/static/ttd-ketua.png'
@@ -42,7 +43,7 @@ const Page = () => {
   const { start_date, end_date } = useMemo(getDateRangeRamadhan, [])
   const { data: financialReportsData } = useList('financial_reports', {
     filters: [
-      ['gte', 'date', start_date],
+      ['eq', 'date', start_date],
       ['lte', 'date', end_date],
     ],
   })
@@ -294,38 +295,42 @@ const Page = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {financialReportsData
-                      .filter(
+                    {orderBy(
+                      financialReportsData.filter(
                         (item) =>
                           item.wallet_id === wallet.id && item.amount >= 0
-                      )
-                      .map((item) => (
-                        <Tr key={item.id}>
-                          <Td>{item.description}</Td>
-                          <Td isNumeric>
-                            {item.amount >= 0 ? currency(item.amount) : null}
-                          </Td>
-                          <Td isNumeric>
-                            {item.amount < 0 ? currency(item.amount) : null}
-                          </Td>
-                        </Tr>
-                      ))}
-                    {financialReportsData
-                      .filter(
+                      ),
+                      ['description'],
+                      ['asc']
+                    ).map((item) => (
+                      <Tr key={item.id}>
+                        <Td>{item.description}</Td>
+                        <Td isNumeric>
+                          {item.amount >= 0 ? currency(item.amount) : null}
+                        </Td>
+                        <Td isNumeric>
+                          {item.amount < 0 ? currency(item.amount) : null}
+                        </Td>
+                      </Tr>
+                    ))}
+                    {orderBy(
+                      financialReportsData.filter(
                         (item) =>
                           item.wallet_id === wallet.id && item.amount < 0
-                      )
-                      .map((item) => (
-                        <Tr key={item.id}>
-                          <Td>{item.description}</Td>
-                          <Td isNumeric>
-                            {item.amount >= 0 ? currency(item.amount) : null}
-                          </Td>
-                          <Td isNumeric>
-                            {item.amount < 0 ? currency(item.amount) : null}
-                          </Td>
-                        </Tr>
-                      ))}
+                      ),
+                      ['description'],
+                      ['asc']
+                    ).map((item) => (
+                      <Tr key={item.id}>
+                        <Td>{item.description}</Td>
+                        <Td isNumeric>
+                          {item.amount >= 0 ? currency(item.amount) : null}
+                        </Td>
+                        <Td isNumeric>
+                          {item.amount < 0 ? currency(item.amount) : null}
+                        </Td>
+                      </Tr>
+                    ))}
                   </Tbody>
                   {summary ? (
                     <Tfoot
@@ -390,8 +395,7 @@ const Page = () => {
             Laporan Keuangan Ramadhan Masjid Al-Kautsar CitraLand Tallasa City
           </Text>
           <Text textStyle={TextStyle.H2}>
-            {dateFormat(new Date(start_date), 'dd MMMM yyyy')} -{' '}
-            {dateFormat(new Date(end_date), 'dd MMMM yyyy')}
+            {dateFormat(new Date(start_date), 'dd MMMM yyyy')}
           </Text>
         </VStack>
         {renderReport}
