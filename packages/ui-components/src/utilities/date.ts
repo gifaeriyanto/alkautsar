@@ -11,9 +11,3 @@ export const getDateRange = () => {
   }
 }
 
-export const getDateRangeRamadhan = () => {
-  return {
-    start_date: format(new Date(), 'yyyy/MM/dd'),
-    end_date: format(new Date(), 'yyyy/MM/dd'),
-  }
-}

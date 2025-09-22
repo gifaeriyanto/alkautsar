@@ -9,12 +9,11 @@ import {
   VStack,
   Box,
 } from '@chakra-ui/react'
-import { getClient, useList, useProfileData } from '@client/supabase'
+import { getClient, useList } from '@client/supabase'
 import {
   currency,
   dateFormat,
   getDateRange,
-  getDateRangeRamadhan,
 } from '@client/ui-components'
 import { useState, useEffect, useMemo } from 'react'
 import { TextStyle } from 'theme/client'
@@ -109,13 +108,6 @@ const Report = ({
 const Page = () => {
   const { data: walletsData } = useList('wallets')
   const { start_date, end_date } = useMemo(getDateRange, [])
-  const { start_date: startDateRamadhan, end_date: endDateRamadhan } = useMemo(
-    getDateRangeRamadhan,
-    []
-  )
-
-  const { data: profileData } = useProfileData()
-  const isAdminRamadhan = profileData?.role === 'admin-ramadhan'
 
   return (
     <Layout.Body title="Beranda">
@@ -126,18 +118,12 @@ const Page = () => {
               {wallet.name}
             </Text>
             <Text textStyle={TextStyle.H4} mb={6} color="gray.500">
-              {dateFormat(
-                new Date(isAdminRamadhan ? startDateRamadhan : start_date)
-              )}{' '}
-              -{' '}
-              {dateFormat(
-                new Date(isAdminRamadhan ? endDateRamadhan : end_date)
-              )}
+              {dateFormat(new Date(start_date))} - {dateFormat(new Date(end_date))}
             </Text>
             <Report
               walletId={wallet.id}
-              startDate={isAdminRamadhan ? startDateRamadhan : start_date}
-              endDate={isAdminRamadhan ? endDateRamadhan : end_date}
+              startDate={start_date}
+              endDate={end_date}
             />
           </Box>
         ))}

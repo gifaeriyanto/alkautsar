@@ -2,13 +2,16 @@ import { useProfileData } from '@client/supabase'
 import { usePathname } from 'next/navigation'
 import { useMemo } from 'react'
 import { BiHomeAlt2, BiWallet } from 'react-icons/bi'
-import { RiHandHeartLine } from 'react-icons/ri'
+import { RiHandHeartLine, RiWallet3Line } from 'react-icons/ri'
 
 const getMenus = (isAdmin: boolean) => [
   { label: 'Beranda', link: '/', icon: <BiHomeAlt2 /> },
   { label: 'Laporan Keuangan', link: '/laporan-keuangan', icon: <BiWallet /> },
   ...(isAdmin
-    ? [{ label: 'Bansos', link: '/bansos', icon: <RiHandHeartLine /> }]
+    ? [
+        { label: 'Kelola Wallet', link: '/wallets', icon: <RiWallet3Line /> },
+        { label: 'Bansos', link: '/bansos', icon: <RiHandHeartLine /> },
+      ]
     : []),
 ]
 

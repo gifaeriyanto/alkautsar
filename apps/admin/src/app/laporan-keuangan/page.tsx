@@ -12,7 +12,7 @@ import {
   useMediaQuery,
   VStack,
 } from '@chakra-ui/react'
-import { useList, useProfileData } from '@client/supabase'
+import { useList } from '@client/supabase'
 import {
   CRUDTable,
   currency,
@@ -97,18 +97,10 @@ const Page = () => {
   const { id: walletId, setWallet } = useWallet()
   const [tabIndex, setTabIndex] = useState(0)
   const [isLargerThan1140] = useMediaQuery('(min-width: 1140px)')
-  const { data: profileData } = useProfileData()
-
-  const isAdminRamadhan = useMemo(() => {
-    return profileData?.role === 'admin-ramadhan'
-  }, [profileData])
 
   const filteredWallets = useMemo(() => {
-    if (isAdminRamadhan) {
-      return walletsData.filter((wallet) => wallet.name === 'Kas Ramadhan')
-    }
-    return walletsData.filter((wallet) => wallet.name !== 'Kas Ramadhan')
-  }, [isAdminRamadhan, walletsData])
+    return walletsData
+  }, [walletsData])
   const activeTab = filteredWallets.findIndex((item) => item.id === walletId)
 
   const handleTabsChange = (index: number) => {
@@ -140,28 +132,20 @@ const Page = () => {
         isLargerThan1140 ? (
           <Button
             as={Link}
-            href={
-              isAdminRamadhan
-                ? '/laporan-keuangan/ramadhan/print'
-                : '/laporan-keuangan/print'
-            }
+            href="/laporan-keuangan/print"
             ml="auto"
             rightIcon={<BiPrinter />}
             bgColor="white"
             colorScheme="gray"
           >
-            {isAdminRamadhan ? 'Cetak Laporan Ramadhan' : 'Cetak Laporan'}
+            Cetak Laporan
           </Button>
         ) : (
           <IconButton
             icon={<BiPrinter />}
             aria-label="print"
             as={Link}
-            href={
-              isAdminRamadhan
-                ? '/laporan-keuangan/ramadhan/print'
-                : '/laporan-keuangan/print'
-            }
+            href="/laporan-keuangan/print"
             mr="50px"
             borderRadius="lg"
             colorScheme="gray"
