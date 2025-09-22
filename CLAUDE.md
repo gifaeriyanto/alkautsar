@@ -111,6 +111,22 @@ PROJECT_ID=<supabase_project_id>
 - Format code with `yarn format` (Prettier)
 - All checks run automatically on commit via Husky
 
+### Code Quality Rules
+
+**ALWAYS run build/lint checks after making changes:**
+```bash
+# Before committing, always run:
+yarn build    # Check for build errors
+yarn lint     # Check for ESLint errors
+```
+
+**Common ESLint Fixes:**
+- `eol-last`: Files must end with a newline character
+- `no-unused-vars`: Remove or prefix unused variables with underscore
+- `@typescript-eslint/no-explicit-any`: Use specific types instead of `any`
+
+**File Endings:** All files MUST end with a single newline character to pass ESLint `eol-last` rule.
+
 ## Database Management
 
 The project uses Supabase with local development support. Always generate types after schema changes:
