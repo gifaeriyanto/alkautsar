@@ -1,19 +1,34 @@
 import type { Metadata } from 'next'
-import { Noto_Sans_JP } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import Provider from './provider'
 
-const noto = Noto_Sans_JP({
+const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   adjustFontFallback: false,
 })
 
 export const metadata: Metadata = {
-  title: 'Logo',
-  description: 'Masjid Al-Kautsar CLTC',
+  title: 'Masjid Al-Kautsar CitraLand Tallasa City',
+  description:
+    'Selamat datang di website resmi Masjid Al-Kautsar CitraLand Tallasa City. Pusat kegiatan ibadah dan dakwah untuk umat muslim di CitraLand Tallasa City.',
   generator: 'Next.js',
   manifest: '/manifest.json',
-  keywords: ['nextjs', 'nextjs13', 'next13', 'pwa', 'next-pwa'],
+  keywords: [
+    'masjid',
+    'al-kautsar',
+    'citraland',
+    'tallasa',
+    'city',
+    'ibadah',
+    'islam',
+    'dakwah',
+    'komunitas',
+    'sholat',
+    'quran',
+    'pendidikan islam',
+    'makassar',
+  ],
   authors: [
     { name: 'Gifa Eriyanto' },
     {
@@ -22,21 +37,32 @@ export const metadata: Metadata = {
     },
   ],
   icons: [
-    { rel: 'apple-touch-icon', url: 'images/icons/icon-128x128.png' },
-    { rel: 'icon', url: 'images/icons/icon-128x128.png' },
+    { rel: 'apple-touch-icon', url: '/images/icons/icon-128x128.png' },
+    { rel: 'icon', url: '/images/icons/icon-128x128.png' },
   ],
+  openGraph: {
+    title: 'Masjid Al-Kautsar CitraLand Tallasa City',
+    description:
+      'Pusat kegiatan ibadah dan dakwah untuk umat muslim di CitraLand Tallasa City.',
+    url: 'https://member.alkautsar.com',
+    siteName: 'Masjid Al-Kautsar',
+    images: [
+      {
+        url: '/images/mosque.jpeg',
+        width: 1200,
+        height: 630,
+        alt: 'Masjid Al-Kautsar CitraLand Tallasa City',
+      },
+    ],
+    locale: 'id_ID',
+    type: 'website',
+  },
 }
 
-const RootLayout = ({
-  children,
-  params: { locale },
-}: {
-  children: React.ReactNode
-  params: { locale: string }
-}) => {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang={locale}>
-      <body className={noto.className}>
+    <html lang="id">
+      <body className={inter.className}>
         <Provider>{children}</Provider>
       </body>
     </html>
