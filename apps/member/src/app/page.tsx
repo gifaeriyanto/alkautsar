@@ -2,43 +2,35 @@
 
 import {
   Box,
-  Heading,
-  Text,
-  VStack,
-  HStack,
-  SimpleGrid,
-  Icon,
-  Link,
   Button,
   Card,
-  Flex,
-  Badge,
-  Image,
   Container,
+  Flex,
+  Heading,
+  HStack,
+  Icon,
+  Image,
+  Link,
+  SimpleGrid,
+  Text,
+  VStack,
 } from '@chakra-ui/react'
 import {
-  FaMosque,
+  FaArrowRight,
+  FaGraduationCap,
+  FaHeart,
   FaInstagram,
-  FaWhatsapp,
+  FaMosque,
   FaPray,
   FaQuran,
-  FaHeart,
-  FaGraduationCap,
-  FaArrowRight,
-  FaPlay,
+  FaWhatsapp,
 } from 'react-icons/fa'
 
 const Page = () => {
   return (
-    <Box bg="gray.50" minH="100vh" color="gray.800" overflow="hidden">
+    <Box minH="100vh" color="gray.800" overflow="hidden">
       {/* Premium Navigation */}
-      <Box
-        py={6}
-        px={{ base: 6, md: 12, lg: 16 }}
-        bg="white"
-        borderBottom="1px solid"
-        borderColor="rgba(0, 0, 0, 0.1)"
-      >
+      <Box py={6} px={{ base: 6, md: 12, lg: 16 }} bg="white">
         <Container maxW="8xl">
           <VStack spacing={4}>
             {/* Logo Section - Centered */}
@@ -125,201 +117,242 @@ const Page = () => {
         </Container>
       </Box>
 
-      {/* Parallax Hero Section */}
-      <Box
-        h="calc(100vh - 226px)"
-        px={{ base: 6, md: 12, lg: 16 }}
-        bg="white"
-        display="flex"
-        alignItems="center"
-      >
-        <Container maxW="8xl">
-          <SimpleGrid
-            columns={{ base: 1, lg: 2 }}
-            spacing={16}
-            alignItems="center"
-          >
-            {/* Left Content */}
-            <VStack align="start" spacing={10}>
-              {/* Premium Badge */}
-              <Badge
-                bg="rgba(245, 158, 11, 0.1)"
-                color="gray.800"
-                px={6}
-                py={2}
-                borderRadius="full"
-                fontSize="sm"
-                fontWeight="600"
-                letterSpacing="wider"
-                border="1px solid rgba(245, 158, 11, 0.2)"
-              >
-                ✨ MASJID AL-KAUTSAR
-              </Badge>
+      {/* Modern Boxed Hero Section */}
+      <Container maxW="8xl">
+        <Box
+          position="relative"
+          borderTopRadius="3xl"
+          overflow="hidden"
+          shadow="2xl"
+          border="1px solid"
+          borderColor="gray.200"
+          h="calc(100vh - 224px)"
+          bg="gray.900"
+        >
+          {/* Background Image with Parallax Effect */}
+          <Box
+            position="absolute"
+            top={0}
+            left={0}
+            right={0}
+            bottom={0}
+            bgImage="url('/images/mosque-sky.png')"
+            bgSize="cover"
+            bgPosition="center"
+            bgRepeat="no-repeat"
+            borderRadius="2xl"
+            sx={{
+              '@keyframes parallaxFloat': {
+                '0%, 100%': { transform: 'scale(1.05) translateY(0px)' },
+                '50%': { transform: 'scale(1.08) translateY(-10px)' },
+              },
+              animation: 'parallaxFloat 20s ease-in-out infinite',
+            }}
+          />
 
-              {/* Hero Typography */}
-              <VStack align="start" spacing={6}>
+          {/* Hero Content */}
+          <Box
+            position="absolute"
+            top="20%"
+            left="50%"
+            transform="translate(-50%, -50%)"
+            zIndex={2}
+            textAlign="center"
+            w="full"
+            maxW="1000px"
+            px={4}
+          >
+            <VStack spacing={8}>
+              {/* Main Title with Advanced Typography */}
+              <VStack spacing={2}>
+                {/* Masjid - Refined serif */}
+                <Text
+                  fontSize={{
+                    base: '18px',
+                    sm: '24px',
+                    md: '28px',
+                    lg: '32px',
+                    xl: '36px',
+                  }}
+                  color="whiteAlpha.800"
+                  fontWeight="300"
+                  letterSpacing="0.3em"
+                  fontFamily="'Playfair Display', serif"
+                  fontStyle="italic"
+                  textTransform="lowercase"
+                  sx={{
+                    position: 'relative',
+                    '@keyframes fadeInUp': {
+                      '0%': { opacity: 0, transform: 'translateY(30px)' },
+                      '100%': { opacity: 1, transform: 'translateY(0)' },
+                    },
+                    animation: 'fadeInUp 1s ease-out 0.2s both',
+                  }}
+                >
+                  masjid
+                </Text>
+
+                {/* AL-KAUTSAR - Modern display */}
                 <Heading
                   as="h1"
-                  fontSize={{ base: '3xl', md: '4xl', lg: '5xl' }}
-                  fontWeight="800"
-                  lineHeight="1.1"
-                  color="gray.900"
+                  fontSize={{
+                    base: '64px',
+                    sm: '80px',
+                    md: '96px',
+                    lg: '120px',
+                    xl: '140px',
+                  }}
+                  fontWeight="900"
+                  lineHeight={0.8}
+                  letterSpacing="-0.02em"
+                  fontFamily="'Inter', -apple-system, BlinkMacSystemFont, sans-serif"
+                  textTransform="uppercase"
+                  color="whiteAlpha.800"
+                  sx={{
+                    position: 'relative',
+                    '@keyframes fadeInUp': {
+                      '0%': { opacity: 0, transform: 'translateY(50px)' },
+                      '100%': { opacity: 1, transform: 'translateY(0)' },
+                    },
+                    animation: 'fadeInUp 1s ease-out 0.4s both',
+                  }}
                 >
-                  Masjid Modern untuk
-                  <Text
-                    as="span"
-                    display="block"
-                    bgGradient="linear(135deg, #F59E0B 0%, #FBBF24 100%)"
-                    bgClip="text"
-                    mt={1}
-                  >
-                    Komunitas Berkualitas
-                  </Text>
+                  AL-KAUTSAR
                 </Heading>
-
-                <Text
-                  fontSize={{ base: 'lg', md: 'xl' }}
-                  lineHeight="1.7"
-                  color="gray.700"
-                  maxW="xl"
-                >
-                  Bergabunglah dengan komunitas muslim yang berkembang di masjid
-                  modern dengan kapasitas 600+ jamaah. Nikmati fasilitas terkini
-                  dan program unggulan dalam perjalanan spiritual di CitraLand
-                  Tallasa City.
-                </Text>
               </VStack>
-
-              {/* CTA Buttons */}
-              <HStack spacing={4}>
-                <Button
-                  size="lg"
-                  bg="linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)"
-                  color="white"
-                  _hover={{
-                    transform: 'translateY(-2px)',
-                    shadow: '0 12px 30px rgba(245, 158, 11, 0.4)',
-                  }}
-                  px={8}
-                  py={3}
-                  h="auto"
-                  fontWeight="600"
-                  borderRadius="full"
-                  rightIcon={<FaArrowRight />}
-                  transition="all 0.3s ease"
-                >
-                  Jelajahi Sekarang
-                </Button>
-
-                <Button
-                  size="lg"
-                  variant="outline"
-                  color="gray.700"
-                  borderColor="gray.300"
-                  _hover={{
-                    bg: 'gray.50',
-                    transform: 'translateY(-2px)',
-                    borderColor: 'gray.400',
-                  }}
-                  px={8}
-                  py={3}
-                  h="auto"
-                  fontWeight="600"
-                  borderRadius="full"
-                  leftIcon={<FaPlay />}
-                  transition="all 0.3s ease"
-                >
-                  Pelajari Lebih Lanjut
-                </Button>
-              </HStack>
-
-              {/* Stats Preview */}
-              <HStack spacing={8} pt={6}>
-                <VStack spacing={1} align="start">
-                  <Text fontSize="2xl" fontWeight="800" color="gray.900">
-                    600+
-                  </Text>
-                  <Text fontSize="sm" color="gray.600" fontWeight="500">
-                    Kapasitas Jamaah
-                  </Text>
-                </VStack>
-                <VStack spacing={1} align="start">
-                  <Text fontSize="2xl" fontWeight="800" color="gray.900">
-                    27 Okt
-                  </Text>
-                  <Text fontSize="sm" color="gray.600" fontWeight="500">
-                    Berdiri Sejak Okt 2024
-                  </Text>
-                </VStack>
-                <VStack spacing={1} align="start">
-                  <Text fontSize="2xl" fontWeight="800" color="gray.900">
-                    10
-                  </Text>
-                  <Text fontSize="sm" color="gray.600" fontWeight="500">
-                    Program Unggulan
-                  </Text>
-                </VStack>
-              </HStack>
             </VStack>
+          </Box>
 
-            {/* Right Content - Parallax Mosque Box */}
-            <Box>
-              <Box
-                position="relative"
-                borderRadius="3xl"
-                overflow="hidden"
-                shadow="2xl"
-                border="1px solid"
-                borderColor="gray.200"
-                bg="linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%)"
-                h="400px"
-                p={6}
+          {/* CTA Buttons - In front of mosque */}
+          <Box
+            position="absolute"
+            bottom="10%"
+            left="50%"
+            transform="translateX(-50%)"
+            zIndex={4}
+            textAlign="center"
+          >
+            <HStack
+              spacing={4}
+              flexDir={{ base: 'column', sm: 'row' }}
+              sx={{
+                '@keyframes fadeInUp': {
+                  '0%': { opacity: 0, transform: 'translateY(30px)' },
+                  '100%': { opacity: 1, transform: 'translateY(0)' },
+                },
+                animation: 'fadeInUp 1s ease-out 0.8s both',
+              }}
+            >
+              <Button
+                size="lg"
+                bg="white"
+                color="gray.900"
+                _hover={{
+                  transform: 'translateY(-4px)',
+                  shadow: '0 20px 40px rgba(255,255,255,0.3)',
+                  bg: 'gray.50',
+                }}
+                px={8}
+                py={4}
+                h="auto"
+                fontWeight="700"
+                borderRadius="full"
+                rightIcon={<FaArrowRight />}
+                transition="all 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
+                fontSize="lg"
               >
-                {/* Sky Background Layer */}
-                <Box
-                  position="absolute"
-                  top={0}
-                  left={0}
-                  right={0}
-                  bottom={0}
-                  bgImage="url('/images/mosque-sky.png')"
-                  bgSize="160%"
-                  bgPosition="center 20%"
-                  bgRepeat="no-repeat"
-                  borderRadius="2xl"
-                />
+                Jelajahi Sekarang
+              </Button>
 
-                {/* Mosque Front Layer */}
-                <Box
-                  position="absolute"
-                  bottom={0}
-                  left={0}
-                  right={0}
-                  h="100%"
-                  bgImage="url('/images/mosque-front.png')"
-                  bgSize="120%"
-                  bgPosition="center 85%"
-                  bgRepeat="no-repeat"
-                  borderRadius="2xl"
-                  zIndex={2}
-                />
+              <Button
+                size="lg"
+                variant="ghost"
+                color="white"
+                border="2px solid"
+                borderColor="whiteAlpha.400"
+                _hover={{
+                  bg: 'whiteAlpha.200',
+                  borderColor: 'white',
+                  transform: 'translateY(-4px)',
+                }}
+                px={8}
+                py={4}
+                h="auto"
+                fontWeight="600"
+                borderRadius="full"
+                transition="all 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
+                fontSize="lg"
+              >
+                Video Tour
+              </Button>
+            </HStack>
+          </Box>
 
-                {/* Subtle overlay for depth */}
-                <Box
-                  position="absolute"
-                  top={0}
-                  left={0}
-                  right={0}
-                  bottom={0}
-                  bg="linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.05) 100%)"
-                  borderRadius="2xl"
-                  zIndex={3}
-                />
-              </Box>
-            </Box>
-          </SimpleGrid>
-        </Container>
-      </Box>
+          {/* Mosque Silhouette */}
+          <Box
+            position="absolute"
+            bottom={0}
+            left={0}
+            right={0}
+            h="100%"
+            bgImage="url('/images/mosque-front.png')"
+            bgSize="100% auto"
+            bgPosition="center bottom"
+            bgRepeat="no-repeat"
+            zIndex={3}
+          />
+
+          {/* Floating Decorative Elements */}
+          <Box
+            position="absolute"
+            top="20%"
+            left="10%"
+            w="3px"
+            h="3px"
+            bg="whiteAlpha.600"
+            borderRadius="full"
+            sx={{
+              '@keyframes float1': {
+                '0%, 100%': { transform: 'translateY(0px) scale(1)' },
+                '50%': { transform: 'translateY(-20px) scale(1.2)' },
+              },
+              animation: 'float1 4s ease-in-out infinite',
+            }}
+          />
+          <Box
+            position="absolute"
+            top="30%"
+            right="15%"
+            w="2px"
+            h="2px"
+            bg="whiteAlpha.400"
+            borderRadius="full"
+            sx={{
+              '@keyframes float2': {
+                '0%, 100%': { transform: 'translateY(0px) scale(1)' },
+                '50%': { transform: 'translateY(-15px) scale(1.5)' },
+              },
+              animation: 'float2 3s ease-in-out infinite 1s',
+            }}
+          />
+          <Box
+            position="absolute"
+            bottom="40%"
+            left="20%"
+            w="4px"
+            h="4px"
+            bg="whiteAlpha.500"
+            borderRadius="full"
+            sx={{
+              '@keyframes float3': {
+                '0%, 100%': { transform: 'translateY(0px) scale(1)' },
+                '50%': { transform: 'translateY(-25px) scale(0.8)' },
+              },
+              animation: 'float3 5s ease-in-out infinite 2s',
+            }}
+          />
+        </Box>
+      </Container>
 
       {/* Premium Feature Cards */}
       <Box
