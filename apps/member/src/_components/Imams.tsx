@@ -12,6 +12,7 @@ import {
   VStack,
   Badge,
   Stack,
+  HStack,
 } from '@chakra-ui/react'
 
 const Imams = () => {
@@ -205,23 +206,18 @@ const Imams = () => {
                     </Text>
                     <Stack spacing={2}>
                       {imam.achievements.map((achievement, idx) => (
-                        <Text
-                          key={idx}
-                          fontSize="sm"
-                          color="gray.600"
-                          display="flex"
-                          alignItems="center"
-                        >
+                        <HStack key={idx} spacing={3}>
                           <Box
                             w="6px"
                             h="6px"
                             bg="orange.400"
                             borderRadius="full"
-                            mr={3}
                             flexShrink={0}
                           />
-                          {achievement}
-                        </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            {achievement}
+                          </Text>
+                        </HStack>
                       ))}
                     </Stack>
                   </Box>
@@ -240,23 +236,18 @@ const Imams = () => {
                     </Text>
                     <Stack spacing={2}>
                       {imam.abilities.map((ability, idx) => (
-                        <Text
-                          key={idx}
-                          fontSize="sm"
-                          color="gray.600"
-                          display="flex"
-                          alignItems="center"
-                        >
+                        <HStack key={idx} spacing={3}>
                           <Box
                             w="6px"
                             h="6px"
                             bg="green.400"
                             borderRadius="full"
-                            mr={3}
                             flexShrink={0}
                           />
-                          {ability}
-                        </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            {ability}
+                          </Text>
+                        </HStack>
                       ))}
                     </Stack>
                   </Box>
