@@ -10,7 +10,7 @@ import {
   Link,
   VStack,
 } from '@chakra-ui/react'
-import { FaArrowRight } from 'react-icons/fa'
+import { FaYoutube } from 'react-icons/fa'
 
 const Navigation = () => {
   return (
@@ -72,29 +72,36 @@ const Navigation = () => {
               ))}
             </HStack>
 
-            {/* Donation Button - Positioned Absolutely to Right */}
+            {/* YouTube Button - Positioned Absolutely to Right */}
             <Box
               position="absolute"
               right={0}
               display={{ base: 'none', lg: 'block' }}
             >
-              <Button
-                size="sm"
-                bg="linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)"
-                color="white"
-                _hover={{
-                  transform: 'translateY(-1px)',
-                  shadow: '0 8px 25px rgba(245, 158, 11, 0.4)',
-                }}
+              <Link
+                href="https://www.youtube.com/@MasjidAlKautsarCLTC"
+                isExternal
+                _hover={{ transform: 'translateY(-1px)' }}
                 transition="all 0.2s ease"
-                borderRadius="full"
-                px={6}
-                fontWeight="600"
-                fontSize="sm"
-                rightIcon={<FaArrowRight size={10} />}
               >
-                Donasi
-              </Button>
+                <Button
+                  size="sm"
+                  bg="linear-gradient(135deg, #DC2626 0%, #EF4444 100%)"
+                  color="white"
+                  _hover={{
+                    bg: 'linear-gradient(135deg, #B91C1C 0%, #DC2626 100%)',
+                    shadow: '0 8px 25px rgba(220, 38, 38, 0.4)',
+                  }}
+                  transition="all 0.2s ease"
+                  borderRadius="full"
+                  px={6}
+                  fontWeight="600"
+                  fontSize="sm"
+                  rightIcon={<FaYoutube size={14} />}
+                >
+                  YouTube
+                </Button>
+              </Link>
             </Box>
           </Flex>
         </VStack>

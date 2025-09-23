@@ -11,166 +11,290 @@ import {
   SimpleGrid,
   Text,
   VStack,
+  Heading,
+  Divider,
 } from '@chakra-ui/react'
-import { FaInstagram, FaWhatsapp } from 'react-icons/fa'
+import {
+  FaInstagram,
+  FaWhatsapp,
+  FaYoutube,
+  FaMapMarkerAlt,
+  FaClock,
+  FaPrayingHands,
+  FaHeart,
+} from 'react-icons/fa'
 
 const Footer = () => {
-  const quickLinks = ['About Us', 'Prayer Times', 'Events', 'Donate']
-  const services = [
-    'Islamic Education',
-    'Marriage Counseling',
-    'Funeral Services',
-    'Community Outreach',
+  const quickLinks = [
+    { name: 'Tentang Kami', href: '/about' },
+    { name: 'Jadwal Sholat', href: '/prayer-times' },
+    { name: 'Kegiatan', href: '/events' },
+    { name: 'Donasi', href: '/donate' },
+  ]
+
+  const programs = [
+    { name: 'Kajian Rutin', href: '/programs/kajian' },
+    { name: 'Tahfiz Al-Quran', href: '/programs/tahfiz' },
+    { name: 'Pendidikan Anak', href: '/programs/education' },
+    { name: 'Bantuan Sosial', href: '/programs/social' },
+  ]
+
+  const prayerTimes = [
+    { name: 'Subuh', time: '05:00' },
+    { name: 'Dzuhur', time: '12:15' },
+    { name: 'Ashar', time: '15:30' },
+    { name: 'Maghrib', time: '18:15' },
+    { name: 'Isya', time: '19:30' },
   ]
 
   return (
     <Box
-      bg="linear-gradient(to bottom, rgba(249, 250, 251, 1) 0%, rgba(243, 244, 246, 1) 100%)"
-      borderTop="1px solid rgba(0, 0, 0, 0.1)"
+      bg="linear-gradient(135deg, #1F2937 0%, #374151 100%)"
+      color="white"
       py={20}
       position="relative"
     >
-      <Container maxW="8xl">
+      {/* Background Pattern */}
+      <Box
+        position="absolute"
+        top="0"
+        left="0"
+        right="0"
+        bottom="0"
+        opacity="0.05"
+        bgImage="radial-gradient(circle at 25% 25%, white 2px, transparent 2px)"
+        bgSize="30px 30px"
+      />
+
+      <Container maxW="8xl" position="relative">
         <VStack spacing={16}>
           {/* Main Footer Content */}
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12} w="full">
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 5 }} spacing={12} w="full">
             {/* Brand Section */}
-            <VStack align="start" spacing={6}>
+            <VStack align="start" spacing={6} gridColumn={{ lg: 'span 2' }}>
               <HStack spacing={4}>
-                <Image
-                  src="/images/logo.png"
-                  alt="Masjid Al-Kautsar"
-                  boxSize={12}
-                  objectFit="contain"
-                />
-                <VStack align="start" spacing={0}>
-                  <Text
+                <Box bg="white" p={3} borderRadius="xl">
+                  <Image
+                    src="/images/logo.png"
+                    alt="Masjid Al-Kautsar"
+                    boxSize={16}
+                    objectFit="contain"
+                  />
+                </Box>
+                <VStack align="start" spacing={1}>
+                  <Heading
+                    fontSize="2xl"
                     fontWeight="800"
-                    fontSize="lg"
                     bgGradient="linear(to-r, #F59E0B, #FBBF24)"
                     bgClip="text"
                   >
-                    AL-KAUTSAR
-                  </Text>
-                  <Text fontSize="xs" color="gray.400" fontWeight="500">
+                    MASJID AL-KAUTSAR
+                  </Heading>
+                  <Text fontSize="sm" color="gray.300" fontWeight="500">
                     CitraLand Tallasa City
                   </Text>
+                  <HStack spacing={2} mt={2}>
+                    <Icon as={FaPrayingHands} color="orange.400" boxSize={4} />
+                    <Text fontSize="xs" color="orange.300" fontWeight="600">
+                      #NyamanTransparanBerkesan
+                    </Text>
+                  </HStack>
                 </VStack>
               </HStack>
-              <Text color="gray.400" fontSize="sm" lineHeight="1.7" maxW="xs">
-                Building bridges between faith and modernity in our vibrant
-                community
+
+              <Text color="gray.300" fontSize="sm" lineHeight="1.7" maxW="md">
+                Masjid yang mengedepankan kenyamanan jamaah, transparansi
+                pengelolaan, dan program dakwah yang berkesan untuk kemajuan
+                umat Islam.
               </Text>
+
+              {/* Contact Info */}
+              <VStack align="start" spacing={3} mt={4}>
+                <HStack spacing={3}>
+                  <Icon as={FaMapMarkerAlt} color="orange.400" boxSize={4} />
+                  <Text fontSize="sm" color="gray.300" lineHeight="1.6">
+                    Citra Land Tallasa City, Kapasa, Kec. Tamalanrea, Kota
+                    Makassar, Sulawesi Selatan 90241
+                  </Text>
+                </HStack>
+              </VStack>
             </VStack>
 
             {/* Quick Links */}
             <VStack align="start" spacing={4}>
-              <Text fontWeight="700" color="gray.900" fontSize="lg">
-                Quick Links
-              </Text>
+              <Heading fontSize="lg" fontWeight="700" color="white">
+                Menu Utama
+              </Heading>
               <VStack align="start" spacing={3}>
                 {quickLinks.map((link) => (
                   <Link
-                    key={link}
-                    color="gray.800"
+                    key={link.name}
+                    href={link.href}
+                    color="gray.300"
                     _hover={{
-                      color: 'gray.900',
+                      color: 'orange.400',
                       transform: 'translateX(4px)',
                     }}
                     fontSize="sm"
                     fontWeight="500"
                     transition="all 0.3s"
                   >
-                    {link}
+                    {link.name}
                   </Link>
                 ))}
               </VStack>
             </VStack>
 
-            {/* Services */}
+            {/* Programs */}
             <VStack align="start" spacing={4}>
-              <Text fontWeight="700" color="gray.900" fontSize="lg">
-                Services
-              </Text>
+              <Heading fontSize="lg" fontWeight="700" color="white">
+                Program
+              </Heading>
               <VStack align="start" spacing={3}>
-                {services.map((service) => (
+                {programs.map((program) => (
                   <Link
-                    key={service}
-                    color="gray.800"
+                    key={program.name}
+                    href={program.href}
+                    color="gray.300"
                     _hover={{
-                      color: 'white',
+                      color: 'orange.400',
                       transform: 'translateX(4px)',
                     }}
                     fontSize="sm"
                     fontWeight="500"
                     transition="all 0.3s"
                   >
-                    {service}
+                    {program.name}
                   </Link>
                 ))}
               </VStack>
             </VStack>
 
-            {/* Social & Contact */}
+            {/* Prayer Times */}
             <VStack align="start" spacing={4}>
-              <Text fontWeight="700" color="gray.900" fontSize="lg">
-                Connect
-              </Text>
-              <VStack align="start" spacing={4}>
-                <HStack spacing={4}>
-                  <Link
-                    href="https://instagram.com/masjid.alkautsar.cltc"
-                    isExternal
-                    p={3}
-                    bg="gray.100"
-                    borderRadius="xl"
-                    _hover={{
-                      bg: 'gray.200',
-                      transform: 'translateY(-2px)',
-                    }}
-                    transition="all 0.3s"
-                  >
-                    <Icon as={FaInstagram} boxSize={5} color="pink.400" />
-                  </Link>
-                  <Link
-                    href="https://wa.me/628123456789"
-                    isExternal
-                    p={3}
-                    bg="gray.100"
-                    borderRadius="xl"
-                    _hover={{
-                      bg: 'gray.200',
-                      transform: 'translateY(-2px)',
-                    }}
-                    transition="all 0.3s"
-                  >
-                    <Icon as={FaWhatsapp} boxSize={5} color="green.400" />
-                  </Link>
-                </HStack>
-                <Text color="gray.400" fontSize="sm" lineHeight="1.6">
-                  Follow our journey and stay connected with the community
-                </Text>
+              <HStack spacing={2}>
+                <Icon as={FaClock} color="orange.400" boxSize={5} />
+                <Heading fontSize="lg" fontWeight="700" color="white">
+                  Jadwal Sholat
+                </Heading>
+              </HStack>
+              <VStack align="start" spacing={2} w="full">
+                {prayerTimes.map((prayer) => (
+                  <HStack key={prayer.name} justify="space-between" w="full">
+                    <Text fontSize="sm" color="gray.300" fontWeight="500">
+                      {prayer.name}
+                    </Text>
+                    <Text fontSize="sm" color="orange.300" fontWeight="600">
+                      {prayer.time}
+                    </Text>
+                  </HStack>
+                ))}
               </VStack>
+              <Text fontSize="xs" color="gray.400" mt={2}>
+                *Waktu lokal Makassar
+              </Text>
             </VStack>
           </SimpleGrid>
 
-          {/* Bottom Bar */}
-          <Box borderTop="1px solid rgba(0, 0, 0, 0.1)" pt={8} w="full">
-            <Flex
-              justify="space-between"
-              align="center"
-              direction={{ base: 'column', md: 'row' }}
-              gap={4}
-            >
-              <Text color="gray.400" fontSize="sm">
-                © 2025 Masjid Al-Kautsar CitraLand Tallasa City. All rights
-                reserved.
-              </Text>
-              <Text color="gray.700" fontSize="sm" fontWeight="500">
-                Crafted with ❤️ for the Ummah
-              </Text>
-            </Flex>
-          </Box>
+          <Divider borderColor="gray.600" />
+
+          {/* Social Media & Bottom Section */}
+          <VStack spacing={8} w="full">
+            {/* Social Media */}
+            <VStack spacing={4}>
+              <Heading
+                fontSize="lg"
+                fontWeight="700"
+                color="white"
+                textAlign="center"
+              >
+                Ikuti Kami
+              </Heading>
+              <HStack spacing={6}>
+                <Link
+                  href="https://instagram.com/masjid.alkautsar.cltc"
+                  isExternal
+                  w={16}
+                  h={16}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  bg="whiteAlpha.100"
+                  borderRadius="xl"
+                  _hover={{
+                    bg: 'whiteAlpha.200',
+                    transform: 'translateY(-2px)',
+                    shadow: '0 8px 25px rgba(245, 158, 11, 0.3)',
+                  }}
+                  transition="all 0.3s"
+                >
+                  <Icon as={FaInstagram} boxSize={6} color="pink.400" />
+                </Link>
+                <Link
+                  href="https://www.youtube.com/@MasjidAlKautsarCLTC"
+                  isExternal
+                  w={16}
+                  h={16}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  bg="whiteAlpha.100"
+                  borderRadius="xl"
+                  _hover={{
+                    bg: 'whiteAlpha.200',
+                    transform: 'translateY(-2px)',
+                    shadow: '0 8px 25px rgba(255, 0, 0, 0.3)',
+                  }}
+                  transition="all 0.3s"
+                >
+                  <Icon as={FaYoutube} boxSize={6} color="red.400" />
+                </Link>
+                <Link
+                  href="https://wa.me/6281145678990"
+                  isExternal
+                  w={16}
+                  h={16}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  bg="whiteAlpha.100"
+                  borderRadius="xl"
+                  _hover={{
+                    bg: 'whiteAlpha.200',
+                    transform: 'translateY(-2px)',
+                    shadow: '0 8px 25px rgba(34, 197, 94, 0.3)',
+                  }}
+                  transition="all 0.3s"
+                >
+                  <Icon as={FaWhatsapp} boxSize={6} color="green.400" />
+                </Link>
+              </HStack>
+            </VStack>
+
+            {/* Bottom Bar */}
+            <Box borderTop="1px solid" borderColor="gray.600" pt={8} w="full">
+              <Flex
+                justify="space-between"
+                align="center"
+                direction={{ base: 'column', md: 'row' }}
+                gap={4}
+              >
+                <Text color="gray.400" fontSize="sm">
+                  © 2024 Masjid Al-Kautsar CitraLand Tallasa City. Hak cipta
+                  dilindungi.
+                </Text>
+                <HStack spacing={2}>
+                  <Text color="gray.400" fontSize="sm">
+                    Dibuat dengan
+                  </Text>
+                  <Icon as={FaHeart} color="red.400" boxSize={4} />
+                  <Text color="gray.400" fontSize="sm">
+                    untuk umat
+                  </Text>
+                </HStack>
+              </Flex>
+            </Box>
+          </VStack>
         </VStack>
       </Container>
     </Box>

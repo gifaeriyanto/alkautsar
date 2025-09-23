@@ -105,23 +105,26 @@ const Features = () => {
             >
               Fasilitas Masjid
             </Text>
-            <Heading
-              as="h2"
-              fontSize={{ base: '3xl', md: '5xl' }}
-              fontWeight="800"
-              lineHeight="1.2"
-              color="gray.900"
-            >
-              Fasilitas Lengkap
-              <Text
-                as="span"
-                display="block"
-                color="gray.700"
+            <VStack spacing={2}>
+              <Heading
+                as="h2"
+                fontSize={{ base: '3xl', md: '5xl' }}
+                fontWeight="800"
+                lineHeight="1.2"
+                color="gray.900"
+              >
+                Fasilitas Lengkap
+              </Heading>
+              <Heading
+                as="h3"
                 fontSize={{ base: '2xl', md: '4xl' }}
+                fontWeight="800"
+                lineHeight="1.2"
+                color="gray.700"
               >
                 untuk Umat
-              </Text>
-            </Heading>
+              </Heading>
+            </VStack>
           </VStack>
 
           {/* Feature Grid */}
