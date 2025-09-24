@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react'
 import {
   FaInstagram,
-  FaWhatsapp,
+  FaFacebook,
   FaYoutube,
   FaMapMarkerAlt,
   FaClock,
@@ -212,7 +212,7 @@ const Footer = () => {
               </Heading>
               <HStack spacing={6}>
                 <Link
-                  href="https://instagram.com/masjid.alkautsar.cltc"
+                  href="https://www.instagram.com/masjid_alkautsar_cltc/"
                   isExternal
                   w={16}
                   h={16}
@@ -229,6 +229,25 @@ const Footer = () => {
                   transition="all 0.3s"
                 >
                   <Icon as={FaInstagram} boxSize={6} color="pink.400" />
+                </Link>
+                <Link
+                  href="https://www.facebook.com/profile.php?id=61568411123173"
+                  isExternal
+                  w={16}
+                  h={16}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  bg="whiteAlpha.100"
+                  borderRadius="xl"
+                  _hover={{
+                    bg: 'whiteAlpha.200',
+                    transform: 'translateY(-2px)',
+                    shadow: '0 8px 25px rgba(66, 103, 178, 0.3)',
+                  }}
+                  transition="all 0.3s"
+                >
+                  <Icon as={FaFacebook} boxSize={6} color="blue.400" />
                 </Link>
                 <Link
                   href="https://www.youtube.com/@MasjidAlKautsarCLTC"
@@ -248,25 +267,6 @@ const Footer = () => {
                   transition="all 0.3s"
                 >
                   <Icon as={FaYoutube} boxSize={6} color="red.400" />
-                </Link>
-                <Link
-                  href="https://wa.me/6281145678990"
-                  isExternal
-                  w={16}
-                  h={16}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  bg="whiteAlpha.100"
-                  borderRadius="xl"
-                  _hover={{
-                    bg: 'whiteAlpha.200',
-                    transform: 'translateY(-2px)',
-                    shadow: '0 8px 25px rgba(34, 197, 94, 0.3)',
-                  }}
-                  transition="all 0.3s"
-                >
-                  <Icon as={FaWhatsapp} boxSize={6} color="green.400" />
                 </Link>
               </HStack>
             </VStack>

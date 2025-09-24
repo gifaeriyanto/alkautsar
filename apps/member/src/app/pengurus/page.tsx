@@ -10,13 +10,12 @@ import {
   Container,
   Heading,
   HStack,
-  Icon,
   Link,
   SimpleGrid,
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { FaPlay, FaUserGraduate, FaUsers, FaYoutube } from 'react-icons/fa'
+import { FaPlay, FaYoutube } from 'react-icons/fa'
 import Footer from '../../_components/Footer'
 import Navigation from '../../_components/Navigation'
 
@@ -30,7 +29,6 @@ interface PengurusRole {
 interface SeksiData {
   name: string
   description: string
-  icon: any
   leader: PengurusRole
   members: PengurusRole[]
 }
@@ -136,7 +134,6 @@ const seksiSeksi: SeksiData[] = [
   {
     name: 'Ibadah dan Dakwah',
     description: 'Mengelola program ibadah, kajian, dan dakwah untuk jamaah',
-    icon: FaUserGraduate,
     leader: {
       name: 'H. Irwan, S.E., M.M.',
       position: 'Koordinator',
@@ -155,7 +152,6 @@ const seksiSeksi: SeksiData[] = [
   {
     name: 'Pendidikan',
     description: 'Mengelola program pendidikan dan pengembangan SDM',
-    icon: FaUserGraduate,
     leader: {
       name: 'Wahyuni Amiruddin, S.Kom.',
       position: 'Koordinator',
@@ -177,7 +173,6 @@ const seksiSeksi: SeksiData[] = [
     name: 'Sosial',
     description:
       'Mengatur kegiatan sosial, bakti sosial, dan hubungan kemasyarakatan',
-    icon: FaUsers,
     leader: {
       name: 'drg. Mohammad Gazali, MARS, Sp.BMM., Subsp TM, TMJ(K)',
       position: 'Koordinator',
@@ -201,7 +196,6 @@ const seksiSeksi: SeksiData[] = [
   {
     name: 'Pembinaan Pemuda dan Media',
     description: 'Membina pemuda dan mengelola media komunikasi masjid',
-    icon: FaUsers,
     leader: {
       name: 'apt. Fathul Kahar, S.Farm.',
       position: 'Koordinator',
@@ -220,7 +214,6 @@ const seksiSeksi: SeksiData[] = [
   {
     name: 'Dana dan Unit Pengumpul Zakat (UPZ)',
     description: 'Mengelola pengumpulan dan penyaluran zakat, infaq, dan sedekah',
-    icon: FaUsers,
     leader: {
       name: 'A. Irdiansyah Achmad, S.I.Kom',
       position: 'Koordinator',
@@ -240,7 +233,6 @@ const seksiSeksi: SeksiData[] = [
   {
     name: 'Pembangunan dan Pemeliharaan Masjid',
     description: 'Mengelola pembangunan dan pemeliharaan fasilitas masjid',
-    icon: FaUsers,
     leader: {
       name: 'H. Andi Muisdinillah Syam, S.E.,M.M',
       position: 'Koordinator',
@@ -259,7 +251,6 @@ const seksiSeksi: SeksiData[] = [
   {
     name: 'Perayaan Hari Besar Islam (PHBI)',
     description: 'Menyelenggarakan perayaan dan peringatan hari-hari besar Islam',
-    icon: FaUsers,
     leader: {
       name: 'dr. A. Irwansyah Achmad, Sp.B',
       position: 'Koordinator',
@@ -278,7 +269,6 @@ const seksiSeksi: SeksiData[] = [
   {
     name: "Pemberdayaan Wanita dan Majelis Ta'lim",
     description: 'Memberdayakan jamaah wanita dan mengelola majelis taklim',
-    icon: FaUsers,
     leader: {
       name: 'drg. Hermiyanti, M.Kes.',
       position: 'Koordinator',
@@ -389,17 +379,6 @@ const SeksiSection = ({ seksi }: { seksi: SeksiData }) => (
       px={8}
     >
       <VStack spacing={4}>
-        <Box
-          w="60px"
-          h="60px"
-          bg="white"
-          borderRadius="xl"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Icon as={seksi.icon} boxSize={8} color="orange.500" />
-        </Box>
         <VStack spacing={2} textAlign="center">
           <Heading size="md" textShadow="0 1px 2px rgba(0,0,0,0.1)">
             Seksi {seksi.name}
