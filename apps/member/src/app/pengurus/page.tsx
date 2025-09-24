@@ -149,6 +149,7 @@ const seksiSeksi: SeksiData[] = [
       { name: 'Hairil Anwar, S.Si.', position: 'Anggota' },
       { name: 'H. Hamzah', position: 'Anggota' },
       { name: 'Dr. Fahruddin, S.Si., M.T.', position: 'Anggota' },
+      { name: 'H. Bahtiar, S.I.P.,M.M', position: 'Anggota' },
     ],
   },
   {
@@ -169,6 +170,7 @@ const seksiSeksi: SeksiData[] = [
       { name: 'Dr. Indira Basalamah, S.E., M.Si.', position: 'Anggota' },
       { name: 'Hj. Marlina', position: 'Anggota' },
       { name: 'Avanti Artputri, S.E.', position: 'Anggota' },
+      { name: 'Yulmi Handayani, S.Pd.,M.Pd', position: 'Anggota' },
     ],
   },
   {
@@ -192,6 +194,8 @@ const seksiSeksi: SeksiData[] = [
       { name: 'dr. Azis Beru Gani, Sp.B.', position: 'Anggota' },
       { name: 'dr. Zulham Effendy Mandar, Sp.B.', position: 'Anggota' },
       { name: 'dr. A. Adil, Sp.A.', position: 'Anggota' },
+      { name: 'dr. Cahya Ramdhani Sila', position: 'Anggota' },
+      { name: 'Dr. Arfan Sanusi, Sp.PD.,FINASIM', position: 'Anggota' },
     ],
   },
   {
@@ -210,6 +214,65 @@ const seksiSeksi: SeksiData[] = [
       { name: 'Syahran Satria Ramadhan', position: 'Anggota' },
       { name: 'Sakila Putri Nandila', position: 'Anggota' },
       { name: 'Murniati', position: 'Anggota' },
+      { name: 'Lily Susiana, S.M', position: 'Anggota' },
+    ],
+  },
+  {
+    name: 'Dana dan Unit Pengumpul Zakat (UPZ)',
+    description: 'Mengelola pengumpulan dan penyaluran zakat, infaq, dan sedekah',
+    icon: FaUsers,
+    leader: {
+      name: 'A. Irdiansyah Achmad, S.I.Kom',
+      position: 'Koordinator',
+    },
+    members: [
+      { name: 'H. Abdul Rauf Kamil, S.H', position: 'Wakil' },
+      { name: 'H. Bahtiar, S.E.,M.H', position: 'Anggota' },
+      { name: 'H. Usman Mustamin', position: 'Anggota' },
+      { name: 'Achmad Maulana Ibrahim, S.T', position: 'Anggota' },
+      { name: 'dr. Nur Surya Wirawan, Sp.An', position: 'Anggota' },
+      { name: 'Haryawan', position: 'Anggota' },
+      { name: 'H. Abdul Azis', position: 'Anggota' },
+      { name: 'Muh. Arsyad, S.H', position: 'Anggota' },
+      { name: 'Muhammad Ilyas Toha', position: 'Anggota' },
+    ],
+  },
+  {
+    name: 'Pembangunan dan Pemeliharaan Masjid',
+    description: 'Mengelola pembangunan dan pemeliharaan fasilitas masjid',
+    icon: FaUsers,
+    leader: {
+      name: 'H. Andi Muisdinillah Syam, S.E.,M.M',
+      position: 'Koordinator',
+    },
+    members: [
+      { name: 'H. Jamaluddin', position: 'Wakil' },
+      { name: 'Ir. Hasan Basri, M.T', position: 'Anggota' },
+      { name: 'Januar Arie Mahmuda, S.T.,M.T', position: 'Anggota' },
+      { name: 'H. Herianto', position: 'Anggota' },
+      { name: 'Zainal', position: 'Anggota' },
+      { name: 'Dian Apriadie (CLTC)', position: 'Anggota' },
+      { name: 'Ahmad Nur (CLTC)', position: 'Anggota' },
+      { name: 'Darmayanto (CLTC)', position: 'Anggota' },
+    ],
+  },
+  {
+    name: 'Perayaan Hari Besar Islam (PHBI)',
+    description: 'Menyelenggarakan perayaan dan peringatan hari-hari besar Islam',
+    icon: FaUsers,
+    leader: {
+      name: 'dr. A. Irwansyah Achmad, Sp.B',
+      position: 'Koordinator',
+    },
+    members: [
+      { name: 'H. Muhammad Agus, S.T.,M.H', position: 'Wakil' },
+      { name: 'dr. Alauddin Jusuf, Sp.An.,M.Kes', position: 'Anggota' },
+      { name: 'Syamsuddin Suaebu', position: 'Anggota' },
+      { name: 'Hj. Rahmatia, S.E', position: 'Anggota' },
+      { name: 'drg. Siti Magfirah Ali Polanunu, Sp.Pros', position: 'Anggota' },
+      { name: 'dr. Yusfiana', position: 'Anggota' },
+      { name: 'Feratamy Tenri Ampa, S.I.Kom', position: 'Anggota' },
+      { name: 'Nur Samsu, S.P.,M.Si', position: 'Anggota' },
     ],
   },
   {
@@ -229,6 +292,7 @@ const seksiSeksi: SeksiData[] = [
       { name: 'Widyasrini Anas, S.E.', position: 'Anggota' },
       { name: 'drg. Husnah Husein, M.K.G.', position: 'Anggota' },
       { name: 'dr. Ferawati Amra', position: 'Anggota' },
+      { name: 'Lindah', position: 'Anggota' },
     ],
   },
 ]
