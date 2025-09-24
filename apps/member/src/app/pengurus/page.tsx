@@ -9,6 +9,7 @@ import {
   Card,
   Container,
   Heading,
+  HStack,
   Icon,
   Link,
   SimpleGrid,
@@ -347,55 +348,64 @@ const SeksiSection = ({ seksi }: { seksi: SeksiData }) => (
     </Box>
 
     {/* Content */}
-    <VStack spacing={8} p={8}>
+    <VStack
+      spacing={{ base: 8, md: 10 }}
+      p={{ base: 6, md: 8 }}
+      w="full"
+      align="stretch"
+    >
       {/* Leader */}
-      <Box w="full">
-        <Text
-          fontSize="sm"
-          fontWeight="600"
-          color="gray.700"
-          textTransform="uppercase"
-          letterSpacing="wide"
-          mb={4}
-          textAlign="center"
-        >
-          Ketua Seksi
-        </Text>
-        <PengurusCard pengurus={seksi.leader} />
-      </Box>
+      <HStack spacing={4} align="flex-start">
+        <Avatar
+          size="lg"
+          src={seksi.leader.photo}
+          name={seksi.leader.name}
+          bg="orange.500"
+          color="white"
+          border="3px solid"
+          borderColor="orange.100"
+          flexShrink={0}
+        />
+        <VStack spacing={2} align="start" flex="1" mt={1}>
+          <Text
+            fontSize={{ base: 'md', md: 'lg' }}
+            color="gray.900"
+            fontWeight="600"
+            lineHeight="1.4"
+          >
+            {seksi.leader.name}
+          </Text>
+          <Badge
+            colorScheme="orange"
+            size="md"
+            borderRadius="full"
+            fontSize="sm"
+            fontWeight="600"
+          >
+            {seksi.leader.position}
+          </Badge>
+        </VStack>
+      </HStack>
 
       {/* Members */}
-      <Box w="full">
-        <Text
-          fontSize="sm"
-          fontWeight="600"
-          color="gray.700"
-          textTransform="uppercase"
-          letterSpacing="wide"
-          mb={4}
-          textAlign="center"
-        >
-          Anggota Seksi
-        </Text>
-        <VStack spacing={3} align="stretch">
-          {seksi.members.map((member, index) => (
+      <VStack spacing={3} align="stretch" w="full">
+        {seksi.members.map((member, index) => (
+          <HStack key={index} spacing={3} align="flex-start">
             <Box
-              key={index}
-              p={3}
-              bg="gray.50"
-              borderRadius="lg"
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              _hover={{
-                bg: 'orange.50',
-                borderColor: 'orange.200',
-              }}
-              transition="all 0.2s ease"
-              border="1px solid"
-              borderColor="gray.200"
-            >
-              <Text fontWeight="600" color="gray.800" fontSize="sm">
+              w="6px"
+              h="6px"
+              bg="orange.400"
+              borderRadius="full"
+              flexShrink={0}
+              mt={2}
+            />
+            <VStack spacing={1} align="start" flex="1">
+              <Text
+                fontSize={{ base: 'sm', md: 'md' }}
+                color="gray.800"
+                fontWeight="500"
+                lineHeight="1.4"
+              >
                 {member.name}
               </Text>
               <Badge
@@ -406,10 +416,10 @@ const SeksiSection = ({ seksi }: { seksi: SeksiData }) => (
               >
                 {member.position}
               </Badge>
-            </Box>
-          ))}
-        </VStack>
-      </Box>
+            </VStack>
+          </HStack>
+        ))}
+      </VStack>
     </VStack>
   </Card>
 )
@@ -606,15 +616,6 @@ const PengurusPage = () => {
           <VStack spacing={20}>
             {/* Section Header */}
             <VStack spacing={6} textAlign="center" maxW="3xl">
-              <Text
-                fontSize="sm"
-                fontWeight="700"
-                letterSpacing="wider"
-                color="gray.600"
-                textTransform="uppercase"
-              >
-                Pengurus Inti
-              </Text>
               <Heading
                 as="h2"
                 fontSize={{ base: '3xl', md: '5xl' }}
@@ -655,15 +656,6 @@ const PengurusPage = () => {
           <VStack spacing={20}>
             {/* Section Header */}
             <VStack spacing={6} textAlign="center" maxW="3xl">
-              <Text
-                fontSize="sm"
-                fontWeight="700"
-                letterSpacing="wider"
-                color="gray.600"
-                textTransform="uppercase"
-              >
-                Dewan Penasehat
-              </Text>
               <Heading
                 as="h2"
                 fontSize={{ base: '3xl', md: '5xl' }}
@@ -707,15 +699,6 @@ const PengurusPage = () => {
           <VStack spacing={20}>
             {/* Section Header */}
             <VStack spacing={6} textAlign="center" maxW="3xl">
-              <Text
-                fontSize="sm"
-                fontWeight="700"
-                letterSpacing="wider"
-                color="gray.600"
-                textTransform="uppercase"
-              >
-                Seksi-Seksi
-              </Text>
               <Heading
                 as="h2"
                 fontSize={{ base: '3xl', md: '5xl' }}
@@ -737,7 +720,12 @@ const PengurusPage = () => {
             </VStack>
 
             {/* Seksi Grid */}
-            <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={12} w="full">
+            <SimpleGrid
+              columns={{ base: 1, xl: 2 }}
+              spacing={{ base: 8, md: 12, lg: 16 }}
+              w="full"
+              maxW="8xl"
+            >
               {seksiSeksi.map((seksi, index) => (
                 <SeksiSection key={index} seksi={seksi} />
               ))}
