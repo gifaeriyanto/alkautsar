@@ -83,8 +83,8 @@ const Hero = () => {
               <Heading
                 as="h1"
                 fontSize={{
-                  base: '64px',
-                  sm: '80px',
+                  base: '44px',
+                  sm: '70px',
                   md: '96px',
                   lg: '120px',
                   xl: '140px',
@@ -168,7 +168,7 @@ const Hero = () => {
           right={0}
           h="100%"
           bgImage="url('/images/mosque-front.png')"
-          bgSize="100% auto"
+          bgSize={{ base: '700px auto', md: '100% auto' }}
           bgPosition="center bottom"
           bgRepeat="no-repeat"
           zIndex={3}

@@ -1,12 +1,18 @@
 import { usePathname } from 'next/navigation'
 import { useMemo } from 'react'
 import { BiHomeAlt2 } from 'react-icons/bi'
+import { HiUsers } from 'react-icons/hi'
 
 const MENUS = [
   {
     label: 'Beranda',
     link: '/',
     icon: <BiHomeAlt2 />,
+  },
+  {
+    label: 'Pengurus',
+    link: '/pengurus',
+    icon: <HiUsers />,
   },
 ]
 

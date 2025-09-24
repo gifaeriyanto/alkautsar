@@ -2,49 +2,68 @@
 'use client'
 
 import {
+  Badge,
   Box,
+  Button,
   Card,
   Container,
   Heading,
+  HStack,
   Image,
   SimpleGrid,
+  Stack,
   Text,
   VStack,
-  Badge,
-  Stack,
-  HStack,
 } from '@chakra-ui/react'
+import { useState } from 'react'
 
 const Imams = () => {
+  const [expandedImam, setExpandedImam] = useState<number | null>(null)
+
+  const toggleExpanded = (index: number) => {
+    setExpandedImam(expandedImam === index ? null : index)
+  }
+
   const imams = [
     {
-      name: 'Imam Naldi',
+      name: 'Muh. Rinaldi Ruslan',
       image: '/images/imam-naldi.jpeg',
-      title: 'Imam Masjid',
+      title: 'Imam Masjid 1',
       achievements: [
         'Hafiz Al-Quran 30 Juz',
-        'Sarjana Syariah',
-        'Pengalaman 10+ Tahun',
-        'Ahli Tafsir & Hadits',
+        'Juara 1 Hifdil Quran 30 Juz Kategori Nasional Musabaqah Hifdil Quran (2025)',
+        'Juara 1 MHQ 20 Juz Kategori Musabaqah Tilawatil Quran Mahasiswa (2025)',
+        'Juara 1 Hifdil Quran 30 Juz Kategori Musabaqah Hifdil Quran IKMN Makassar (2024)',
+        'Juara 2 MHQ 20 Juz Kategori Musabaqah Tilawatil Quran Mahasiswa (2024)',
+        'Juara 3 Musabaqah Tilawatil Quran Kategori Musabaqah Tilawatil Quran Mahasiswa (2024)',
+        'Juara 5 PTON (Pekan Tilawatil Quran Nasional) RRI Tahfidz Kategori Yogyakarta City (2024)',
+        'Juara 1 PTQ (Pekan Tilawatil Quran) RRI Makassar Regional South Sulawesi (2024)',
+        'Juara 5 MTQMN (Musabaqah Tilawatil Quran Mahasiswa Nasional) (2023)',
+        'Juara 1 MTQPN (Musabaqah Tilawatil Quran Pelajar Nasional) (2022)',
+        'Juara 1 FCQ (Festival Cerdas Quran) Hifdil Quran 10 Juz (2022)',
+        'Alumni PPTQ Al-Imam Ashim Makassar',
+        'Mahasiswa Sistem Informasi Unhas',
       ],
       abilities: [
         'Memimpin Sholat 5 Waktu',
-        'Khutbah Jumat Inspiratif',
-        'Kajian Tafsir Al-Quran',
-        'Konseling Keluarga Islam',
-        'Pembinaan Remaja Masjid',
+        'Supervisi Program Tahfiz',
+        "Pembinaan Qur'an Mahasiswa",
+        'Koordinasi Kegiatan Ekstrakurikuler',
+        "Mentoring Tilawah Al-Qur'an",
       ],
-      specialization: 'Tafsir & Hadits',
+      specialization: "Tahfiz & Tilawah Al-Qur'an",
     },
     {
-      name: 'Imam Mahmud',
+      name: 'Imam Mahmud Maro',
       image: '/images/imam-mahmud.jpeg',
-      title: 'Imam Muda',
+      title: 'Imam Masjid 2',
       achievements: [
         'Hafiz Al-Quran 30 Juz',
-        'Alumni Pesantren Gontor',
-        'Juara MTQ Nasional',
-        'Sertifikat Qiraat 7',
+        'Alumni Pesantren Modern Darussalam Gontor',
+        'Juara MTQ (Musabaqah Tilawatil Quran) Nasional',
+        "Sertifikat Qiraat Sab'ah (7 Qiraat)",
+        'Pembina Tahfiz Regional Sulawesi Selatan',
+        'Instruktur Qiraat Bersertifikat',
       ],
       abilities: [
         'Memimpin Sholat Tarawih',
@@ -62,7 +81,7 @@ const Imams = () => {
       position="relative"
       py={32}
       px={{ base: 6, md: 12, lg: 16 }}
-      bg="white"
+      bg="linear-gradient(to bottom, rgba(249, 250, 251, 1) 0%, rgba(243, 244, 246, 1) 100%)"
       data-section="imams"
     >
       <Container maxW="8xl">
@@ -111,149 +130,150 @@ const Imams = () => {
 
           {/* Imams Grid */}
           <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={12} w="full">
-            {imams.map((imam) => (
-              <Card
-                key={imam.name}
-                bg="white"
-                border="1px solid rgba(0, 0, 0, 0.08)"
-                borderRadius="2xl"
-                overflow="hidden"
-                _hover={{
-                  transform: 'translateY(-8px)',
-                  shadow: '0 25px 80px rgba(0, 0, 0, 0.15)',
-                  border: '1px solid rgba(245, 158, 11, 0.2)',
-                }}
-                transition="all 0.5s cubic-bezier(0.4, 0, 0.2, 1)"
-                position="relative"
-              >
-                {/* Image Section */}
-                <Box position="relative" h="400px" overflow="hidden">
-                  <Image
-                    src={imam.image}
-                    alt={imam.name}
-                    w="full"
-                    h="full"
-                    objectFit="cover"
-                    transition="transform 0.5s ease"
-                  />
-                  <Box
-                    position="absolute"
-                    bottom="0"
-                    left="0"
-                    right="0"
-                    h="50%"
-                    bgGradient="linear(to-t, rgba(0,0,0,0.8), transparent)"
-                  />
-                  <VStack
-                    position="absolute"
-                    bottom="6"
-                    left="6"
-                    align="start"
-                    spacing={2}
-                  >
-                    <Heading
-                      as="h3"
-                      fontSize="2xl"
-                      fontWeight="700"
-                      color="white"
-                      textShadow="0 2px 4px rgba(0,0,0,0.5)"
+            {imams.map((imam, imamIndex) => {
+              const isExpanded = expandedImam === imamIndex
+              const displayedAchievements = isExpanded
+                ? imam.achievements
+                : imam.achievements.slice(0, 3)
+              const hasMoreAchievements = imam.achievements.length > 3
+
+              return (
+                <Card
+                  key={imam.name}
+                  bg="white"
+                  border="1px solid rgba(0, 0, 0, 0.08)"
+                  borderRadius="2xl"
+                  overflow="hidden"
+                  _hover={{
+                    transform: 'translateY(-8px)',
+                    shadow: '0 25px 80px rgba(0, 0, 0, 0.15)',
+                    border: '1px solid rgba(245, 158, 11, 0.2)',
+                  }}
+                  transition="all 0.5s cubic-bezier(0.4, 0, 0.2, 1)"
+                  position="relative"
+                >
+                  {/* Image Section */}
+                  <Box position="relative" h="400px" overflow="hidden">
+                    <Image
+                      src={imam.image}
+                      alt={imam.name}
+                      w="full"
+                      h="full"
+                      objectFit="cover"
+                      transition="transform 0.5s ease"
+                    />
+                    <Box
+                      position="absolute"
+                      bottom="0"
+                      left="0"
+                      right="0"
+                      h="50%"
+                      bgGradient="linear(to-t, rgba(0,0,0,0.8), transparent)"
+                    />
+                    <VStack
+                      position="absolute"
+                      bottom="6"
+                      left="6"
+                      align="start"
+                      spacing={2}
                     >
-                      {imam.name}
-                    </Heading>
-                    <Badge
-                      colorScheme="orange"
-                      px={3}
-                      py={1}
-                      borderRadius="full"
-                      fontSize="sm"
-                      fontWeight="600"
-                    >
-                      {imam.title}
-                    </Badge>
+                      <Heading
+                        as="h3"
+                        fontSize="2xl"
+                        fontWeight="700"
+                        color="white"
+                        textShadow="0 2px 4px rgba(0,0,0,0.5)"
+                      >
+                        {imam.name}
+                      </Heading>
+                      <Badge
+                        colorScheme="orange"
+                        px={3}
+                        py={1}
+                        borderRadius="full"
+                        fontSize="sm"
+                        fontWeight="600"
+                      >
+                        {imam.title}
+                      </Badge>
+                    </VStack>
+                  </Box>
+
+                  {/* Content Section */}
+                  <VStack spacing={6} p={8} align="start">
+                    {/* Specialization */}
+                    <Box>
+                      <Text
+                        fontSize="sm"
+                        fontWeight="600"
+                        color="orange.600"
+                        textTransform="uppercase"
+                        letterSpacing="wide"
+                        mb={2}
+                      >
+                        Spesialisasi
+                      </Text>
+                      <Text fontSize="lg" fontWeight="700" color="gray.900">
+                        {imam.specialization}
+                      </Text>
+                    </Box>
+
+                    {/* Achievements */}
+                    <Box w="full">
+                      <Text
+                        fontSize="sm"
+                        fontWeight="600"
+                        color="gray.700"
+                        textTransform="uppercase"
+                        letterSpacing="wide"
+                        mb={3}
+                      >
+                        Prestasi & Pendidikan
+                      </Text>
+                      <Stack spacing={2}>
+                        {displayedAchievements.map((achievement, idx) => (
+                          <HStack key={idx} spacing={3}>
+                            <Box
+                              w="6px"
+                              h="6px"
+                              bg="orange.400"
+                              borderRadius="full"
+                              flexShrink={0}
+                            />
+                            <Text fontSize="sm" color="gray.600">
+                              {achievement}
+                            </Text>
+                          </HStack>
+                        ))}
+                      </Stack>
+
+                      {/* Show More/Less Button */}
+                      {hasMoreAchievements ? (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          colorScheme="orange"
+                          onClick={() => {
+                            toggleExpanded(imamIndex)
+                          }}
+                          mt={3}
+                          fontWeight="600"
+                          _hover={{
+                            bg: 'orange.50',
+                          }}
+                        >
+                          {isExpanded
+                            ? `Tampilkan Lebih Sedikit`
+                            : `Tampilkan ${
+                                imam.achievements.length - 3
+                              } Lainnya`}
+                        </Button>
+                      ) : null}
+                    </Box>
                   </VStack>
-                </Box>
-
-                {/* Content Section */}
-                <VStack spacing={6} p={8} align="start">
-                  {/* Specialization */}
-                  <Box>
-                    <Text
-                      fontSize="sm"
-                      fontWeight="600"
-                      color="orange.600"
-                      textTransform="uppercase"
-                      letterSpacing="wide"
-                      mb={2}
-                    >
-                      Spesialisasi
-                    </Text>
-                    <Text fontSize="lg" fontWeight="700" color="gray.900">
-                      {imam.specialization}
-                    </Text>
-                  </Box>
-
-                  {/* Achievements */}
-                  <Box w="full">
-                    <Text
-                      fontSize="sm"
-                      fontWeight="600"
-                      color="gray.700"
-                      textTransform="uppercase"
-                      letterSpacing="wide"
-                      mb={3}
-                    >
-                      Prestasi & Pendidikan
-                    </Text>
-                    <Stack spacing={2}>
-                      {imam.achievements.map((achievement, idx) => (
-                        <HStack key={idx} spacing={3}>
-                          <Box
-                            w="6px"
-                            h="6px"
-                            bg="orange.400"
-                            borderRadius="full"
-                            flexShrink={0}
-                          />
-                          <Text fontSize="sm" color="gray.600">
-                            {achievement}
-                          </Text>
-                        </HStack>
-                      ))}
-                    </Stack>
-                  </Box>
-
-                  {/* Abilities */}
-                  <Box w="full">
-                    <Text
-                      fontSize="sm"
-                      fontWeight="600"
-                      color="gray.700"
-                      textTransform="uppercase"
-                      letterSpacing="wide"
-                      mb={3}
-                    >
-                      Keahlian & Bidang Dakwah
-                    </Text>
-                    <Stack spacing={2}>
-                      {imam.abilities.map((ability, idx) => (
-                        <HStack key={idx} spacing={3}>
-                          <Box
-                            w="6px"
-                            h="6px"
-                            bg="green.400"
-                            borderRadius="full"
-                            flexShrink={0}
-                          />
-                          <Text fontSize="sm" color="gray.600">
-                            {ability}
-                          </Text>
-                        </HStack>
-                      ))}
-                    </Stack>
-                  </Box>
-                </VStack>
-              </Card>
-            ))}
+                </Card>
+              )
+            })}
           </SimpleGrid>
         </VStack>
       </Container>
