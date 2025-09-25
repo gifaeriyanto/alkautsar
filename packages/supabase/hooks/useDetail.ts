@@ -3,7 +3,7 @@ import { getCRUDBase } from '..'
 import { Database, Tables } from '../types/database'
 
 export const useDetail = <
-  T extends keyof (Database['public']['Tables'] & Database['public']['Views']),
+  T extends keyof (Database['public']['Tables']  ),
 >(
   table: T,
   id: string,

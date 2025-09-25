@@ -1,1 +1,6 @@
 migrations
+seeds
+scripts
+types
+*.sql
+*.sh

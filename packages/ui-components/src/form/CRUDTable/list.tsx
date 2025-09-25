@@ -39,6 +39,7 @@ import Link from 'next/link'
 import React, { useCallback, useMemo, useState } from 'react'
 import { BiDotsVertical, BiNote, BiPlus, BiUser } from 'react-icons/bi'
 import { Database } from '@client/supabase/types/database'
+import { useRouter } from 'next/navigation'
 import {
   GeneralDatabaseTable,
   Pagination,
@@ -49,7 +50,6 @@ import {
   timeFormat,
   transformImage,
 } from '../..'
-import { useRouter } from 'next/navigation'
 
 interface FieldData {
   type: 'avatar' | 'photo' | 'date' | 'time' | 'text' | 'currency'
@@ -174,7 +174,7 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
     [isLargerThan1140]
   )
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   const renderItem = (
     type: FieldData['type'],
     value: any,
@@ -282,7 +282,7 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
     return `${baseUrl}/${item.id}`
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   const rowWrapper = (item: any, children: React.ReactNode) => {
     if (variant === 'table') {
       return <>{children}</>

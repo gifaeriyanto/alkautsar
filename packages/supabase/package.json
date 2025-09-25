@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "lint": "yarn eslint --fix --ext .tsx --ext .ts **/*",
+    "lint": "yarn eslint --fix --ext .tsx --ext .ts .",
     "supabase:gen:types": "bash ./scripts/gen-types.sh",
     "supabase:gen:types:ci": "npx supabase gen types typescript --project-id $PROJECT_ID > types/database.ts",
     "supabase:start": "npx supabase start",
