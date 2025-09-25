@@ -94,13 +94,23 @@ const ListData = ({ walletId }: { walletId: string }) => {
 
 const Page = () => {
   const { data: walletsData } = useList('wallets')
+  const { data: eventsData } = useList('events')
   const { id: walletId, setWallet } = useWallet()
   const [tabIndex, setTabIndex] = useState(0)
   const [isLargerThan1140] = useMediaQuery('(min-width: 1140px)')
 
   const filteredWallets = useMemo(() => {
-    return walletsData
-  }, [walletsData])
+    if (walletsData.length === 0) return []
+    if (eventsData.length === 0) return walletsData
+
+    // Get wallet IDs that are assigned to events
+    const assignedWalletIds = eventsData
+      .filter(event => event.wallet_id)
+      .map(event => event.wallet_id)
+
+    // Filter out wallets that are assigned to events
+    return walletsData.filter(wallet => !assignedWalletIds.includes(wallet.id))
+  }, [walletsData, eventsData])
   const activeTab = filteredWallets.findIndex((item) => item.id === walletId)
 
   const handleTabsChange = (index: number) => {

@@ -1,7 +1,7 @@
 import { useProfileData } from '@client/supabase'
 import { usePathname } from 'next/navigation'
 import { useMemo } from 'react'
-import { BiHomeAlt2, BiWallet } from 'react-icons/bi'
+import { BiHomeAlt2, BiWallet, BiCalendarEvent } from 'react-icons/bi'
 import { RiWallet3Line } from 'react-icons/ri'
 
 const getMenus = (isAdmin: boolean) => [
@@ -9,6 +9,7 @@ const getMenus = (isAdmin: boolean) => [
   { label: 'Laporan Keuangan', link: '/laporan-keuangan', icon: <BiWallet /> },
   ...(isAdmin
     ? [
+        { label: 'Kelola Event', link: '/events', icon: <BiCalendarEvent /> },
         { label: 'Kelola Wallet', link: '/wallets', icon: <RiWallet3Line /> },
       ]
     : []),
