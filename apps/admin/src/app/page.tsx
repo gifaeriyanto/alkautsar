@@ -107,12 +107,26 @@ const Report = ({
 
 const Page = () => {
   const { data: walletsData } = useList('wallets')
+  const { data: eventsData } = useList('events')
   const { start_date, end_date } = useMemo(getDateRange, [])
+
+  const filteredWallets = useMemo(() => {
+    if (walletsData.length === 0) return []
+    if (eventsData.length === 0) return walletsData
+
+    // Get wallet IDs that are assigned to events
+    const assignedWalletIds = eventsData
+      .filter(event => event.wallet_id)
+      .map(event => event.wallet_id)
+
+    // Filter out wallets that are assigned to events
+    return walletsData.filter(wallet => !assignedWalletIds.includes(wallet.id))
+  }, [walletsData, eventsData])
 
   return (
     <Layout.Body title="Beranda">
       <VStack w="full" align="stretch">
-        {walletsData.map((wallet) => (
+        {filteredWallets.map((wallet) => (
           <Box key={wallet.id}>
             <Text textStyle={TextStyle.H3} mb={2}>
               {wallet.name}
