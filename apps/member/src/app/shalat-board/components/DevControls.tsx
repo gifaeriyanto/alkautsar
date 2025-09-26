@@ -90,7 +90,7 @@ export const DevControls = ({
             <Text fontSize="xs" color="gray.300">
               ({currentActiveIndex + 1}/{totalPrayers})
             </Text>
-            {isIqamahMode && (
+            {isIqamahMode ? (
               <Badge
                 colorScheme="green"
                 fontSize="xs"
@@ -100,7 +100,7 @@ export const DevControls = ({
               >
                 IQAMAH
               </Badge>
-            )}
+            ) : null}
           </HStack>
         </Box>
       )}
