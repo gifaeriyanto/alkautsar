@@ -3,6 +3,7 @@ import { usePathname } from 'next/navigation'
 import { useMemo } from 'react'
 import { BiHomeAlt2, BiWallet, BiCalendarEvent } from 'react-icons/bi'
 import { RiWallet3Line } from 'react-icons/ri'
+import { MdDashboard } from 'react-icons/md'
 
 const getMenus = (isAdmin: boolean) => [
   { label: 'Beranda', link: '/', icon: <BiHomeAlt2 /> },
@@ -11,6 +12,7 @@ const getMenus = (isAdmin: boolean) => [
     ? [
         { label: 'Kelola Event', link: '/events', icon: <BiCalendarEvent /> },
         { label: 'Kelola Wallet', link: '/wallets', icon: <RiWallet3Line /> },
+        { label: 'Board Shalat', link: '/board', icon: <MdDashboard /> },
       ]
     : []),
 ]

@@ -1,0 +1,78 @@
+import { Flex, VStack, Icon, Text } from '@chakra-ui/react'
+import type { PrayerTime } from '../types'
+import {
+  getPrayerBackground,
+  getPrayerIcon,
+  formatTime,
+} from '../utils/prayerUtils'
+
+interface PrayerColumnProps {
+  prayer: PrayerTime
+  currentTime: Date
+}
+
+export const PrayerColumn = ({ prayer, currentTime }: PrayerColumnProps) => {
+  const IconComponent = getPrayerIcon(prayer.name)
+  const isCurrentPrayer = prayer.isActive
+
+  return (
+    <Flex
+      direction="column"
+      align="center"
+      justify="center"
+      className={`prayer-column ${isCurrentPrayer ? 'active' : 'inactive'}`}
+      color="white"
+      position="relative"
+      h="100vh"
+      p={8}
+      backgroundImage={`url('${getPrayerBackground(prayer.name)}')`}
+      backgroundSize="cover"
+      backgroundPosition="center"
+      backgroundRepeat="no-repeat"
+      _before={{
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        bg: 'linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.6) 100%)',
+        zIndex: 0,
+      }}
+    >
+      <VStack spacing={6} position="relative" zIndex={1}>
+        {/* Prayer Icon */}
+        <Icon as={IconComponent} fontSize="6xl" color="white" />
+
+        {/* Prayer Name */}
+        <Text fontSize="3xl" fontWeight="600" textAlign="center">
+          {prayer.name}
+        </Text>
+
+        {/* Current Time (only for active prayer) */}
+        {Boolean(isCurrentPrayer) && (
+          <Text
+            fontSize="2xl"
+            fontWeight="400"
+            className="mono-time"
+            opacity={0.8}
+          >
+            {formatTime(currentTime)}
+          </Text>
+        )}
+
+        {/* Prayer Time */}
+        <Text fontSize="4xl" fontWeight="500" className="mono-time">
+          {prayer.time}
+        </Text>
+
+        {/* Iqomah Time - Hide for Friday prayer */}
+        {Boolean(prayer.iqomah) && (
+          <Text fontSize="xl" fontWeight="400" opacity={0.7}>
+            Iqamah: {prayer.iqomah}
+          </Text>
+        )}
+      </VStack>
+    </Flex>
+  )
+}

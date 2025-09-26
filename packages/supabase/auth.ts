@@ -12,7 +12,7 @@ export const signIn = (email: string, password: string) => {
 }
 
 export const signOut = async (shouldReload = true) => {
-  await supabase.auth.signOut()
+  await supabase.auth.signOut({ scope: 'local' })
   if (shouldReload) {
     window.location.reload()
   }
