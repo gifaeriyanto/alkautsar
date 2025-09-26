@@ -1,24 +1,20 @@
 import {
-  Box,
-  HStack,
-  VStack,
-  Button,
-  Text,
-  Switch,
-  FormControl,
-  FormLabel,
   Badge,
-  IconButton,
+  Box,
+  Button,
   Collapse,
+  HStack,
+  IconButton,
+  Switch,
+  Text,
   useDisclosure,
 } from '@chakra-ui/react'
 import {
+  FiCalendar,
   FiChevronLeft,
   FiChevronRight,
-  FiCalendar,
   FiClock,
   FiMinimize2,
-  FiMaximize2,
   FiSettings,
 } from 'react-icons/fi'
 
