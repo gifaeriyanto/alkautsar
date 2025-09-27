@@ -129,6 +129,7 @@ export const useRealtimeList = <T extends keyof Database['public']['Tables']>(
     } finally {
       off()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     disabled,
     on,
@@ -136,7 +137,9 @@ export const useRealtimeList = <T extends keyof Database['public']['Tables']>(
     pageSize,
     table,
     select,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     deepCompareEffect(sort),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     deepCompareEffect(filters),
     setPage,
     off,
