@@ -1,6 +1,7 @@
 import { Box, Grid } from '@chakra-ui/react'
 import type { PrayerTime } from '../types'
 import { PrayerColumn } from './PrayerColumn'
+import { MainSlides } from './MainSlides'
 
 interface ShalatBoardProps {
   prayerTimes: PrayerTime[]
@@ -23,10 +24,16 @@ export const ShalatBoard = ({ prayerTimes, currentTime }: ShalatBoardProps) => {
         maxWidth: '100vw',
       }}
     >
-      {/* Six Column Prayer Times Layout */}
+      {/* Main Content Area - 60vh */}
+      <Box h="60vh" w="100vw" position="relative" zIndex={2}>
+        {/* Main Slides Component */}
+        <MainSlides prayerTimes={prayerTimes} currentTime={currentTime} />
+      </Box>
+
+      {/* Six Column Prayer Times Layout - 40vh */}
       <Grid
         templateColumns="repeat(6, 1fr)"
-        h="100vh"
+        h="40vh"
         w="100vw"
         position="relative"
         zIndex={2}

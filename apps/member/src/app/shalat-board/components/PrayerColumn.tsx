@@ -23,7 +23,7 @@ export const PrayerColumn = ({ prayer, currentTime }: PrayerColumnProps) => {
       className={`prayer-column ${isCurrentPrayer ? 'active' : 'inactive'}`}
       color="white"
       position="relative"
-      h="100vh"
+      h="40vh"
       p={8}
       backgroundImage={`url('${getPrayerBackground(prayer.name)}')`}
       backgroundSize="cover"

@@ -1,6 +1,7 @@
 export * from './useCRUD'
 export * from './useDetail'
 export * from './useList'
+export * from './useRealtimeList'
 export * from './useSubscribe'
 export * from './useUser'
 export * from './useProfileData'
