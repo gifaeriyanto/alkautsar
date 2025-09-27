@@ -84,7 +84,9 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
 
   useEffect(() => {
     walletsData.forEach((wallet) => {
-      getWalletSummary(wallet.id as string)
+      if (wallet.id) {
+        getWalletSummary(wallet.id)
+      }
     })
   }, [getWalletSummary, walletsData])
 

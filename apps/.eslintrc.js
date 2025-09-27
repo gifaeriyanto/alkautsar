@@ -5,6 +5,7 @@ module.exports = {
     'react/jsx-sort-props': 'off',
     '@typescript-eslint/no-floating-promises': 'off',
     '@typescript-eslint/no-misused-promises': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'eol-last': ['error', 'always'],
     camelcase: 'off',
     'react/no-unstable-nested-components': [
