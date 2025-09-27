@@ -95,13 +95,10 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
       (acc, curr) => {
         return {
           total_income:
-            acc.total_income +
-            (walletSummary?.[curr.id!]?.total_income || 0),
+            acc.total_income + (walletSummary?.[curr.id!]?.total_income || 0),
           total_expense:
-            acc.total_expense +
-            (walletSummary?.[curr.id!]?.total_expense || 0),
-          balance:
-            acc.balance + (walletSummary?.[curr.id!]?.balance || 0),
+            acc.total_expense + (walletSummary?.[curr.id!]?.total_expense || 0),
+          balance: acc.balance + (walletSummary?.[curr.id!]?.balance || 0),
         }
       },
       {
@@ -148,7 +145,7 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
           </Flex>
           {/* Current Time (only for active prayer) */}
           <Text
-            fontSize="180px"
+            fontSize="140px"
             fontWeight="400"
             className="mono-time"
             opacity={0.8}
