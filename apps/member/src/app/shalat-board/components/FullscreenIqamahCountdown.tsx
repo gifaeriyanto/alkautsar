@@ -42,6 +42,7 @@ export const FullscreenIqamahCountdown = ({
         backgroundSize="cover"
         backgroundPosition="center"
         backgroundRepeat="no-repeat"
+        backdropFilter="blur(10px) saturate(150%)"
         _before={{
           content: '""',
           position: 'absolute',
