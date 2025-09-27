@@ -16,6 +16,7 @@ import {
   FiClock,
   FiMinimize2,
   FiSettings,
+  FiSun,
 } from 'react-icons/fi'
 
 interface DevControlsProps {
@@ -24,10 +25,13 @@ interface DevControlsProps {
   isFridayMocked: boolean
   isIqamahMode: boolean
   hasIqamahTime: boolean
+  isSyuruqForbiddenMode: boolean
+  hasSyuruqTime: boolean
   onPreviousPrayer: () => void
   onNextPrayer: () => void
   onToggleFridayMock: () => void
   onToggleIqamahTimer: () => void
+  onToggleSyuruqForbiddenTimer: () => void
   onResetToRealTime: () => void
   isDevMode: boolean
 }
@@ -38,10 +42,13 @@ export const DevControls = ({
   isFridayMocked,
   isIqamahMode,
   hasIqamahTime,
+  isSyuruqForbiddenMode,
+  hasSyuruqTime,
   onPreviousPrayer,
   onNextPrayer,
   onToggleFridayMock,
   onToggleIqamahTimer,
+  onToggleSyuruqForbiddenTimer,
   onResetToRealTime,
   isDevMode,
 }: DevControlsProps) => {
@@ -99,6 +106,17 @@ export const DevControls = ({
                 borderRadius="6px"
               >
                 IQAMAH
+              </Badge>
+            ) : null}
+            {isSyuruqForbiddenMode ? (
+              <Badge
+                colorScheme="orange"
+                fontSize="xs"
+                px={2}
+                py={1}
+                borderRadius="6px"
+              >
+                SYURUQ
               </Badge>
             ) : null}
           </HStack>
@@ -221,6 +239,38 @@ export const DevControls = ({
               }}
             >
               {isIqamahMode ? 'Hide' : 'Iqamah'}
+            </Button>
+
+            {/* Syuruq Forbidden Timer */}
+            <Button
+              leftIcon={<FiSun />}
+              onClick={onToggleSyuruqForbiddenTimer}
+              size="xs"
+              variant={isSyuruqForbiddenMode ? 'solid' : 'outline'}
+              isDisabled={!hasSyuruqTime}
+              bg={isSyuruqForbiddenMode ? 'orange.500' : 'transparent'}
+              color={isSyuruqForbiddenMode ? 'white' : 'white'}
+              borderColor={
+                isSyuruqForbiddenMode
+                  ? 'orange.500'
+                  : 'rgba(255, 255, 255, 0.3)'
+              }
+              _hover={{
+                bg: isSyuruqForbiddenMode
+                  ? 'orange.600'
+                  : 'rgba(255, 255, 255, 0.2)',
+                borderColor: isSyuruqForbiddenMode
+                  ? 'orange.600'
+                  : 'rgba(255, 255, 255, 0.5)',
+                color: 'white',
+              }}
+              _disabled={{
+                opacity: 0.4,
+                cursor: 'not-allowed',
+                color: 'gray.400',
+              }}
+            >
+              {isSyuruqForbiddenMode ? 'Hide' : 'Syuruq'}
             </Button>
 
             {/* Friday Mock */}

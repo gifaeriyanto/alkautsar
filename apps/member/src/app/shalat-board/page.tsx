@@ -3,10 +3,11 @@
 import { usePrayerTimes } from './hooks/usePrayerTimes'
 import { useDevMode } from './hooks/useDevMode'
 import { useIqamahTimer } from './hooks/useIqamahTimer'
+import { useSyuruqForbiddenTime } from './hooks/useSyuruqForbiddenTime'
 import { ShalatBoard } from './components/ShalatBoard'
 import { DevControls } from './components/DevControls'
-import { IqamahTimer } from './components/IqamahTimer'
 import { FullscreenIqamahCountdown } from './components/FullscreenIqamahCountdown'
+import { FullscreenSyuruqForbiddenTime } from './components/FullscreenSyuruqForbiddenTime'
 import {
   ConfigurationLoading,
   PrayerTimesLoading,
@@ -46,6 +47,15 @@ const ShalatBoardPage = () => {
     currentPrayerWithIqamah,
   } = useIqamahTimer(prayerTimes, isDevMode)
 
+  // Syuruq forbidden time hook
+  const {
+    isForbiddenTime,
+    forbiddenCountdown,
+    shouldShowFullscreen: shouldShowForbiddenFullscreen,
+    syuruqTime,
+    toggleForbiddenMode,
+  } = useSyuruqForbiddenTime(prayerTimes, isDevMode)
+
   if (isLoading) {
     return prayerTimes.length === 0 ? (
       <ConfigurationLoading />
@@ -70,22 +80,25 @@ const ShalatBoardPage = () => {
         isFridayMocked={isFridayMocked}
         isIqamahMode={isIqamahMode}
         hasIqamahTime={Boolean(currentPrayerWithIqamah)}
+        isSyuruqForbiddenMode={isForbiddenTime}
+        hasSyuruqTime={Boolean(syuruqTime)}
         onPreviousPrayer={handlePreviousPrayer}
         onNextPrayer={handleNextPrayer}
         onToggleFridayMock={handleToggleFridayMock}
         onToggleIqamahTimer={toggleIqamahMode}
+        onToggleSyuruqForbiddenTimer={toggleForbiddenMode}
         onResetToRealTime={handleResetToRealTime}
         isDevMode={isDevMode}
-      />
-      <IqamahTimer
-        isVisible={Boolean(isIqamahMode && isDevMode && !shouldShowFullscreen)}
-        currentPrayer={currentPrayerWithIqamah}
-        countdown={iqamahCountdown}
       />
       <FullscreenIqamahCountdown
         isVisible={Boolean(shouldShowFullscreen && currentPrayerWithIqamah)}
         currentPrayer={currentPrayerWithIqamah}
         countdown={iqamahCountdown}
+      />
+      <FullscreenSyuruqForbiddenTime
+        isVisible={Boolean(shouldShowForbiddenFullscreen && isForbiddenTime)}
+        syuruqTime={syuruqTime}
+        countdown={forbiddenCountdown}
       />
     </>
   )
