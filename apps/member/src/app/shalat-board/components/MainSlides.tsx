@@ -141,7 +141,9 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
             fontWeight="bold"
           >
             <Text>{activePrayer?.name}</Text>
-            <Text>Iqamah {activePrayer?.time}</Text>
+            <Text hidden={!activePrayer?.iqomah}>
+              Adzan {activePrayer?.time}
+            </Text>
           </Flex>
           {/* Current Time (only for active prayer) */}
           <Text
@@ -196,7 +198,7 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
             zIndex: 0,
           }}
         >
-          <Text position="relative" zIndex={1}>
+          <Text position="relative" fontSize="lg" zIndex={1}>
             Laporan Keuangan {dateFormat(new Date(dateRange.start))} -{' '}
             {dateFormat(new Date(dateRange.end))}
           </Text>

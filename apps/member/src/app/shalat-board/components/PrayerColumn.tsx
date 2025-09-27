@@ -1,17 +1,12 @@
-import { Flex, VStack, Icon, Text } from '@chakra-ui/react'
+import { Flex, VStack, Icon, Text, Box } from '@chakra-ui/react'
 import type { PrayerTime } from '../types'
-import {
-  getPrayerBackground,
-  getPrayerIcon,
-  formatTime,
-} from '../utils/prayerUtils'
+import { getPrayerBackground, getPrayerIcon } from '../utils/prayerUtils'
 
 interface PrayerColumnProps {
   prayer: PrayerTime
-  currentTime: Date
 }
 
-export const PrayerColumn = ({ prayer, currentTime }: PrayerColumnProps) => {
+export const PrayerColumn = ({ prayer }: PrayerColumnProps) => {
   const IconComponent = getPrayerIcon(prayer.name)
   const isCurrentPrayer = prayer.isActive
 
@@ -40,7 +35,7 @@ export const PrayerColumn = ({ prayer, currentTime }: PrayerColumnProps) => {
         zIndex: 0,
       }}
     >
-      <VStack spacing={6} position="relative" zIndex={1}>
+      <VStack spacing={4} position="relative" zIndex={1}>
         {/* Prayer Icon */}
         <Icon as={IconComponent} fontSize="6xl" color="white" />
 
@@ -49,29 +44,15 @@ export const PrayerColumn = ({ prayer, currentTime }: PrayerColumnProps) => {
           {prayer.name}
         </Text>
 
-        {/* Current Time (only for active prayer) */}
-        {Boolean(isCurrentPrayer) && (
-          <Text
-            fontSize="2xl"
-            fontWeight="400"
-            className="mono-time"
-            opacity={0.8}
-          >
-            {formatTime(currentTime)}
-          </Text>
-        )}
-
         {/* Prayer Time */}
         <Text fontSize="4xl" fontWeight="500" className="mono-time">
           {prayer.time}
         </Text>
 
         {/* Iqomah Time - Hide for Friday prayer */}
-        {Boolean(prayer.iqomah) && (
-          <Text fontSize="xl" fontWeight="400" opacity={0.7}>
-            Iqamah: {prayer.iqomah}
-          </Text>
-        )}
+        <Box fontSize="xl" fontWeight="400" opacity={0.7} h="32px">
+          {Boolean(prayer.iqomah) && <>Iqamah: {prayer.iqomah}</>}
+        </Box>
       </VStack>
     </Flex>
   )

@@ -39,11 +39,7 @@ export const ShalatBoard = ({ prayerTimes, currentTime }: ShalatBoardProps) => {
         zIndex={2}
       >
         {prayerTimes.map((prayer) => (
-          <PrayerColumn
-            key={prayer.name}
-            prayer={prayer}
-            currentTime={currentTime}
-          />
+          <PrayerColumn key={prayer.name} prayer={prayer} />
         ))}
       </Grid>
     </Box>
