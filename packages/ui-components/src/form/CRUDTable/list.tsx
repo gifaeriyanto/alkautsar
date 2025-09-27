@@ -174,8 +174,8 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
     [isLargerThan1140]
   )
 
-   
-  const renderItem = (
+
+  const renderItem = useCallback((
     type: FieldData['type'],
     value: any,
     {
@@ -270,9 +270,9 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
       default:
         return null
     }
-  }
+  }, [isLargerThan1140])
 
-  const getDetailUrl = (item: any) => {
+  const getDetailUrl = useCallback((item: any) => {
     if (detailUrl) {
       if (typeof detailUrl === 'string') {
         return detailUrl
@@ -280,10 +280,9 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
       return detailUrl(item)
     }
     return `${baseUrl}/${item.id}`
-  }
+  }, [baseUrl, detailUrl])
 
-   
-  const rowWrapper = (item: any, children: React.ReactNode) => {
+  const rowWrapper = useCallback((item: any, children: React.ReactNode) => {
     if (variant === 'table') {
       return <>{children}</>
     }
@@ -291,7 +290,7 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
       return <Box>{children}</Box>
     }
     return <Link href={getDetailUrl(item)}>{children}</Link>
-  }
+  }, [variant, disableDetail, getDetailUrl])
 
   const actions = useCallback<any>(
     (item: any, index: number) => {
@@ -493,12 +492,15 @@ export const CRUDTable = <T extends GeneralDatabaseTable>({
     actions,
     data,
     disableDelete,
+    disableDetail,
     disableEdit,
     fields,
+    getDetailUrl,
     moreActions,
     renderCustomItem,
     renderEmptyState,
     renderItem,
+    router,
     rowWrapper,
     variant,
   ])
