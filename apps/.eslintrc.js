@@ -6,6 +6,7 @@ module.exports = {
     '@typescript-eslint/no-floating-promises': 'off',
     '@typescript-eslint/no-misused-promises': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
     'eol-last': ['error', 'always'],
     camelcase: 'off',
     'react/no-unstable-nested-components': [
