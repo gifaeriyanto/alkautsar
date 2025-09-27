@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
-import { useList } from '@client/supabase'
-import type { PrayerTime } from '../types'
+import { useRealtimeList } from '@client/supabase'
+import { useCallback, useEffect, useState } from 'react'
 import { ORGANIZATION_ID } from '../../../_constants'
+import type { PrayerTime } from '../types'
 
 interface UsePrayerTimesReturn {
   prayerTimes: PrayerTime[]
@@ -17,7 +17,7 @@ export const usePrayerTimes = (): UsePrayerTimesReturn => {
   const [error, setError] = useState<string | null>(null)
 
   // Fetch board configuration using hardcoded organization ID
-  const { data: boardConfig, isLoading: configLoading } = useList(
+  const { data: boardConfig, isLoading: configLoading } = useRealtimeList(
     'board_configs',
     {
       pageSize: 1,
