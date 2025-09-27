@@ -96,12 +96,12 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
         return {
           total_income:
             acc.total_income +
-            (walletSummary?.[curr.id as string]?.total_income || 0),
+            (walletSummary?.[curr.id!]?.total_income || 0),
           total_expense:
             acc.total_expense +
-            (walletSummary?.[curr.id as string]?.total_expense || 0),
+            (walletSummary?.[curr.id!]?.total_expense || 0),
           balance:
-            acc.balance + (walletSummary?.[curr.id as string]?.balance || 0),
+            acc.balance + (walletSummary?.[curr.id!]?.balance || 0),
         }
       },
       {
