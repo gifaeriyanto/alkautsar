@@ -1,7 +1,7 @@
 import { Center, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { getClient, useRealtimeList } from '@client/supabase'
 import type { Database } from '@client/supabase/types/database'
-import { currency, dateFormFormat } from '@client/ui-components'
+import { currency, dateFormat, dateFormFormat } from '@client/ui-components'
 import { previousFriday, startOfDay, subWeeks } from 'date-fns'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ORGANIZATION_ID } from '../../../_constants'
@@ -122,6 +122,7 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
         backgroundPosition="center"
         backgroundRepeat="no-repeat"
         color="white"
+        position="relative"
         _before={{
           content: '""',
           position: 'absolute',
@@ -160,11 +161,47 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
         h="100%"
         w="100%"
         bgColor="orange.500"
-        templateRows="repeat(3, 1fr)"
+        templateRows="50px repeat(3, 1fr)"
         color="white"
         fontSize="xx-large"
         fontWeight="bold"
       >
+        <Flex
+          color="white"
+          fontSize="xl"
+          fontWeight="bold"
+          bgColor="orange.400"
+          justify="center"
+          align="center"
+          backgroundImage={`url('${getPrayerBackground(
+            activePrayer?.name || ''
+          )}')`}
+          backgroundSize="cover"
+          backgroundPosition="center"
+          backgroundRepeat="no-repeat"
+          position="relative"
+          _before={{
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `url('${getPrayerBackground(
+              activePrayer?.name || ''
+            )}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            filter: 'blur(8px)',
+            zIndex: 0,
+          }}
+        >
+          <Text position="relative" zIndex={1}>
+            Laporan Keuangan {dateFormat(new Date(dateRange.start))} -{' '}
+            {dateFormat(new Date(dateRange.end))}
+          </Text>
+        </Flex>
         <Flex
           h="100%"
           bgColor="orange.500"
