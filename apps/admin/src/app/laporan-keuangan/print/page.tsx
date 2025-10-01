@@ -94,10 +94,10 @@ const Page = () => {
     if (!walletSummary) {
       return 0
     }
-    return Object.entries(walletSummary).reduce((prev, [_key, value]) => {
-      return prev + value.balance
+    return selectedWalletIds.reduce((prev, walletId) => {
+      return prev + (walletSummary[walletId]?.balance || 0)
     }, 0)
-  }, [walletSummary])
+  }, [walletSummary, selectedWalletIds])
 
   // Handler for wallet selection
   const handleWalletToggle = useCallback((walletId: string) => {

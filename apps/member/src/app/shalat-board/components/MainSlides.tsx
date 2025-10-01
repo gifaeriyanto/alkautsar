@@ -91,14 +91,20 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
   }, [getWalletSummary, walletsData])
 
   const allWalletSummary = useMemo(() => {
-    return walletsData.reduce(
-      (acc, curr) => {
+    if (!walletSummary) {
+      return {
+        total_income: 0,
+        total_expense: 0,
+        balance: 0,
+      }
+    }
+
+    return Object.values(walletSummary).reduce(
+      (acc, summary) => {
         return {
-          total_income:
-            acc.total_income + (walletSummary?.[curr.id!]?.total_income || 0),
-          total_expense:
-            acc.total_expense + (walletSummary?.[curr.id!]?.total_expense || 0),
-          balance: acc.balance + (walletSummary?.[curr.id!]?.balance || 0),
+          total_income: acc.total_income + summary.total_income,
+          total_expense: acc.total_expense + summary.total_expense,
+          balance: acc.balance + summary.balance,
         }
       },
       {
@@ -107,7 +113,7 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
         balance: 0,
       }
     )
-  }, [walletSummary, walletsData])
+  }, [walletSummary])
 
   return (
     <Grid templateColumns="4fr 2fr" h="100%" w="100%" bgColor="gray.800">
