@@ -133,7 +133,7 @@ const PrayerCard = ({ prayer }: { prayer: PrayerTime }) => {
           </Text>
         </VStack>
 
-        {prayer.iqomah && (
+        {prayer.iqomah ? (
           <VStack spacing={1}>
             <Text fontSize="xs" color="gray.500" fontWeight="600" textTransform="uppercase" letterSpacing="wide">
               Iqamah
@@ -147,7 +147,7 @@ const PrayerCard = ({ prayer }: { prayer: PrayerTime }) => {
               {prayer.iqomah}
             </Text>
           </VStack>
-        )}
+        ) : null}
       </VStack>
     </Card>
   )
@@ -158,6 +158,41 @@ const ShalatPage = () => {
 
   const activePrayer = prayerTimes.find((p) => p.isActive)
   const nextPrayer = prayerTimes.find((p) => p.isNext)
+
+  const renderPrayerTimesContent = () => {
+    if (isLoading) {
+      return (
+        <Center py={20}>
+          <VStack spacing={4}>
+            <Spinner size="xl" color="orange.500" thickness="4px" />
+            <Text color="gray.600" fontSize="lg">
+              Memuat jadwal shalat...
+            </Text>
+          </VStack>
+        </Center>
+      )
+    }
+
+    if (error) {
+      return (
+        <Center py={20}>
+          <VStack spacing={4}>
+            <Text color="red.500" fontSize="xl" fontWeight="600">
+              {error}
+            </Text>
+          </VStack>
+        </Center>
+      )
+    }
+
+    return (
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} w="full">
+        {prayerTimes.map((prayer) => (
+          <PrayerCard key={prayer.name} prayer={prayer} />
+        ))}
+      </SimpleGrid>
+    )
+  }
 
   return (
     <Box minH="100vh" bg="linear-gradient(to bottom, rgba(249, 250, 251, 1) 0%, rgba(243, 244, 246, 1) 100%)" color="gray.800">
@@ -235,16 +270,16 @@ const ShalatPage = () => {
                       hour12: false,
                     })}
                   </Text>
-                  {activePrayer && (
+                  {activePrayer ? (
                     <Text fontSize="lg" fontWeight="600" mt={2}>
                       Shalat {activePrayer.name} sedang berlangsung
                     </Text>
-                  )}
-                  {nextPrayer && !activePrayer && (
+                  ) : null}
+                  {nextPrayer && !activePrayer ? (
                     <Text fontSize="lg" fontWeight="600" mt={2}>
                       Shalat {nextPrayer.name} selanjutnya
                     </Text>
-                  )}
+                  ) : null}
                 </VStack>
               </Box>
             )}
@@ -255,30 +290,7 @@ const ShalatPage = () => {
       {/* Prayer Times Grid */}
       <Box py={20} px={{ base: 6, md: 12, lg: 16 }}>
         <Container maxW="8xl">
-          {isLoading ? (
-            <Center py={20}>
-              <VStack spacing={4}>
-                <Spinner size="xl" color="orange.500" thickness="4px" />
-                <Text color="gray.600" fontSize="lg">
-                  Memuat jadwal shalat...
-                </Text>
-              </VStack>
-            </Center>
-          ) : error ? (
-            <Center py={20}>
-              <VStack spacing={4}>
-                <Text color="red.500" fontSize="xl" fontWeight="600">
-                  {error}
-                </Text>
-              </VStack>
-            </Center>
-          ) : (
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} w="full">
-              {prayerTimes.map((prayer) => (
-                <PrayerCard key={prayer.name} prayer={prayer} />
-              ))}
-            </SimpleGrid>
-          )}
+          {renderPrayerTimesContent()}
         </Container>
       </Box>
 
