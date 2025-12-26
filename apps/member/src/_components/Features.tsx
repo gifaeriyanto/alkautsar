@@ -29,8 +29,7 @@ const Features = () => {
       description:
         'Ruang sholat modern dengan AC penuh dan karpet berkualitas tinggi untuk kenyamanan ibadah',
       gradient: 'linear(135deg, #F59E0B 0%, #FBBF24 100%)',
-      image:
-        'https://images.unsplash.com/photo-1564769625905-50e93615e769?w=400&h=300&fit=crop',
+      image: '/images/facilities/mosque-inside Medium.jpeg',
     },
     {
       icon: FaMosque,
@@ -39,8 +38,7 @@ const Features = () => {
       description:
         'Area parkir yang luas dan aman untuk kendaraan bermotor jamaah',
       gradient: 'linear(135deg, #FBBF24 0%, #FCD34D 100%)',
-      image:
-        'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
+      image: '/images/facilities/parkiran Medium.jpeg',
     },
     {
       icon: FaGraduationCap,
@@ -49,8 +47,7 @@ const Features = () => {
       description:
         'Area rekreasi dengan tenis meja dan pemandangan danau yang indah',
       gradient: 'linear(135deg, #F59E0B 0%, #FBBF24 100%)',
-      image:
-        'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=300&fit=crop',
+      image: '/images/facilities/tennis-table Medium.jpeg',
     },
     {
       icon: FaHeart,
@@ -59,8 +56,7 @@ const Features = () => {
       description:
         '2 unit TV monitor 100 inch untuk mendukung presentasi, kajian, dan berbagai kegiatan masjid',
       gradient: 'linear(135deg, #FCD34D 0%, #FEF3C7 100%)',
-      image:
-        'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=300&fit=crop',
+      image: '/images/facilities/monitor Medium.jpeg',
     },
     {
       icon: FaHeart,
@@ -69,8 +65,7 @@ const Features = () => {
       description:
         'Lingkungan asri dengan banyak pepohonan dan area hijau untuk relaksasi',
       gradient: 'linear(135deg, #10B981 0%, #34D399 100%)',
-      image:
-        'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop',
+      image: '/images/facilities/taman Medium.jpeg',
     },
     {
       icon: FaHeart,

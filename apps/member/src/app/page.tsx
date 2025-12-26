@@ -17,7 +17,10 @@ const Page = () => {
       <Features />
       <Imams />
       <LeaderQuote />
-      <BlogNews />
+      {/* TODO: Unhide when news/articles are available */}
+      <Box display="none">
+        <BlogNews />
+      </Box>
       <Footer />
     </Box>
   )
