@@ -135,15 +135,15 @@ const WalletCard = ({
           <Divider borderColor="gray.200" />
 
           {/* Summary Section */}
-          {isLoading && (
+          {isLoading ? (
             <VStack py={{ base: 6, md: 8 }}>
               <Spinner size={{ base: 'md', md: 'lg' }} color="orange.500" />
               <Text color="gray.500" fontSize="sm">
                 Memuat data...
               </Text>
             </VStack>
-          )}
-          {!isLoading && summary && (
+          ) : null}
+          {!isLoading && summary ? (
             <SimpleGrid
               columns={{ base: 1, sm: 3 }}
               spacing={{ base: 3, md: 4 }}
@@ -250,14 +250,14 @@ const WalletCard = ({
                 </VStack>
               </Box>
             </SimpleGrid>
-          )}
-          {!isLoading && !summary && (
+          ) : null}
+          {!isLoading && !summary ? (
             <Box py={4}>
               <Text color="gray.500" fontSize="sm" textAlign="center">
                 Tidak ada data
               </Text>
             </Box>
-          )}
+          ) : null}
 
           {/* Recent Reports */}
           {reports.length > 0 && (

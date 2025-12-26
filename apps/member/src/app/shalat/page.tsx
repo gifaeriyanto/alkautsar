@@ -71,7 +71,7 @@ const PrayerCard = ({ prayer }: { prayer: PrayerTime }) => {
           zIndex={2}
           spacing={2}
         >
-          {isCurrentPrayer && (
+          {isCurrentPrayer ? (
             <Badge
               colorScheme="orange"
               fontSize="xs"
@@ -83,8 +83,8 @@ const PrayerCard = ({ prayer }: { prayer: PrayerTime }) => {
             >
               Sedang Berlangsung
             </Badge>
-          )}
-          {isNextPrayer && !isCurrentPrayer && (
+          ) : null}
+          {isNextPrayer && !isCurrentPrayer ? (
             <Badge
               colorScheme="blue"
               fontSize="xs"
@@ -96,7 +96,7 @@ const PrayerCard = ({ prayer }: { prayer: PrayerTime }) => {
             >
               Selanjutnya
             </Badge>
-          )}
+          ) : null}
         </HStack>
 
         {/* Icon and Content */}

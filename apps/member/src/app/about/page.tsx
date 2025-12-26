@@ -110,9 +110,9 @@ const AboutPage = () => {
         <VStack spacing={16}>
           {/* About Sections */}
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8} w="full">
-            {aboutSections.map((section, index) => (
+            {aboutSections.map((section) => (
               <Card
-                key={index}
+                key={section.title}
                 bg="white"
                 border="1px solid rgba(0, 0, 0, 0.08)"
                 borderRadius="2xl"
@@ -165,9 +165,9 @@ const AboutPage = () => {
               </Box>
 
               <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6} mt={8}>
-                {commitments.map((commitment, index) => (
+                {commitments.map((commitment) => (
                   <Card
-                    key={index}
+                    key={commitment.title}
                     bg="white"
                     border="1px solid rgba(0, 0, 0, 0.08)"
                     borderRadius="2xl"
