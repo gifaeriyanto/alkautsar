@@ -26,7 +26,7 @@ const Navigation = () => {
     { label: 'Beranda', href: '/' },
     { label: 'Tentang', href: '#' },
     { label: 'Pengurus', href: '/pengurus' },
-    { label: 'Sholat', href: '#' },
+    { label: 'Sholat', href: '/shalat' },
     { label: 'Acara', href: '#' },
     { label: 'Galeri', href: '#' },
     { label: 'Kontak', href: '#' },
