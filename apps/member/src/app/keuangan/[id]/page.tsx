@@ -23,8 +23,17 @@ import {
 } from '@chakra-ui/react'
 import { getClient, useDetail, useList } from '@client/supabase'
 import { currency, dateFormat, dateFormFormat } from '@client/ui-components'
-import { previousFriday, startOfDay, subWeeks, subDays } from 'date-fns'
-import { useCallback, useEffect, useState } from 'react'
+import {
+  previousFriday,
+  startOfDay,
+  subWeeks,
+  subDays,
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  format,
+} from 'date-fns'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   FaArrowDown,
   FaArrowUp,
@@ -40,6 +49,12 @@ interface WalletSummary {
   total_income: number
   total_expense: number
   balance: number
+}
+
+interface MonthlyData {
+  month: string
+  income: number
+  expense: number
 }
 
 const WalletDetailPage = ({ params }: { params: { id: string } }) => {
@@ -121,6 +136,74 @@ const WalletDetailPage = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     getWalletSummary()
   }, [getWalletSummary])
+
+  // Monthly trend data for last 12 months (independent of period navigation)
+  const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([])
+  const [isLoadingMonthlyData, setIsLoadingMonthlyData] = useState(true)
+
+  const fetchMonthlyData = useCallback(async () => {
+    if (!params.id) return
+
+    const supabase = getClient()
+    setIsLoadingMonthlyData(true)
+
+    try {
+      const today = new Date()
+
+      // Create array of month data promises
+      const monthPromises = Array.from({ length: 12 }, (_, i) => {
+        const monthDate = subMonths(today, 11 - i)
+        const monthStart = startOfMonth(monthDate)
+        const monthEnd = endOfMonth(monthDate)
+
+        const startDate = dateFormFormat(monthStart)
+        const endDate = dateFormFormat(monthEnd)
+
+        return supabase
+          .rpc('get_wallet_summary', {
+            start_date: startDate,
+            end_date: endDate,
+            wallet_id: params.id,
+          })
+          .then((res) => {
+            const income = res.data?.[0]?.total_income || 0
+            const expense = Math.abs(res.data?.[0]?.total_expense || 0)
+
+            return {
+              month: format(monthDate, 'MMM yyyy'),
+              income,
+              expense,
+            }
+          })
+      })
+
+      const months = await Promise.all(monthPromises)
+      setMonthlyData(months)
+    } catch (error) {
+      // Handle error silently
+    } finally {
+      setIsLoadingMonthlyData(false)
+    }
+  }, [params.id])
+
+  useEffect(() => {
+    fetchMonthlyData()
+  }, [fetchMonthlyData])
+
+  // Calculate averages
+  const averages = useMemo(() => {
+    if (monthlyData.length === 0) {
+      return { avgIncome: 0, avgExpense: 0 }
+    }
+
+    const totalIncome = monthlyData.reduce((sum, m) => sum + m.income, 0)
+    const totalExpense = monthlyData.reduce((sum, m) => sum + m.expense, 0)
+
+    return {
+      avgIncome: totalIncome / monthlyData.length,
+      avgExpense: totalExpense / monthlyData.length,
+    }
+  }, [monthlyData])
 
   if (isLoadingWallet || !wallet) {
     return (
@@ -227,6 +310,195 @@ const WalletDetailPage = ({ params }: { params: { id: string } }) => {
                   Selanjutnya
                 </Button>
               </HStack>
+            </CardBody>
+          </Card>
+
+          {/* Monthly Trend Graph */}
+          <Card
+            bg="white"
+            border="1px solid rgba(0, 0, 0, 0.08)"
+            borderRadius="2xl"
+            w="full"
+          >
+            <CardBody p={{ base: 4, md: 8 }}>
+              <VStack spacing={{ base: 4, md: 6 }} align="stretch">
+                <Heading
+                  fontSize={{ base: 'xl', md: '2xl' }}
+                  fontWeight="700"
+                  color="gray.800"
+                >
+                  Tren 12 Bulan Terakhir
+                </Heading>
+
+                {isLoadingMonthlyData ? (
+                  <VStack py={8}>
+                    <Spinner size="lg" color="orange.500" />
+                    <Text color="gray.500" fontSize="sm">
+                      Memuat data grafik...
+                    </Text>
+                  </VStack>
+                ) : null}
+                {!isLoadingMonthlyData && monthlyData.length > 0 ? (
+                  <>
+                    {/* Chart */}
+                    <Box
+                      w="full"
+                      h={{ base: '300px', md: '400px' }}
+                      position="relative"
+                    >
+                      {/* Simple bar chart using CSS */}
+                      <VStack spacing={4} align="stretch">
+                        {monthlyData.map((data: MonthlyData) => {
+                          const maxValue = Math.max(
+                            ...monthlyData.map((d: MonthlyData) =>
+                              Math.max(d.income, d.expense)
+                            )
+                          )
+                          const incomePercent =
+                            maxValue > 0 ? (data.income / maxValue) * 100 : 0
+                          const expensePercent =
+                            maxValue > 0 ? (data.expense / maxValue) * 100 : 0
+
+                          return (
+                            <Box key={data.month}>
+                              <HStack
+                                spacing={2}
+                                mb={1}
+                                fontSize={{ base: 'xs', md: 'sm' }}
+                              >
+                                <Text
+                                  fontWeight="600"
+                                  color="gray.700"
+                                  minW={{ base: '60px', md: '80px' }}
+                                >
+                                  {data.month}
+                                </Text>
+                                <HStack spacing={2} flex={1}>
+                                  <Box
+                                    bg="green.500"
+                                    h="20px"
+                                    borderRadius="md"
+                                    width={`${incomePercent}%`}
+                                    minW={incomePercent > 0 ? '2px' : '0'}
+                                  />
+                                  <Box
+                                    bg="red.500"
+                                    h="20px"
+                                    borderRadius="md"
+                                    width={`${expensePercent}%`}
+                                    minW={expensePercent > 0 ? '2px' : '0'}
+                                  />
+                                </HStack>
+                                <HStack spacing={4} fontSize="xs">
+                                  <Text color="green.600" fontWeight="600">
+                                    {currency(data.income)}
+                                  </Text>
+                                  <Text color="red.600" fontWeight="600">
+                                    {currency(data.expense)}
+                                  </Text>
+                                </HStack>
+                              </HStack>
+                            </Box>
+                          )
+                        })}
+                      </VStack>
+                    </Box>
+
+                    {/* Legend */}
+                    <HStack
+                      justify="center"
+                      spacing={6}
+                      pt={4}
+                      borderTop="1px solid"
+                      borderColor="gray.200"
+                    >
+                      <HStack spacing={2}>
+                        <Box w={4} h={4} bg="green.500" borderRadius="sm" />
+                        <Text
+                          fontSize={{ base: 'xs', md: 'sm' }}
+                          color="gray.700"
+                        >
+                          Pemasukan
+                        </Text>
+                      </HStack>
+                      <HStack spacing={2}>
+                        <Box w={4} h={4} bg="red.500" borderRadius="sm" />
+                        <Text
+                          fontSize={{ base: 'xs', md: 'sm' }}
+                          color="gray.700"
+                        >
+                          Pengeluaran
+                        </Text>
+                      </HStack>
+                    </HStack>
+
+                    {/* Average Summary */}
+                    <SimpleGrid
+                      columns={{ base: 1, sm: 2 }}
+                      spacing={{ base: 3, md: 6 }}
+                      pt={4}
+                    >
+                      <Box
+                        bg="white"
+                        borderRadius="xl"
+                        p={{ base: 4, md: 6 }}
+                        border="1px solid"
+                        borderColor="gray.200"
+                      >
+                        <VStack spacing={2} align="start">
+                          <Text
+                            fontSize={{ base: 'xs', md: 'sm' }}
+                            color="gray.600"
+                            fontWeight="600"
+                          >
+                            Rata-rata Pemasukan/Bulan
+                          </Text>
+                          <Text
+                            fontSize={{ base: 'xl', md: '2xl' }}
+                            fontWeight="800"
+                            color="gray.800"
+                            wordBreak="break-word"
+                          >
+                            {currency(averages.avgIncome)}
+                          </Text>
+                        </VStack>
+                      </Box>
+                      <Box
+                        bg="white"
+                        borderRadius="xl"
+                        p={{ base: 4, md: 6 }}
+                        border="1px solid"
+                        borderColor="gray.200"
+                      >
+                        <VStack spacing={2} align="start">
+                          <Text
+                            fontSize={{ base: 'xs', md: 'sm' }}
+                            color="red.600"
+                            fontWeight="600"
+                          >
+                            Rata-rata Pengeluaran/Bulan
+                          </Text>
+                          <Text
+                            fontSize={{ base: 'xl', md: '2xl' }}
+                            fontWeight="800"
+                            color="red.600"
+                            wordBreak="break-word"
+                          >
+                            {currency(averages.avgExpense)}
+                          </Text>
+                        </VStack>
+                      </Box>
+                    </SimpleGrid>
+                  </>
+                ) : null}
+                {!isLoadingMonthlyData && monthlyData.length === 0 ? (
+                  <Box py={8} textAlign="center">
+                    <Text color="gray.500" fontSize="sm">
+                      Tidak ada data untuk ditampilkan
+                    </Text>
+                  </Box>
+                ) : null}
+              </VStack>
             </CardBody>
           </Card>
 

@@ -24,7 +24,16 @@ import {
 } from '@chakra-ui/react'
 import { getClient, useRealtimeList } from '@client/supabase'
 import { currency, dateFormat, dateFormFormat } from '@client/ui-components'
-import { previousFriday, startOfDay, subWeeks, subDays } from 'date-fns'
+import {
+  previousFriday,
+  startOfDay,
+  subWeeks,
+  subDays,
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  format,
+} from 'date-fns'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
@@ -51,6 +60,12 @@ interface FinancialReport {
   amount: number
   description: string | null
   notes: string | null
+}
+
+interface MonthlyData {
+  month: string
+  income: number
+  expense: number
 }
 
 const WalletCard = ({
@@ -308,10 +323,13 @@ const WalletCard = ({
 
 const KeuanganPage = () => {
   // Specific wallet IDs to show
-  const ALLOWED_WALLET_IDS = [
-    'edbfa00b-eace-4bd1-ada5-41e7b709a4c3',
-    'fcfefe72-7374-4957-bf9e-2579a533f124',
-  ]
+  const ALLOWED_WALLET_IDS = useMemo(
+    () => [
+      'edbfa00b-eace-4bd1-ada5-41e7b709a4c3',
+      'fcfefe72-7374-4957-bf9e-2579a533f124',
+    ],
+    []
+  )
 
   // Get date range for last week (following shalat board logic)
   const getLastTwoFridaysToLastFriday = (currentDate: Date) => {
@@ -354,7 +372,7 @@ const KeuanganPage = () => {
     return allWallets.filter((wallet) =>
       ALLOWED_WALLET_IDS.includes(wallet.id as any)
     )
-  }, [allWallets])
+  }, [allWallets, ALLOWED_WALLET_IDS])
 
   const [walletSummaries, setWalletSummaries] = useState<
     Record<string, WalletSummary>
@@ -379,10 +397,13 @@ const KeuanganPage = () => {
 
         if (res.data?.[0]) {
           const summary = res.data[0] as WalletSummary
-          setWalletSummaries((prev) => ({
-            ...prev,
-            [walletId]: summary,
-          }))
+          setWalletSummaries((prev) => {
+            const updated: Record<string, WalletSummary> = {
+              ...prev,
+              [walletId]: summary,
+            }
+            return updated
+          })
         }
       } catch (error) {
         // Handle error silently
@@ -444,6 +465,82 @@ const KeuanganPage = () => {
       }
     )
   }, [walletSummaries])
+
+  // Monthly trend data for last 12 months
+  const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([])
+  const [isLoadingMonthlyData, setIsLoadingMonthlyData] = useState(true)
+
+  const fetchMonthlyData = useCallback(async () => {
+    const supabase = getClient()
+    setIsLoadingMonthlyData(true)
+
+    try {
+      const today = new Date()
+
+      // Create array of month data promises
+      const monthPromises = Array.from({ length: 12 }, (_, i) => {
+        const monthDate = subMonths(today, 11 - i)
+        const monthStart = startOfMonth(monthDate)
+        const monthEnd = endOfMonth(monthDate)
+
+        const startDate = dateFormFormat(monthStart)
+        const endDate = dateFormFormat(monthEnd)
+
+        // Fetch data for all wallets in parallel
+        const walletPromises = ALLOWED_WALLET_IDS.map((walletId) =>
+          supabase.rpc('get_wallet_summary', {
+            start_date: startDate,
+            end_date: endDate,
+            wallet_id: walletId,
+          })
+        )
+
+        return Promise.all(walletPromises).then((results) => {
+          let totalIncome = 0
+          let totalExpense = 0
+
+          results.forEach((res) => {
+            if (res.data?.[0]) {
+              totalIncome += res.data[0].total_income || 0
+              totalExpense += Math.abs(res.data[0].total_expense || 0)
+            }
+          })
+
+          return {
+            month: format(monthDate, 'MMM yyyy'),
+            income: totalIncome,
+            expense: totalExpense,
+          }
+        })
+      })
+
+      const months = await Promise.all(monthPromises)
+      setMonthlyData(months)
+    } catch (error) {
+      // Handle error silently
+    } finally {
+      setIsLoadingMonthlyData(false)
+    }
+  }, [ALLOWED_WALLET_IDS])
+
+  useEffect(() => {
+    fetchMonthlyData()
+  }, [fetchMonthlyData])
+
+  // Calculate averages
+  const averages = useMemo(() => {
+    if (monthlyData.length === 0) {
+      return { avgIncome: 0, avgExpense: 0 }
+    }
+
+    const totalIncome = monthlyData.reduce((sum, m) => sum + m.income, 0)
+    const totalExpense = monthlyData.reduce((sum, m) => sum + m.expense, 0)
+
+    return {
+      avgIncome: totalIncome / monthlyData.length,
+      avgExpense: totalExpense / monthlyData.length,
+    }
+  }, [monthlyData])
 
   return (
     <Box minH="100vh" color="gray.800" bg="gray.50">
@@ -541,6 +638,194 @@ const KeuanganPage = () => {
                   Selanjutnya
                 </Button>
               </HStack>
+            </CardBody>
+          </Card>
+
+          {/* Monthly Trend Graph */}
+          <Card
+            bg="white"
+            border="1px solid rgba(0, 0, 0, 0.08)"
+            borderRadius="2xl"
+            w="full"
+          >
+            <CardBody p={{ base: 4, md: 8 }}>
+              <VStack spacing={{ base: 4, md: 6 }} align="stretch">
+                <Heading
+                  fontSize={{ base: 'xl', md: '2xl' }}
+                  fontWeight="700"
+                  color="gray.800"
+                >
+                  Tren 12 Bulan Terakhir
+                </Heading>
+
+                {isLoadingMonthlyData ? (
+                  <VStack py={8}>
+                    <Spinner size="lg" color="orange.500" />
+                    <Text color="gray.500" fontSize="sm">
+                      Memuat data grafik...
+                    </Text>
+                  </VStack>
+                ) : null}
+                {!isLoadingMonthlyData && monthlyData.length > 0 ? (
+                  <>
+                    {/* Chart will be rendered here */}
+                    <Box
+                      w="full"
+                      h={{ base: '300px', md: '400px' }}
+                      position="relative"
+                    >
+                      {/* Simple bar chart using CSS */}
+                      <VStack spacing={4} align="stretch">
+                        {monthlyData.map((data: MonthlyData) => {
+                          const maxValue = Math.max(
+                            ...monthlyData.map((d: MonthlyData) =>
+                              Math.max(d.income, d.expense)
+                            )
+                          )
+                          const incomePercent =
+                            maxValue > 0 ? (data.income / maxValue) * 100 : 0
+                          const expensePercent =
+                            maxValue > 0 ? (data.expense / maxValue) * 100 : 0
+
+                          return (
+                            <Box key={data.month}>
+                              <HStack
+                                spacing={2}
+                                mb={1}
+                                fontSize={{ base: 'xs', md: 'sm' }}
+                              >
+                                <Text
+                                  fontWeight="600"
+                                  color="gray.700"
+                                  minW={{ base: '60px', md: '80px' }}
+                                >
+                                  {data.month}
+                                </Text>
+                                <HStack spacing={2} flex={1}>
+                                  <Box
+                                    bg="green.500"
+                                    h="20px"
+                                    borderRadius="md"
+                                    width={`${incomePercent}%`}
+                                    minW={incomePercent > 0 ? '2px' : '0'}
+                                  />
+                                  <Box
+                                    bg="red.500"
+                                    h="20px"
+                                    borderRadius="md"
+                                    width={`${expensePercent}%`}
+                                    minW={expensePercent > 0 ? '2px' : '0'}
+                                  />
+                                </HStack>
+                                <HStack spacing={4} fontSize="xs">
+                                  <Text color="green.600" fontWeight="600">
+                                    {currency(data.income)}
+                                  </Text>
+                                  <Text color="red.600" fontWeight="600">
+                                    {currency(data.expense)}
+                                  </Text>
+                                </HStack>
+                              </HStack>
+                            </Box>
+                          )
+                        })}
+                      </VStack>
+                    </Box>
+
+                    {/* Legend */}
+                    <HStack
+                      justify="center"
+                      spacing={6}
+                      pt={4}
+                      borderTop="1px solid"
+                      borderColor="gray.200"
+                    >
+                      <HStack spacing={2}>
+                        <Box w={4} h={4} bg="green.500" borderRadius="sm" />
+                        <Text
+                          fontSize={{ base: 'xs', md: 'sm' }}
+                          color="gray.700"
+                        >
+                          Pemasukan
+                        </Text>
+                      </HStack>
+                      <HStack spacing={2}>
+                        <Box w={4} h={4} bg="red.500" borderRadius="sm" />
+                        <Text
+                          fontSize={{ base: 'xs', md: 'sm' }}
+                          color="gray.700"
+                        >
+                          Pengeluaran
+                        </Text>
+                      </HStack>
+                    </HStack>
+
+                    {/* Average Summary */}
+                    <SimpleGrid
+                      columns={{ base: 1, sm: 2 }}
+                      spacing={{ base: 3, md: 6 }}
+                      pt={4}
+                    >
+                      <Box
+                        bg="white"
+                        borderRadius="xl"
+                        p={{ base: 4, md: 6 }}
+                        border="1px solid"
+                        borderColor="gray.200"
+                      >
+                        <VStack spacing={2} align="start">
+                          <Text
+                            fontSize={{ base: 'xs', md: 'sm' }}
+                            color="gray.600"
+                            fontWeight="600"
+                          >
+                            Rata-rata Pemasukan/Bulan
+                          </Text>
+                          <Text
+                            fontSize={{ base: 'xl', md: '2xl' }}
+                            fontWeight="800"
+                            color="gray.800"
+                            wordBreak="break-word"
+                          >
+                            {currency(averages.avgIncome)}
+                          </Text>
+                        </VStack>
+                      </Box>
+                      <Box
+                        bg="white"
+                        borderRadius="xl"
+                        p={{ base: 4, md: 6 }}
+                        border="1px solid"
+                        borderColor="gray.200"
+                      >
+                        <VStack spacing={2} align="start">
+                          <Text
+                            fontSize={{ base: 'xs', md: 'sm' }}
+                            color="red.600"
+                            fontWeight="600"
+                          >
+                            Rata-rata Pengeluaran/Bulan
+                          </Text>
+                          <Text
+                            fontSize={{ base: 'xl', md: '2xl' }}
+                            fontWeight="800"
+                            color="red.600"
+                            wordBreak="break-word"
+                          >
+                            {currency(averages.avgExpense)}
+                          </Text>
+                        </VStack>
+                      </Box>
+                    </SimpleGrid>
+                  </>
+                ) : (
+                  <Box py={8} textAlign="center">
+                    <Text color="gray.500" fontSize="sm">
+                      Tidak ada data untuk ditampilkan
+                    </Text>
+                  </Box>
+                )}
+              </VStack>
             </CardBody>
           </Card>
 
