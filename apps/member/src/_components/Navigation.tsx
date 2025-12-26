@@ -30,6 +30,7 @@ const Navigation = () => {
     { label: 'Pengurus', href: '/pengurus' },
     { label: 'Sholat', href: '/shalat' },
     { label: 'Acara', href: '/events' },
+    { label: 'Keuangan', href: '/keuangan' },
     { label: 'Kontak', href: '#' },
   ]
 

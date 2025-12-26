@@ -27,6 +27,7 @@ const Footer = () => {
   const quickLinks = [
     { name: 'Tentang Kami', href: '/about' },
     { name: 'Kegiatan', href: '/events' },
+    { name: 'Keuangan', href: '/keuangan' },
     { name: 'Donasi', href: '/donate' },
   ]
 
