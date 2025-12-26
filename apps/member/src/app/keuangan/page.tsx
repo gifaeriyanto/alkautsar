@@ -716,6 +716,139 @@ const KeuanganPage = () => {
             </CardBody>
           </Card>
 
+          {/* Total Summary */}
+          {Object.keys(walletSummaries).length > 0 && (
+            <Card
+              bg="white"
+              border="1px solid rgba(0, 0, 0, 0.08)"
+              borderRadius="2xl"
+              w="full"
+            >
+              <CardBody p={{ base: 4, md: 8 }}>
+                <VStack spacing={{ base: 4, md: 6 }} align="stretch">
+                  <Heading
+                    fontSize={{ base: 'xl', md: '2xl' }}
+                    fontWeight="700"
+                    color="gray.800"
+                  >
+                    Ringkasan Total
+                  </Heading>
+                  <SimpleGrid
+                    columns={{ base: 1, sm: 3 }}
+                    spacing={{ base: 3, md: 6 }}
+                  >
+                    <Box
+                      bg="white"
+                      borderRadius="xl"
+                      p={{ base: 4, md: 6 }}
+                      border="1px solid"
+                      borderColor="gray.200"
+                    >
+                      <VStack spacing={2} align="start">
+                        <Text
+                          fontSize={{ base: 'xs', md: 'sm' }}
+                          color="gray.600"
+                          fontWeight="600"
+                        >
+                          Total Pemasukan
+                        </Text>
+                        <Text
+                          fontSize={{ base: 'xl', md: '2xl' }}
+                          fontWeight="800"
+                          color="gray.800"
+                          wordBreak="break-word"
+                        >
+                          {currency(totalSummary.total_income)}
+                        </Text>
+                      </VStack>
+                    </Box>
+                    <Box
+                      bg="white"
+                      borderRadius="xl"
+                      p={{ base: 4, md: 6 }}
+                      border="1px solid"
+                      borderColor="gray.200"
+                    >
+                      <VStack spacing={2} align="start">
+                        <Text
+                          fontSize={{ base: 'xs', md: 'sm' }}
+                          color="red.600"
+                          fontWeight="600"
+                        >
+                          Total Pengeluaran
+                        </Text>
+                        <Text
+                          fontSize={{ base: 'xl', md: '2xl' }}
+                          fontWeight="800"
+                          color="red.600"
+                          wordBreak="break-word"
+                        >
+                          {currency(Math.abs(totalSummary.total_expense))}
+                        </Text>
+                      </VStack>
+                    </Box>
+                    <Box
+                      bg="white"
+                      borderRadius="xl"
+                      p={{ base: 4, md: 6 }}
+                      border="1px solid"
+                      borderColor="gray.200"
+                    >
+                      <VStack spacing={2} align="start">
+                        <Text
+                          fontSize={{ base: 'xs', md: 'sm' }}
+                          color="gray.600"
+                          fontWeight="600"
+                        >
+                          Total Saldo
+                        </Text>
+                        <Text
+                          fontSize={{ base: 'xl', md: '2xl' }}
+                          fontWeight="800"
+                          color="gray.800"
+                          wordBreak="break-word"
+                        >
+                          {currency(totalSummary.balance)}
+                        </Text>
+                      </VStack>
+                    </Box>
+                  </SimpleGrid>
+                </VStack>
+              </CardBody>
+            </Card>
+          )}
+
+          {/* Wallets List */}
+          {walletsData.length === 0 ? (
+            <Card
+              bg="white"
+              border="1px solid rgba(0, 0, 0, 0.08)"
+              borderRadius="2xl"
+              w="full"
+            >
+              <CardBody p={12}>
+                <VStack spacing={4}>
+                  <Icon as={FaWallet} boxSize={12} color="gray.400" />
+                  <Text color="gray.500" fontSize="lg" textAlign="center">
+                    Belum ada data wallet
+                  </Text>
+                </VStack>
+              </CardBody>
+            </Card>
+          ) : (
+            <SimpleGrid columns={{ base: 1, md: 1 }} spacing={6} w="full">
+              {walletsData.map((wallet) => (
+                <WalletCard
+                  key={wallet.id}
+                  wallet={wallet}
+                  summary={walletSummaries[wallet.id || '']}
+                  reports={walletReports[wallet.id || ''] || []}
+                  isLoading={loadingWallets.has(wallet.id || '')}
+                />
+              ))}
+            </SimpleGrid>
+          )}
+
           {/* Monthly Trend Graph */}
           <Card
             bg="white"
@@ -970,139 +1103,6 @@ const KeuanganPage = () => {
               </VStack>
             </CardBody>
           </Card>
-
-          {/* Total Summary */}
-          {Object.keys(walletSummaries).length > 0 && (
-            <Card
-              bg="white"
-              border="1px solid rgba(0, 0, 0, 0.08)"
-              borderRadius="2xl"
-              w="full"
-            >
-              <CardBody p={{ base: 4, md: 8 }}>
-                <VStack spacing={{ base: 4, md: 6 }} align="stretch">
-                  <Heading
-                    fontSize={{ base: 'xl', md: '2xl' }}
-                    fontWeight="700"
-                    color="gray.800"
-                  >
-                    Ringkasan Total
-                  </Heading>
-                  <SimpleGrid
-                    columns={{ base: 1, sm: 3 }}
-                    spacing={{ base: 3, md: 6 }}
-                  >
-                    <Box
-                      bg="white"
-                      borderRadius="xl"
-                      p={{ base: 4, md: 6 }}
-                      border="1px solid"
-                      borderColor="gray.200"
-                    >
-                      <VStack spacing={2} align="start">
-                        <Text
-                          fontSize={{ base: 'xs', md: 'sm' }}
-                          color="gray.600"
-                          fontWeight="600"
-                        >
-                          Total Pemasukan
-                        </Text>
-                        <Text
-                          fontSize={{ base: 'xl', md: '2xl' }}
-                          fontWeight="800"
-                          color="gray.800"
-                          wordBreak="break-word"
-                        >
-                          {currency(totalSummary.total_income)}
-                        </Text>
-                      </VStack>
-                    </Box>
-                    <Box
-                      bg="white"
-                      borderRadius="xl"
-                      p={{ base: 4, md: 6 }}
-                      border="1px solid"
-                      borderColor="gray.200"
-                    >
-                      <VStack spacing={2} align="start">
-                        <Text
-                          fontSize={{ base: 'xs', md: 'sm' }}
-                          color="red.600"
-                          fontWeight="600"
-                        >
-                          Total Pengeluaran
-                        </Text>
-                        <Text
-                          fontSize={{ base: 'xl', md: '2xl' }}
-                          fontWeight="800"
-                          color="red.600"
-                          wordBreak="break-word"
-                        >
-                          {currency(Math.abs(totalSummary.total_expense))}
-                        </Text>
-                      </VStack>
-                    </Box>
-                    <Box
-                      bg="white"
-                      borderRadius="xl"
-                      p={{ base: 4, md: 6 }}
-                      border="1px solid"
-                      borderColor="gray.200"
-                    >
-                      <VStack spacing={2} align="start">
-                        <Text
-                          fontSize={{ base: 'xs', md: 'sm' }}
-                          color="gray.600"
-                          fontWeight="600"
-                        >
-                          Total Saldo
-                        </Text>
-                        <Text
-                          fontSize={{ base: 'xl', md: '2xl' }}
-                          fontWeight="800"
-                          color="gray.800"
-                          wordBreak="break-word"
-                        >
-                          {currency(totalSummary.balance)}
-                        </Text>
-                      </VStack>
-                    </Box>
-                  </SimpleGrid>
-                </VStack>
-              </CardBody>
-            </Card>
-          )}
-
-          {/* Wallets List */}
-          {walletsData.length === 0 ? (
-            <Card
-              bg="white"
-              border="1px solid rgba(0, 0, 0, 0.08)"
-              borderRadius="2xl"
-              w="full"
-            >
-              <CardBody p={12}>
-                <VStack spacing={4}>
-                  <Icon as={FaWallet} boxSize={12} color="gray.400" />
-                  <Text color="gray.500" fontSize="lg" textAlign="center">
-                    Belum ada data wallet
-                  </Text>
-                </VStack>
-              </CardBody>
-            </Card>
-          ) : (
-            <SimpleGrid columns={{ base: 1, md: 1 }} spacing={6} w="full">
-              {walletsData.map((wallet) => (
-                <WalletCard
-                  key={wallet.id}
-                  wallet={wallet}
-                  summary={walletSummaries[wallet.id || '']}
-                  reports={walletReports[wallet.id || ''] || []}
-                  isLoading={loadingWallets.has(wallet.id || '')}
-                />
-              ))}
-            </SimpleGrid>
-          )}
         </VStack>
       </Container>
 
