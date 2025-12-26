@@ -1,32 +1,40 @@
 'use client'
 
 import {
+  Badge,
   Box,
-  Container,
-  Heading,
-  Text,
-  VStack,
-  SimpleGrid,
   Card,
   CardBody,
-  Icon,
-  HStack,
-  Badge,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Spinner,
+  Container,
   Divider,
+  Heading,
+  HStack,
+  Icon,
+  SimpleGrid,
+  Spinner,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  VStack,
+  Button,
 } from '@chakra-ui/react'
 import { getClient, useRealtimeList } from '@client/supabase'
-import type { Database } from '@client/supabase/types/database'
 import { currency, dateFormat, dateFormFormat } from '@client/ui-components'
 import { previousFriday, startOfDay, subWeeks } from 'date-fns'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { FaWallet, FaArrowUp, FaArrowDown, FaEquals } from 'react-icons/fa'
+import {
+  FaArrowDown,
+  FaArrowUp,
+  FaEquals,
+  FaWallet,
+  FaChevronLeft,
+  FaChevronRight,
+} from 'react-icons/fa'
 import Footer from '../../_components/Footer'
 import Navigation from '../../_components/Navigation'
 import { ORGANIZATION_ID } from '../../_constants'
@@ -51,12 +59,18 @@ const WalletCard = ({
   reports,
   isLoading,
 }: {
-  wallet: Database['public']['Tables']['wallets']['Row']
+  wallet: { id: string | null; name: string }
   summary: WalletSummary | undefined
   reports: FinancialReport[]
   isLoading: boolean
 }) => {
-  const isPositive = summary ? summary.balance >= 0 : true
+  const router = useRouter()
+
+  const handleClick = () => {
+    if (wallet.id) {
+      router.push(`/keuangan/${wallet.id}`)
+    }
+  }
 
   return (
     <Card
@@ -64,6 +78,8 @@ const WalletCard = ({
       border="1px solid rgba(0, 0, 0, 0.08)"
       borderRadius="2xl"
       overflow="hidden"
+      cursor="pointer"
+      onClick={handleClick}
       _hover={{
         transform: 'translateY(-4px)',
         shadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
@@ -91,20 +107,27 @@ const WalletCard = ({
                 </Heading>
               </HStack>
             </VStack>
+            <Text fontSize="xs" color="gray.500" fontWeight="500">
+              Klik untuk detail →
+            </Text>
           </HStack>
 
           <Divider borderColor="gray.200" />
 
           {/* Summary Section */}
-          {isLoading ? (
+          {isLoading && (
             <VStack py={{ base: 6, md: 8 }}>
               <Spinner size={{ base: 'md', md: 'lg' }} color="orange.500" />
               <Text color="gray.500" fontSize="sm">
                 Memuat data...
               </Text>
             </VStack>
-          ) : summary ? (
-            <SimpleGrid columns={{ base: 1, sm: 3 }} spacing={{ base: 3, md: 4 }}>
+          )}
+          {!isLoading && summary && (
+            <SimpleGrid
+              columns={{ base: 1, sm: 3 }}
+              spacing={{ base: 3, md: 4 }}
+            >
               {/* Total Income */}
               <Box
                 bg="white"
@@ -207,7 +230,8 @@ const WalletCard = ({
                 </VStack>
               </Box>
             </SimpleGrid>
-          ) : (
+          )}
+          {!isLoading && !summary && (
             <Box py={4}>
               <Text color="gray.500" fontSize="sm" textAlign="center">
                 Tidak ada data
@@ -241,7 +265,10 @@ const WalletCard = ({
                     <Tbody>
                       {reports.slice(0, 5).map((report) => (
                         <Tr key={report.id}>
-                          <Td fontSize={{ base: 'xs', md: 'sm' }} whiteSpace="nowrap">
+                          <Td
+                            fontSize={{ base: 'xs', md: 'sm' }}
+                            whiteSpace="nowrap"
+                          >
                             {dateFormat(new Date(report.date))}
                           </Td>
                           <Td>
@@ -303,19 +330,29 @@ const KeuanganPage = () => {
     }
   }
 
-  const currentTime = new Date()
+  const [currentTime, setCurrentTime] = useState(new Date())
   const dateRange = getLastTwoFridaysToLastFriday(currentTime)
+
+  const handlePrevPeriod = () => {
+    const newDate = subWeeks(currentTime, 1)
+    setCurrentTime(newDate)
+  }
+
+  const handleNextPeriod = () => {
+    const newDate = subWeeks(currentTime, -1)
+    setCurrentTime(newDate)
+  }
 
   const { data: wallets } = useRealtimeList('wallets', {
     select: '',
     filters: [['eq', 'organization_id', ORGANIZATION_ID]],
   })
-  const allWallets = wallets as Database['public']['Tables']['wallets']['Row'][]
+  const allWallets = wallets
 
   // Filter wallets to only show allowed IDs
   const walletsData = useMemo(() => {
     return allWallets.filter((wallet) =>
-      ALLOWED_WALLET_IDS.includes(wallet.id || '')
+      ALLOWED_WALLET_IDS.includes(wallet.id as any)
     )
   }, [allWallets])
 
@@ -328,37 +365,33 @@ const KeuanganPage = () => {
   const [loadingWallets, setLoadingWallets] = useState<Set<string>>(new Set())
 
   const getWalletSummary = useCallback(
-    (walletId: string) => {
+    async (walletId: string) => {
       const supabase = getClient()
       setLoadingWallets((prev) => new Set(prev).add(walletId))
 
-      // Get summary for last week date range
-      supabase
-        .rpc('get_wallet_summary', {
+      try {
+        // Get summary for last week date range
+        const res = await supabase.rpc('get_wallet_summary', {
           start_date: dateRange.start,
           end_date: dateRange.end,
           wallet_id: walletId,
         })
-        .then((res) => {
-          if (res.data && res.data[0]) {
-            setWalletSummaries((prev) => ({
-              ...prev,
-              [walletId]: res.data[0],
-            }))
-          }
-          setLoadingWallets((prev) => {
-            const next = new Set(prev)
-            next.delete(walletId)
-            return next
-          })
+
+        if (res.data?.[0]) {
+          setWalletSummaries((prev) => ({
+            ...prev,
+            [walletId]: res.data[0],
+          }))
+        }
+      } catch (error) {
+        // Handle error silently
+      } finally {
+        setLoadingWallets((prev) => {
+          const next = new Set(prev)
+          next.delete(walletId)
+          return next
         })
-        .catch(() => {
-          setLoadingWallets((prev) => {
-            const next = new Set(prev)
-            next.delete(walletId)
-            return next
-          })
-        })
+      }
     },
     [dateRange.end, dateRange.start]
   )
@@ -433,7 +466,12 @@ const KeuanganPage = () => {
           bgImage="radial-gradient(circle at 25% 25%, white 2px, transparent 2px)"
           bgSize="40px 40px"
         />
-        <Container maxW="6xl" position="relative" zIndex={1} px={{ base: 4, md: 6 }}>
+        <Container
+          maxW="6xl"
+          position="relative"
+          zIndex={1}
+          px={{ base: 4, md: 6 }}
+        >
           <VStack spacing={{ base: 4, md: 6 }} textAlign="center">
             <Heading
               fontSize={{ base: '2xl', md: '4xl', lg: '5xl' }}
@@ -450,15 +488,6 @@ const KeuanganPage = () => {
             >
               Transparansi pengelolaan keuangan Masjid Al-Kautsar
             </Text>
-            <Text
-              fontSize={{ base: 'xs', md: 'md' }}
-              opacity={0.85}
-              mt={2}
-              px={{ base: 2, md: 0 }}
-            >
-              Periode: {dateFormat(new Date(dateRange.start))} -{' '}
-              {dateFormat(new Date(dateRange.end))}
-            </Text>
           </VStack>
         </Container>
       </Box>
@@ -466,6 +495,54 @@ const KeuanganPage = () => {
       {/* Main Content */}
       <Container maxW="6xl" py={{ base: 8, md: 16 }} px={{ base: 4, md: 6 }}>
         <VStack spacing={{ base: 8, md: 12 }}>
+          {/* Period Navigation */}
+          <Card
+            bg="white"
+            border="1px solid rgba(0, 0, 0, 0.08)"
+            borderRadius="2xl"
+            w="full"
+          >
+            <CardBody p={{ base: 4, md: 6 }}>
+              <HStack justify="space-between" align="center">
+                <Button
+                  leftIcon={<FaChevronLeft />}
+                  onClick={handlePrevPeriod}
+                  variant="outline"
+                  colorScheme="orange"
+                  size={{ base: 'sm', md: 'md' }}
+                >
+                  Sebelumnya
+                </Button>
+                <VStack spacing={1}>
+                  <Text
+                    fontSize={{ base: 'sm', md: 'md' }}
+                    fontWeight="600"
+                    color="gray.700"
+                  >
+                    Periode
+                  </Text>
+                  <Text
+                    fontSize={{ base: 'xs', md: 'sm' }}
+                    color="gray.600"
+                    textAlign="center"
+                  >
+                    {dateFormat(new Date(dateRange.start))} -{' '}
+                    {dateFormat(new Date(dateRange.end))}
+                  </Text>
+                </VStack>
+                <Button
+                  rightIcon={<FaChevronRight />}
+                  onClick={handleNextPeriod}
+                  variant="outline"
+                  colorScheme="orange"
+                  size={{ base: 'sm', md: 'md' }}
+                >
+                  Selanjutnya
+                </Button>
+              </HStack>
+            </CardBody>
+          </Card>
+
           {/* Total Summary */}
           {Object.keys(walletSummaries).length > 0 && (
             <Card
@@ -483,7 +560,10 @@ const KeuanganPage = () => {
                   >
                     Ringkasan Total
                   </Heading>
-                  <SimpleGrid columns={{ base: 1, sm: 3 }} spacing={{ base: 3, md: 6 }}>
+                  <SimpleGrid
+                    columns={{ base: 1, sm: 3 }}
+                    spacing={{ base: 3, md: 6 }}
+                  >
                     <Box
                       bg="white"
                       borderRadius="xl"
@@ -604,4 +684,3 @@ const KeuanganPage = () => {
 }
 
 export default KeuanganPage
-
