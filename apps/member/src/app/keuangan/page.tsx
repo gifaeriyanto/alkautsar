@@ -24,7 +24,7 @@ import {
 } from '@chakra-ui/react'
 import { getClient, useRealtimeList } from '@client/supabase'
 import { currency, dateFormat, dateFormFormat } from '@client/ui-components'
-import { previousFriday, startOfDay, subWeeks } from 'date-fns'
+import { previousFriday, startOfDay, subWeeks, subDays } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
@@ -326,7 +326,7 @@ const KeuanganPage = () => {
 
     return {
       start: dateFormFormat(twoFridaysAgo),
-      end: dateFormFormat(lastFriday),
+      end: dateFormFormat(subDays(lastFriday, 1)),
     }
   }
 
@@ -378,9 +378,10 @@ const KeuanganPage = () => {
         })
 
         if (res.data?.[0]) {
+          const summary = res.data[0] as WalletSummary
           setWalletSummaries((prev) => ({
             ...prev,
-            [walletId]: res.data[0],
+            [walletId]: summary,
           }))
         }
       } catch (error) {

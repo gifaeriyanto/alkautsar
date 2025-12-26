@@ -23,12 +23,10 @@ import {
 } from '@chakra-ui/react'
 import { getClient, useDetail, useList } from '@client/supabase'
 import { currency, dateFormat, dateFormFormat } from '@client/ui-components'
-import { previousFriday, startOfDay, subWeeks } from 'date-fns'
-import { useRouter } from 'next/navigation'
+import { previousFriday, startOfDay, subWeeks, subDays } from 'date-fns'
 import { useCallback, useEffect, useState } from 'react'
 import {
   FaArrowDown,
-  FaArrowLeft,
   FaArrowUp,
   FaChevronLeft,
   FaChevronRight,
@@ -45,7 +43,6 @@ interface WalletSummary {
 }
 
 const WalletDetailPage = ({ params }: { params: { id: string } }) => {
-  const router = useRouter()
   const { data: wallet, isLoading: isLoadingWallet } = useDetail(
     'wallets',
     params.id
@@ -61,7 +58,7 @@ const WalletDetailPage = ({ params }: { params: { id: string } }) => {
 
     return {
       start: dateFormFormat(twoFridaysAgo),
-      end: dateFormFormat(lastFriday),
+      end: dateFormFormat(subDays(lastFriday, 1)),
     }
   }
 
@@ -169,19 +166,6 @@ const WalletDetailPage = ({ params }: { params: { id: string } }) => {
           px={{ base: 4, md: 6 }}
         >
           <VStack spacing={{ base: 4, md: 6 }} textAlign="center">
-            <Button
-              leftIcon={<FaArrowLeft />}
-              variant="ghost"
-              color="white"
-              _hover={{ bg: 'whiteAlpha.200' }}
-              onClick={() => {
-                router.push('/keuangan')
-              }}
-              alignSelf="flex-start"
-              mb={4}
-            >
-              Kembali
-            </Button>
             <HStack spacing={3} justify="center">
               <Icon as={FaWallet} boxSize={{ base: 8, md: 10 }} />
               <Heading
@@ -410,7 +394,6 @@ const WalletDetailPage = ({ params }: { params: { id: string } }) => {
                           <Th fontSize={{ base: 'xs', md: 'sm' }}>
                             Keterangan
                           </Th>
-                          <Th fontSize={{ base: 'xs', md: 'sm' }}>Catatan</Th>
                           <Th isNumeric fontSize={{ base: 'xs', md: 'sm' }}>
                             Jumlah
                           </Th>
@@ -432,16 +415,6 @@ const WalletDetailPage = ({ params }: { params: { id: string } }) => {
                                 maxW={{ base: '150px', md: 'none' }}
                               >
                                 {report.description || '-'}
-                              </Text>
-                            </Td>
-                            <Td>
-                              <Text
-                                fontSize={{ base: 'xs', md: 'sm' }}
-                                noOfLines={1}
-                                maxW={{ base: '150px', md: 'none' }}
-                                color="gray.600"
-                              >
-                                {report.notes || '-'}
                               </Text>
                             </Td>
                             <Td isNumeric fontSize={{ base: 'xs', md: 'sm' }}>
