@@ -19,7 +19,6 @@ import {
   FaFacebook,
   FaYoutube,
   FaMapMarkerAlt,
-  FaClock,
   FaPrayingHands,
   FaHeart,
 } from 'react-icons/fa'
@@ -27,7 +26,6 @@ import {
 const Footer = () => {
   const quickLinks = [
     { name: 'Tentang Kami', href: '/about' },
-    { name: 'Jadwal Sholat', href: '/prayer-times' },
     { name: 'Kegiatan', href: '/events' },
     { name: 'Donasi', href: '/donate' },
   ]
@@ -37,14 +35,6 @@ const Footer = () => {
     { name: 'Tahfiz Al-Quran', href: '/programs/tahfiz' },
     { name: 'Pendidikan Anak', href: '/programs/education' },
     { name: 'Bantuan Sosial', href: '/programs/social' },
-  ]
-
-  const prayerTimes = [
-    { name: 'Subuh', time: '05:00' },
-    { name: 'Dzuhur', time: '12:15' },
-    { name: 'Ashar', time: '15:30' },
-    { name: 'Maghrib', time: '18:15' },
-    { name: 'Isya', time: '19:30' },
   ]
 
   return (
@@ -69,7 +59,7 @@ const Footer = () => {
       <Container maxW="8xl" position="relative">
         <VStack spacing={16}>
           {/* Main Footer Content */}
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 5 }} spacing={12} w="full">
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12} w="full">
             {/* Brand Section */}
             <VStack align="start" spacing={6} gridColumn={{ lg: 'span 2' }}>
               <HStack spacing={4}>
@@ -113,7 +103,7 @@ const Footer = () => {
                 <HStack spacing={3}>
                   <Icon as={FaMapMarkerAlt} color="orange.400" boxSize={4} />
                   <Text fontSize="sm" color="gray.300" lineHeight="1.6">
-                    Citra Land Tallasa City, Kapasa, Kec. Tamalanrea, Kota
+                    CitraLand Tallasa City, Kapasa, Kec. Tamalanrea, Kota
                     Makassar, Sulawesi Selatan 90241
                   </Text>
                 </HStack>
@@ -168,31 +158,6 @@ const Footer = () => {
                   </Link>
                 ))}
               </VStack>
-            </VStack>
-
-            {/* Prayer Times */}
-            <VStack align="start" spacing={4}>
-              <HStack spacing={2}>
-                <Icon as={FaClock} color="orange.400" boxSize={5} />
-                <Heading fontSize="lg" fontWeight="700" color="white">
-                  Jadwal Sholat
-                </Heading>
-              </HStack>
-              <VStack align="start" spacing={2} w="full">
-                {prayerTimes.map((prayer) => (
-                  <HStack key={prayer.name} justify="space-between" w="full">
-                    <Text fontSize="sm" color="gray.300" fontWeight="500">
-                      {prayer.name}
-                    </Text>
-                    <Text fontSize="sm" color="orange.300" fontWeight="600">
-                      {prayer.time}
-                    </Text>
-                  </HStack>
-                ))}
-              </VStack>
-              <Text fontSize="xs" color="gray.400" mt={2}>
-                *Waktu lokal Makassar
-              </Text>
             </VStack>
           </SimpleGrid>
 

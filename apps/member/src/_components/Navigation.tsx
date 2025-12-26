@@ -16,21 +16,28 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
+import { usePathname } from 'next/navigation'
 import { FaYoutube } from 'react-icons/fa'
 import { HiMenu, HiX } from 'react-icons/hi'
 
 const Navigation = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const pathname = usePathname()
 
   const menuItems = [
     { label: 'Beranda', href: '/' },
-    { label: 'Tentang', href: '#' },
+    { label: 'Tentang', href: '/about' },
     { label: 'Pengurus', href: '/pengurus' },
     { label: 'Sholat', href: '/shalat' },
-    { label: 'Acara', href: '#' },
-    { label: 'Galeri', href: '#' },
+    { label: 'Acara', href: '/events' },
     { label: 'Kontak', href: '#' },
   ]
+
+  const isActive = (href: string) => {
+    if (href === '#') return false
+    if (href === '/') return pathname === '/'
+    return pathname.startsWith(href)
+  }
 
   return (
     <Box py={6} px={{ base: 6, md: 12, lg: 16 }} bg="white">
@@ -57,39 +64,42 @@ const Navigation = () => {
           >
             {/* Desktop Navigation */}
             <HStack spacing={10}>
-              {menuItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  color="gray.700"
-                  _hover={{
-                    color: 'gray.900',
-                    transform: 'translateY(-1px)',
-                    _after: {
-                      width: '100%',
-                    },
-                  }}
-                  fontWeight="600"
-                  fontSize="sm"
-                  letterSpacing="wide"
-                  transition="all 0.2s ease"
-                  textDecoration="none"
-                  position="relative"
-                  _after={{
-                    content: '""',
-                    position: 'absolute',
-                    width: '0',
-                    height: '2px',
-                    bottom: '-4px',
-                    left: '50%',
-                    bg: 'linear-gradient(90deg, #F59E0B, #FBBF24)',
-                    transition: 'all 0.3s ease',
-                    transform: 'translateX(-50%)',
-                  }}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {menuItems.map((item) => {
+                const active = isActive(item.href)
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    color={active ? 'orange.500' : 'gray.700'}
+                    _hover={{
+                      color: active ? 'orange.600' : 'gray.900',
+                      transform: 'translateY(-1px)',
+                      _after: {
+                        width: '100%',
+                      },
+                    }}
+                    fontWeight={active ? '700' : '600'}
+                    fontSize="sm"
+                    letterSpacing="wide"
+                    transition="all 0.2s ease"
+                    textDecoration="none"
+                    position="relative"
+                    _after={{
+                      content: '""',
+                      position: 'absolute',
+                      width: active ? '100%' : '0',
+                      height: '2px',
+                      bottom: '-4px',
+                      left: '50%',
+                      bg: 'linear-gradient(90deg, #F59E0B, #FBBF24)',
+                      transition: 'all 0.3s ease',
+                      transform: 'translateX(-50%)',
+                    }}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              })}
             </HStack>
 
             {/* YouTube Button - Desktop */}
@@ -154,47 +164,53 @@ const Navigation = () => {
 
           <DrawerBody p={0}>
             <VStack spacing={0} align="stretch">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={onClose}
-                  textDecoration="none"
-                  _hover={{ textDecoration: 'none' }}
-                >
-                  <Flex
-                    align="center"
-                    px={6}
-                    py={4}
-                    borderBottomWidth="1px"
-                    borderColor="gray.50"
-                    _hover={{
-                      bg: 'linear-gradient(90deg, #F59E0B10, #FBBF2410)',
-                      borderLeftWidth: '4px',
-                      borderLeftColor: 'orange.400',
-                    }}
-                    transition="all 0.2s ease"
-                    cursor="pointer"
+              {menuItems.map((item) => {
+                const active = isActive(item.href)
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    onClick={onClose}
+                    textDecoration="none"
+                    _hover={{ textDecoration: 'none' }}
                   >
-                    <Box
-                      w="8px"
-                      h="8px"
-                      bg="orange.400"
-                      borderRadius="full"
-                      mr={4}
-                      opacity={0.7}
-                    />
-                    <Box
-                      color="gray.700"
-                      fontWeight="600"
-                      fontSize="lg"
-                      _hover={{ color: 'gray.900' }}
+                    <Flex
+                      align="center"
+                      px={6}
+                      py={4}
+                      borderBottomWidth="1px"
+                      borderColor="gray.50"
+                      bg={active ? 'linear-gradient(90deg, #F59E0B10, #FBBF2410)' : 'transparent'}
+                      borderLeftWidth={active ? '4px' : '0'}
+                      borderLeftColor="orange.400"
+                      _hover={{
+                        bg: 'linear-gradient(90deg, #F59E0B10, #FBBF2410)',
+                        borderLeftWidth: '4px',
+                        borderLeftColor: 'orange.400',
+                      }}
+                      transition="all 0.2s ease"
+                      cursor="pointer"
                     >
-                      {item.label}
-                    </Box>
-                  </Flex>
-                </Link>
-              ))}
+                      <Box
+                        w="8px"
+                        h="8px"
+                        bg="orange.400"
+                        borderRadius="full"
+                        mr={4}
+                        opacity={active ? 1 : 0.7}
+                      />
+                      <Box
+                        color={active ? 'orange.600' : 'gray.700'}
+                        fontWeight={active ? '700' : '600'}
+                        fontSize="lg"
+                        _hover={{ color: active ? 'orange.700' : 'gray.900' }}
+                      >
+                        {item.label}
+                      </Box>
+                    </Flex>
+                  </Link>
+                )
+              })}
 
               {/* YouTube Section */}
               <Box px={6} py={8}>
