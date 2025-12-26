@@ -122,7 +122,12 @@ const WalletCard = ({
                 </Heading>
               </HStack>
             </VStack>
-            <Text fontSize="xs" color="gray.500" fontWeight="500">
+            <Text
+              fontSize="xs"
+              color="gray.500"
+              fontWeight="500"
+              display={{ base: 'none', sm: 'block' }}
+            >
               Klik untuk detail →
             </Text>
           </HStack>
@@ -266,7 +271,61 @@ const WalletCard = ({
                 >
                   Transaksi Terbaru
                 </Heading>
-                <Box overflowX="auto" w="full">
+                {/* Mobile Card View */}
+                <VStack
+                  spacing={3}
+                  align="stretch"
+                  display={{ base: 'flex', md: 'none' }}
+                >
+                  {reports.slice(0, 5).map((report) => (
+                    <Card
+                      key={report.id}
+                      bg="gray.50"
+                      border="1px solid"
+                      borderColor="gray.200"
+                      borderRadius="lg"
+                    >
+                      <CardBody p={3}>
+                        <VStack spacing={2} align="stretch">
+                          <HStack justify="space-between" align="start">
+                            <Text
+                              fontSize="xs"
+                              color="gray.600"
+                              fontWeight="600"
+                              whiteSpace="nowrap"
+                            >
+                              {dateFormat(new Date(report.date))}
+                            </Text>
+                            <Badge
+                              colorScheme={report.amount >= 0 ? 'green' : 'red'}
+                              px={2}
+                              py={0.5}
+                              borderRadius="md"
+                              fontSize="xs"
+                            >
+                              {report.amount >= 0 ? '+' : ''}
+                              {currency(report.amount)}
+                            </Badge>
+                          </HStack>
+                          <Text
+                            fontSize="sm"
+                            color="gray.800"
+                            noOfLines={2}
+                            wordBreak="break-word"
+                          >
+                            {report.description || '-'}
+                          </Text>
+                        </VStack>
+                      </CardBody>
+                    </Card>
+                  ))}
+                </VStack>
+                {/* Desktop Table View */}
+                <Box
+                  overflowX="auto"
+                  w="full"
+                  display={{ base: 'none', md: 'block' }}
+                >
                   <Table variant="simple" size={{ base: 'xs', md: 'sm' }}>
                     <Thead>
                       <Tr>
@@ -425,7 +484,7 @@ const KeuanganPage = () => {
         .from('financial_reports')
         .select('id, date, amount, description, notes')
         .eq('wallet_id', walletId)
-        .eq('deleted_at', null)
+        .is('deleted_at', null)
         .gte('date', dateRange.start)
         .lte('date', dateRange.end)
         .order('date', { ascending: false })
@@ -601,17 +660,8 @@ const KeuanganPage = () => {
             w="full"
           >
             <CardBody p={{ base: 4, md: 6 }}>
-              <HStack justify="space-between" align="center">
-                <Button
-                  leftIcon={<FaChevronLeft />}
-                  onClick={handlePrevPeriod}
-                  variant="outline"
-                  colorScheme="orange"
-                  size={{ base: 'sm', md: 'md' }}
-                >
-                  Sebelumnya
-                </Button>
-                <VStack spacing={1}>
+              <VStack spacing={{ base: 3, md: 0 }}>
+                <VStack spacing={1} w="full">
                   <Text
                     fontSize={{ base: 'sm', md: 'md' }}
                     fontWeight="600"
@@ -623,21 +673,46 @@ const KeuanganPage = () => {
                     fontSize={{ base: 'xs', md: 'sm' }}
                     color="gray.600"
                     textAlign="center"
+                    px={2}
                   >
                     {dateFormat(new Date(dateRange.start))} -{' '}
                     {dateFormat(new Date(dateRange.end))}
                   </Text>
                 </VStack>
-                <Button
-                  rightIcon={<FaChevronRight />}
-                  onClick={handleNextPeriod}
-                  variant="outline"
-                  colorScheme="orange"
-                  size={{ base: 'sm', md: 'md' }}
+                <HStack
+                  justify="space-between"
+                  align="center"
+                  w="full"
+                  spacing={{ base: 2, md: 4 }}
                 >
-                  Selanjutnya
-                </Button>
-              </HStack>
+                  <Button
+                    leftIcon={<FaChevronLeft />}
+                    onClick={handlePrevPeriod}
+                    variant="outline"
+                    colorScheme="orange"
+                    size={{ base: 'sm', md: 'md' }}
+                    flex={{ base: 1, md: 'none' }}
+                  >
+                    <Text display={{ base: 'none', sm: 'block' }}>
+                      Sebelumnya
+                    </Text>
+                    <Text display={{ base: 'block', sm: 'none' }}>Prev</Text>
+                  </Button>
+                  <Button
+                    rightIcon={<FaChevronRight />}
+                    onClick={handleNextPeriod}
+                    variant="outline"
+                    colorScheme="orange"
+                    size={{ base: 'sm', md: 'md' }}
+                    flex={{ base: 1, md: 'none' }}
+                  >
+                    <Text display={{ base: 'none', sm: 'block' }}>
+                      Selanjutnya
+                    </Text>
+                    <Text display={{ base: 'block', sm: 'none' }}>Next</Text>
+                  </Button>
+                </HStack>
+              </VStack>
             </CardBody>
           </Card>
 
@@ -671,11 +746,12 @@ const KeuanganPage = () => {
                     {/* Chart will be rendered here */}
                     <Box
                       w="full"
-                      h={{ base: '300px', md: '400px' }}
+                      minH={{ base: 'auto', md: '400px' }}
+                      h={{ base: 'auto', md: '400px' }}
                       position="relative"
                     >
                       {/* Simple bar chart using CSS */}
-                      <VStack spacing={4} align="stretch">
+                      <VStack spacing={{ base: 3, md: 4 }} align="stretch">
                         {monthlyData.map((data: MonthlyData) => {
                           const maxValue = Math.max(
                             ...monthlyData.map((d: MonthlyData) =>
@@ -688,11 +764,76 @@ const KeuanganPage = () => {
                             maxValue > 0 ? (data.expense / maxValue) * 100 : 0
 
                           return (
-                            <Box key={data.month}>
+                            <Box
+                              key={data.month}
+                              pb={{ base: 3, md: 0 }}
+                              borderBottom={{
+                                base: '1px solid',
+                                md: 'none',
+                              }}
+                              borderColor={{
+                                base: 'gray.200',
+                                md: 'transparent',
+                              }}
+                              _last={{ borderBottom: 'none' }}
+                            >
+                              <VStack
+                                spacing={3}
+                                align="stretch"
+                                display={{ base: 'flex', md: 'none' }}
+                              >
+                                <Text
+                                  fontWeight="700"
+                                  color="gray.800"
+                                  fontSize="sm"
+                                >
+                                  {data.month}
+                                </Text>
+                                <HStack spacing={2} flex={1} h="20px">
+                                  <Box
+                                    bg="green.500"
+                                    h="full"
+                                    borderRadius="md"
+                                    width={`${incomePercent}%`}
+                                    minW={incomePercent > 0 ? '2px' : '0'}
+                                  />
+                                  <Box
+                                    bg="red.500"
+                                    h="full"
+                                    borderRadius="md"
+                                    width={`${expensePercent}%`}
+                                    minW={expensePercent > 0 ? '2px' : '0'}
+                                  />
+                                </HStack>
+                                <VStack
+                                  spacing={2}
+                                  align="stretch"
+                                  fontSize="xs"
+                                  pt={1}
+                                >
+                                  <HStack justify="space-between">
+                                    <Text color="green.600" fontWeight="600">
+                                      Pemasukan:
+                                    </Text>
+                                    <Text color="green.600" fontWeight="700">
+                                      {currency(data.income)}
+                                    </Text>
+                                  </HStack>
+                                  <HStack justify="space-between">
+                                    <Text color="red.600" fontWeight="600">
+                                      Pengeluaran:
+                                    </Text>
+                                    <Text color="red.600" fontWeight="700">
+                                      {currency(data.expense)}
+                                    </Text>
+                                  </HStack>
+                                </VStack>
+                              </VStack>
                               <HStack
                                 spacing={2}
                                 mb={1}
                                 fontSize={{ base: 'xs', md: 'sm' }}
+                                display={{ base: 'none', md: 'flex' }}
                               >
                                 <Text
                                   fontWeight="600"
@@ -734,11 +875,12 @@ const KeuanganPage = () => {
 
                     {/* Legend */}
                     <HStack
-                      justify="center"
-                      spacing={6}
+                      justify={{ base: 'flex-start', md: 'center' }}
+                      spacing={{ base: 4, md: 6 }}
                       pt={4}
                       borderTop="1px solid"
                       borderColor="gray.200"
+                      flexWrap="wrap"
                     >
                       <HStack spacing={2}>
                         <Box w={4} h={4} bg="green.500" borderRadius="sm" />
