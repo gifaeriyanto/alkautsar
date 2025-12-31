@@ -37,8 +37,8 @@ export const metadata: Metadata = {
     },
   ],
   icons: [
-    { rel: 'apple-touch-icon', url: '/images/icons/icon-128x128.png' },
-    { rel: 'icon', url: '/images/icons/icon-128x128.png' },
+    { rel: 'apple-touch-icon', url: '/apple-touch-icon.png' },
+    { rel: 'icon', url: '/favicon-32x32.png' },
   ],
   openGraph: {
     title: 'Masjid Al-Kautsar CitraLand Tallasa City',
