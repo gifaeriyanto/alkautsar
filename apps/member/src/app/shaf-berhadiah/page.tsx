@@ -81,6 +81,10 @@ const ShafBerhadiahPage = () => {
   const [phase, setPhase] = useState<Phase>('idle')
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS)
   const [luckyShaf, setLuckyShaf] = useState<LuckyShaf[]>([])
+  const [revealedCount, setRevealedCount] = useState(0)
+  const [rollingShaf, setRollingShaf] = useState<LuckyShaf[]>(() =>
+    generateLuckyShaf(RESULT_COUNT),
+  )
   const [isConfettiVisible, setIsConfettiVisible] = useState(false)
   const [confettiSeed, setConfettiSeed] = useState(0)
   const pendingResultRef = useRef<LuckyShaf[]>([])
@@ -89,6 +93,7 @@ const ShafBerhadiahPage = () => {
   const startDraw = () => {
     if (phase === 'loading') return
     pendingResultRef.current = generateLuckyShaf(RESULT_COUNT)
+    setRollingShaf(generateLuckyShaf(RESULT_COUNT))
     setCountdown(COUNTDOWN_SECONDS)
     setPhase('loading')
   }
@@ -133,6 +138,37 @@ const ShafBerhadiahPage = () => {
     }
   }, [isConfettiVisible])
 
+  useEffect(() => {
+    if (phase !== 'result') return undefined
+
+    setRevealedCount(0)
+    let nextCount = 0
+    const revealTimer = window.setInterval(() => {
+      nextCount += 1
+      setRevealedCount(nextCount)
+
+      if (nextCount >= RESULT_COUNT) {
+        window.clearInterval(revealTimer)
+      }
+    }, 380)
+
+    return () => {
+      window.clearInterval(revealTimer)
+    }
+  }, [phase])
+
+  useEffect(() => {
+    if (phase !== 'loading') return undefined
+
+    const rollingTimer = window.setInterval(() => {
+      setRollingShaf(generateLuckyShaf(RESULT_COUNT))
+    }, 120)
+
+    return () => {
+      window.clearInterval(rollingTimer)
+    }
+  }, [phase])
+
   return (
     <>
       <style>
@@ -171,6 +207,10 @@ const ShafBerhadiahPage = () => {
           @keyframes progressRun {
             from { width: 100%; }
             to { width: 0%; }
+          }
+          @keyframes rollingGlow {
+            0%, 100% { opacity: 0.8; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-1px); }
           }
         `}
       </style>
@@ -322,6 +362,31 @@ const ShafBerhadiahPage = () => {
                   sx={{ animation: `progressRun ${COUNTDOWN_SECONDS}s linear forwards` }}
                 />
               </Box>
+              <VStack
+                w="full"
+                spacing={2}
+                mt={1}
+                bg="rgba(0,0,0,0.2)"
+                border="1px solid rgba(255,255,255,0.18)"
+                borderRadius="2xl"
+                px={{ base: 4, md: 6 }}
+                py={{ base: 3, md: 4 }}
+              >
+                {rollingShaf.map((item) => (
+                  <Heading
+                    key={`rolling-${item.shaf}-${item.urutan}-${item.direction}`}
+                    as="h3"
+                    fontSize={{ base: 'lg', md: '2xl' }}
+                    fontWeight="700"
+                    fontFamily="'JetBrains Mono', Consolas, monospace"
+                    color="orange.50"
+                    letterSpacing="wide"
+                    sx={{ animation: 'rollingGlow 0.5s ease-in-out infinite' }}
+                  >
+                    Shaf {item.shaf} Urutan {item.urutan} {item.direction}
+                  </Heading>
+                ))}
+              </VStack>
             </VStack>
           )}
 
@@ -336,6 +401,9 @@ const ShafBerhadiahPage = () => {
                   spacing={{ base: 2, md: 3 }}
                   bg={getStripeBackground(index)}
                   borderBottom={index === luckyShaf.length - 1 ? 'none' : '1px solid rgba(255,255,255,0.16)'}
+                  opacity={index < revealedCount ? 1 : 0}
+                  transform={index < revealedCount ? 'translateY(0)' : 'translateY(18px)'}
+                  transition="opacity 0.45s ease, transform 0.45s ease"
                 >
                   <HStack spacing={{ base: 3, md: 5 }} align="center">
                     <Box
