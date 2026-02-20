@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Box, Button, HStack, Heading, VStack } from '@chakra-ui/react'
 
-const MAX_SHAF = 14
+const MAX_SHAF = 12
 const MAX_PER_SHAF = 24
 const MAX_DISPLAY_URUTAN = 15
 const RESULT_COUNT = 5
