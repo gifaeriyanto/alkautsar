@@ -7,7 +7,7 @@ const MAX_SHAF = 12
 const MAX_PER_SHAF = 24
 const MAX_DISPLAY_URUTAN = 12
 const RESULT_COUNT = 5
-const COUNTDOWN_SECONDS = 5
+const COUNTDOWN_SECONDS = 8
 const MAX_GENERATED_URUTAN = Math.min(MAX_PER_SHAF, MAX_DISPLAY_URUTAN)
 
 type Direction = 'dari kiri' | 'dari kanan'
