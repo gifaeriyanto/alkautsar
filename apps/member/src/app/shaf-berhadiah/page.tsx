@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Box, Button, HStack, Heading, VStack } from '@chakra-ui/react'
 
-const MAX_SHAF = 12
+const MAX_SHAF = 18
 const MAX_PER_SHAF = 24
 const MAX_DISPLAY_URUTAN = 12
 const RESULT_COUNT = 5
@@ -64,6 +64,9 @@ const getStripeBackground = (index: number) => {
 
   return colors[index] ?? 'rgba(194, 65, 12, 0.9)'
 }
+
+const formatShafLabel = (shaf: number) =>
+  shaf >= 13 ? `Shaf ${shaf} Lt. 2` : `Shaf ${shaf}`
 
 const createConfetti = (seed: number): ConfettiPiece[] =>
   Array.from({ length: 90 }, (_, i) => ({
@@ -383,7 +386,7 @@ const ShafBerhadiahPage = () => {
                     letterSpacing="wide"
                     sx={{ animation: 'rollingGlow 0.5s ease-in-out infinite' }}
                   >
-                    Shaf {item.shaf} Urutan {item.urutan} {item.direction}
+                    {formatShafLabel(item.shaf)} Urutan {item.urutan} {item.direction}
                   </Heading>
                 ))}
               </VStack>
@@ -428,7 +431,7 @@ const ShafBerhadiahPage = () => {
                       fontFamily="'JetBrains Mono', Consolas, monospace"
                       lineHeight={1.1}
                     >
-                      Shaf {item.shaf} Urutan {item.urutan} {item.direction}
+                      {formatShafLabel(item.shaf)} Urutan {item.urutan} {item.direction}
                     </Heading>
                   </HStack>
                 </VStack>
