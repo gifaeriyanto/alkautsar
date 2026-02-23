@@ -66,7 +66,7 @@ const getStripeBackground = (index: number) => {
 }
 
 const formatShafLabel = (shaf: number) =>
-  shaf >= 13 ? `Shaf ${shaf} Lt. 2` : `Shaf ${shaf}`
+  shaf >= 13 ? `Shaf ${shaf - 12} Lt. 2` : `Shaf ${shaf}`
 
 const createConfetti = (seed: number): ConfettiPiece[] =>
   Array.from({ length: 90 }, (_, i) => ({
