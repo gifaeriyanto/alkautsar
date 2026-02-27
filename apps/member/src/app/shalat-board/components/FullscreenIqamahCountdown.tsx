@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useRef } from 'react'
 import { Box, VStack, Text, keyframes, Fade } from '@chakra-ui/react'
 import type { PrayerTime } from '../types'
 
@@ -21,7 +24,43 @@ export const FullscreenIqamahCountdown = ({
   currentPrayer,
   countdown,
 }: FullscreenIqamahCountdownProps) => {
+  const tickAudioRef = useRef<HTMLAudioElement | null>(null)
+  const lastPlayedSecondRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    tickAudioRef.current = new Audio('/tick.mp3')
+    tickAudioRef.current.preload = 'auto'
+
+    return () => {
+      if (!tickAudioRef.current) return
+      tickAudioRef.current.pause()
+      tickAudioRef.current = null
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isVisible || !countdown) {
+      lastPlayedSecondRef.current = null
+      return
+    }
+
+    const totalSeconds = countdown.minutes * 60 + countdown.seconds
+    const isLastTenSeconds = totalSeconds > 0 && totalSeconds <= 10
+    const isAlreadyPlayedForCurrentSecond =
+      lastPlayedSecondRef.current === totalSeconds
+
+    if (!isLastTenSeconds || isAlreadyPlayedForCurrentSecond) return
+
+    const audio = tickAudioRef.current
+    if (!audio) return
+
+    lastPlayedSecondRef.current = totalSeconds
+    audio.currentTime = 0
+    void audio.play().catch((_error) => undefined)
+  }, [countdown, isVisible])
+
   if (!currentPrayer || !countdown) return null
+  const isPrayerTimeScreen = countdown.minutes === 0 && countdown.seconds === 0
 
   return (
     <Fade
@@ -98,20 +137,45 @@ export const FullscreenIqamahCountdown = ({
                 IQOMAH
               </Box>
 
-              {/* Countdown Numbers */}
-              <Text
-                fontSize="240px"
-                fontWeight="900"
-                fontFamily="'JetBrains Mono', monospace"
-                lineHeight="0.75"
-                textAlign="center"
-                letterSpacing="0.01em"
-                color="white"
-                textShadow="0 0 50px rgba(255, 255, 255, 0.9), 0 0 100px rgba(255, 255, 255, 0.7), 0 0 150px rgba(255, 255, 255, 0.5)"
-              >
-                {String(countdown.minutes).padStart(2, '0')}:
-                {String(countdown.seconds).padStart(2, '0')}
-              </Text>
+              {isPrayerTimeScreen ? (
+                <VStack spacing={6}>
+                  <Text
+                    fontSize={{ base: '56px', md: '88px' }}
+                    fontWeight="900"
+                    lineHeight="1"
+                    textAlign="center"
+                    color="white"
+                    textTransform="uppercase"
+                    letterSpacing="0.08em"
+                    textShadow="0 0 40px rgba(255, 255, 255, 0.85), 0 0 90px rgba(255, 255, 255, 0.5)"
+                  >
+                    Waktunya Shalat
+                  </Text>
+                  <Text
+                    fontSize={{ base: '28px', md: '42px' }}
+                    fontWeight="700"
+                    color="whiteAlpha.900"
+                    textAlign="center"
+                    textShadow="0 0 20px rgba(255,255,255,0.35)"
+                  >
+                    Luruskan dan rapatkan shaf
+                  </Text>
+                </VStack>
+              ) : (
+                <Text
+                  fontSize="240px"
+                  fontWeight="900"
+                  fontFamily="'JetBrains Mono', monospace"
+                  lineHeight="0.75"
+                  textAlign="center"
+                  letterSpacing="0.01em"
+                  color="white"
+                  textShadow="0 0 50px rgba(255, 255, 255, 0.9), 0 0 100px rgba(255, 255, 255, 0.7), 0 0 150px rgba(255, 255, 255, 0.5)"
+                >
+                  {String(countdown.minutes).padStart(2, '0')}:
+                  {String(countdown.seconds).padStart(2, '0')}
+                </Text>
+              )}
             </VStack>
           </Box>
         </VStack>

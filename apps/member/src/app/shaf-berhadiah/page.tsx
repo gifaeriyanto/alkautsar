@@ -6,12 +6,14 @@ import { Box, Button, HStack, Heading, VStack } from '@chakra-ui/react'
 const MAX_SHAF = 18
 const MAX_PER_SHAF = 24
 const MAX_DISPLAY_URUTAN = 12
-const RESULT_COUNT = 5
+const SARUNG_RESULT_COUNT = 5
+const SEJADAH_RESULT_COUNT = 7
 const COUNTDOWN_SECONDS = 8
 const MAX_GENERATED_URUTAN = Math.min(MAX_PER_SHAF, MAX_DISPLAY_URUTAN)
 
 type Direction = 'dari kiri' | 'dari kanan'
 type Phase = 'idle' | 'loading' | 'result'
+type PrizePhase = 'sarung' | 'sejadah'
 
 interface LuckyShaf {
   shaf: number
@@ -35,17 +37,26 @@ const CONFETTI_COLORS = ['#FFFFFF', '#FBBF24', '#F97316', '#FED7AA']
 const getRandomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min
 
-const generateLuckyShaf = (count: number): LuckyShaf[] => {
+const getResultCountByPhase = (phase: PrizePhase) =>
+  phase === 'sarung' ? SARUNG_RESULT_COUNT : SEJADAH_RESULT_COUNT
+
+const toSelectionKey = ({ shaf, urutan, direction }: LuckyShaf) =>
+  `${shaf}-${urutan}-${direction}`
+
+const generateLuckyShaf = (count: number, excludedKeys: Set<string> = new Set()): LuckyShaf[] => {
   const generated = new Set<string>()
   const results: LuckyShaf[] = []
+  let attempts = 0
+  const maxAttempts = 10000
 
-  while (results.length < count) {
+  while (results.length < count && attempts < maxAttempts) {
+    attempts += 1
     const shaf = getRandomInt(1, MAX_SHAF)
     const direction: Direction = Math.random() > 0.5 ? 'dari kiri' : 'dari kanan'
     const urutan = getRandomInt(1, MAX_GENERATED_URUTAN)
-    const key = `${shaf}-${direction}-${urutan}`
+    const key = `${shaf}-${urutan}-${direction}`
 
-    if (generated.has(key)) continue
+    if (excludedKeys.has(key) || generated.has(key)) continue
     generated.add(key)
     results.push({ shaf, urutan, direction })
   }
@@ -82,23 +93,47 @@ const createConfetti = (seed: number): ConfettiPiece[] =>
 
 const ShafBerhadiahPage = () => {
   const [phase, setPhase] = useState<Phase>('idle')
+  const [prizePhase, setPrizePhase] = useState<PrizePhase>('sarung')
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS)
   const [luckyShaf, setLuckyShaf] = useState<LuckyShaf[]>([])
   const [revealedCount, setRevealedCount] = useState(0)
   const [rollingShaf, setRollingShaf] = useState<LuckyShaf[]>(() =>
-    generateLuckyShaf(RESULT_COUNT),
+    generateLuckyShaf(SARUNG_RESULT_COUNT),
   )
   const [isConfettiVisible, setIsConfettiVisible] = useState(false)
   const [confettiSeed, setConfettiSeed] = useState(0)
   const pendingResultRef = useRef<LuckyShaf[]>([])
   const confettiPiecesRef = useRef<ConfettiPiece[]>([])
+  const usedSelectionKeysRef = useRef<Set<string>>(new Set())
+  const tickAudioRef = useRef<HTMLAudioElement | null>(null)
 
-  const startDraw = () => {
+  const currentResultCount = getResultCountByPhase(prizePhase)
+
+  const startDraw = (targetPrizePhase: PrizePhase, resetUsedKeys: boolean) => {
     if (phase === 'loading') return
-    pendingResultRef.current = generateLuckyShaf(RESULT_COUNT)
-    setRollingShaf(generateLuckyShaf(RESULT_COUNT))
+    if (resetUsedKeys) {
+      usedSelectionKeysRef.current = new Set()
+    }
+
+    const resultCount = getResultCountByPhase(targetPrizePhase)
+    pendingResultRef.current = generateLuckyShaf(resultCount, usedSelectionKeysRef.current)
+    setRollingShaf(generateLuckyShaf(resultCount, usedSelectionKeysRef.current))
     setCountdown(COUNTDOWN_SECONDS)
+    setPrizePhase(targetPrizePhase)
     setPhase('loading')
+  }
+
+  const playTick = () => {
+    const audio = tickAudioRef.current
+    if (!audio) return
+
+    audio.currentTime = 0
+    void audio.play().catch((_error) => undefined)
+  }
+
+  const handleNextPhase = () => {
+    if (phase !== 'result' || prizePhase !== 'sarung') return
+    startDraw('sejadah', false)
   }
 
   useEffect(() => {
@@ -106,24 +141,40 @@ const ShafBerhadiahPage = () => {
 
     let remaining = COUNTDOWN_SECONDS
     setCountdown(remaining)
+    playTick()
 
     const timer = window.setInterval(() => {
       remaining -= 1
       if (remaining <= 0) {
         window.clearInterval(timer)
         setLuckyShaf(pendingResultRef.current)
+        pendingResultRef.current.forEach((item) => {
+          usedSelectionKeysRef.current.add(toSelectionKey(item))
+        })
         setPhase('result')
         setConfettiSeed((prev) => prev + 1)
         setIsConfettiVisible(true)
         return
       }
+      playTick()
       setCountdown(remaining)
     }, 1000)
 
     return () => {
       window.clearInterval(timer)
     }
-  }, [phase])
+  }, [luckyShaf.length, phase])
+
+  useEffect(() => {
+    tickAudioRef.current = new Audio('/tick.mp3')
+    tickAudioRef.current.preload = 'auto'
+
+    return () => {
+      if (!tickAudioRef.current) return
+      tickAudioRef.current.pause()
+      tickAudioRef.current = null
+    }
+  }, [])
 
   useEffect(() => {
     confettiPiecesRef.current = createConfetti(confettiSeed)
@@ -150,7 +201,7 @@ const ShafBerhadiahPage = () => {
       nextCount += 1
       setRevealedCount(nextCount)
 
-      if (nextCount >= RESULT_COUNT) {
+      if (nextCount >= luckyShaf.length) {
         window.clearInterval(revealTimer)
       }
     }, 380)
@@ -158,19 +209,19 @@ const ShafBerhadiahPage = () => {
     return () => {
       window.clearInterval(revealTimer)
     }
-  }, [phase])
+  }, [luckyShaf.length, phase])
 
   useEffect(() => {
     if (phase !== 'loading') return undefined
 
     const rollingTimer = window.setInterval(() => {
-      setRollingShaf(generateLuckyShaf(RESULT_COUNT))
+      setRollingShaf(generateLuckyShaf(currentResultCount))
     }, 120)
 
     return () => {
       window.clearInterval(rollingTimer)
     }
-  }, [phase])
+  }, [currentResultCount, phase])
 
   return (
     <>
@@ -294,12 +345,14 @@ const ShafBerhadiahPage = () => {
                   color="orange.100"
                   letterSpacing="wide"
                 >
-                  Lucky Draw 5 Shaf
+                  Lucky Draw 7 Shaf
                 </Heading>
               </VStack>
 
               <Button
-                onClick={startDraw}
+                onClick={() => {
+                  startDraw('sarung', true)
+                }}
                 h={{ base: '74px', md: '96px' }}
                 px={{ base: 16, md: 24 }}
                 borderRadius="full"
@@ -339,7 +392,7 @@ const ShafBerhadiahPage = () => {
                 letterSpacing="wider"
                 textTransform="uppercase"
               >
-                Mengundi Shaf Beruntung
+                Mengundi {prizePhase === 'sarung' ? 'Hadiah Sarung' : 'Hadiah Sejadah'}
               </Heading>
               <Heading
                 fontSize={{ base: '8rem', md: '12rem' }}
@@ -395,6 +448,31 @@ const ShafBerhadiahPage = () => {
 
           {phase === 'result' && (
             <VStack w="full" h="full" spacing={0} overflow="hidden">
+              <HStack
+                w="full"
+                justify="space-between"
+                px={{ base: 4, md: 6 }}
+                py={{ base: 3, md: 4 }}
+                bg="rgba(0,0,0,0.35)"
+                borderBottom="1px solid rgba(255,255,255,0.18)"
+              >
+                <Heading size={{ base: 'md', md: 'lg' }} color="orange.100">
+                  {prizePhase === 'sarung' ? 'Hadiah Sarung' : 'Hadiah Sejadah'}
+                </Heading>
+                {prizePhase === 'sarung' ? (
+                  <Button
+                    onClick={handleNextPhase}
+                    size={{ base: 'sm', md: 'md' }}
+                    bg="white"
+                    color="orange.700"
+                    fontWeight="800"
+                    _hover={{ bg: 'orange.50' }}
+                    borderRadius="full"
+                  >
+                    Next
+                  </Button>
+                ) : null}
+              </HStack>
               {luckyShaf.map((item, index) => (
                 <VStack
                   key={`${item.shaf}-${item.direction}-${item.urutan}`}

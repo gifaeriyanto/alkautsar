@@ -16,6 +16,7 @@ export const useIqamahTimer = (
   prayerTimes: PrayerTime[],
   isDevMode = false
 ): IqamahTimerReturn => {
+  const POST_IQAMAH_SCREEN_MS = 10_000
   const [isIqamahMode, setIsIqamahMode] = useState(false)
   const [iqamahCountdown, setIqamahCountdown] = useState<{
     minutes: number
@@ -23,6 +24,7 @@ export const useIqamahTimer = (
   } | null>(null)
   const [shouldShowFullscreen, setShouldShowFullscreen] = useState(false)
   const [mockCountdownSeconds, setMockCountdownSeconds] = useState(0)
+  const [postIqamahEndAt, setPostIqamahEndAt] = useState<number | null>(null)
 
   // Find current active prayer that has iqamah time
   const currentPrayerWithIqamah =
@@ -37,11 +39,13 @@ export const useIqamahTimer = (
 
       // In dev mode, when turning on iqamah mode, start with a mock countdown
       if (isDevMode && newValue && currentPrayerWithIqamah) {
-        // Start with 5 minutes (300 seconds) countdown
-        setMockCountdownSeconds(300)
+        // Start with 30 seconds countdown
+        setMockCountdownSeconds(30)
+        setPostIqamahEndAt(null)
       } else if (!newValue) {
         // Reset mock countdown when turning off
         setMockCountdownSeconds(0)
+        setPostIqamahEndAt(null)
       }
 
       return newValue
@@ -64,6 +68,7 @@ export const useIqamahTimer = (
           if (newValue <= 0) {
             setShouldShowFullscreen(true)
             setIqamahCountdown({ minutes: 0, seconds: 0 })
+            setPostIqamahEndAt(Date.now() + POST_IQAMAH_SCREEN_MS)
             return 0
           }
           setShouldShowFullscreen(true) // Always show fullscreen in dev mock mode
@@ -77,6 +82,28 @@ export const useIqamahTimer = (
     }
   }, [isDevMode, isIqamahMode, mockCountdownSeconds])
 
+  // Keep "Waktunya Shalat" screen visible for 10 seconds in dev mode
+  useEffect(() => {
+    if (!isDevMode || !isIqamahMode || !postIqamahEndAt) return undefined
+
+    const interval = setInterval(() => {
+      const isExpired = Date.now() >= postIqamahEndAt
+
+      if (isExpired) {
+        setShouldShowFullscreen(false)
+        setPostIqamahEndAt(null)
+        return
+      }
+
+      setShouldShowFullscreen(true)
+      setIqamahCountdown({ minutes: 0, seconds: 0 })
+    }, 250)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [isDevMode, isIqamahMode, postIqamahEndAt])
+
   // Calculate countdown to iqamah (real mode)
   useEffect(() => {
     // Skip real countdown if in dev mode
@@ -87,6 +114,7 @@ export const useIqamahTimer = (
     if (!currentPrayerWithIqamah?.iqomah) {
       setIqamahCountdown(null)
       setShouldShowFullscreen(false)
+      setPostIqamahEndAt(null)
       return
     }
 
@@ -124,8 +152,18 @@ export const useIqamahTimer = (
       const isCurrentlyActive = now >= prayerTime && now <= iqamahTime
 
       if (!isCurrentlyActive) {
+        const isPostIqamahActive =
+          postIqamahEndAt !== null && now.getTime() < postIqamahEndAt
+
+        if (isPostIqamahActive) {
+          setIqamahCountdown({ minutes: 0, seconds: 0 })
+          setShouldShowFullscreen(true)
+          return
+        }
+
         setIqamahCountdown(null)
         setShouldShowFullscreen(false)
+        setPostIqamahEndAt(null)
         return
       }
 
@@ -134,6 +172,9 @@ export const useIqamahTimer = (
       if (diff <= 0) {
         setIqamahCountdown({ minutes: 0, seconds: 0 })
         setShouldShowFullscreen(true) // Show fullscreen when time is up
+        if (!postIqamahEndAt) {
+          setPostIqamahEndAt(now.getTime() + POST_IQAMAH_SCREEN_MS)
+        }
         return
       }
 
@@ -145,6 +186,9 @@ export const useIqamahTimer = (
 
       // Show fullscreen countdown since we're in the active window
       setShouldShowFullscreen(true)
+      if (postIqamahEndAt) {
+        setPostIqamahEndAt(null)
+      }
     }
 
     // Calculate immediately
@@ -156,7 +200,7 @@ export const useIqamahTimer = (
     return () => {
       clearInterval(interval)
     }
-  }, [currentPrayerWithIqamah, isDevMode, isIqamahMode])
+  }, [currentPrayerWithIqamah, isDevMode, isIqamahMode, postIqamahEndAt])
 
   return {
     isIqamahMode,
