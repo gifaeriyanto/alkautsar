@@ -1,16 +1,16 @@
-import { Center, Flex, Grid, Text, VStack } from '@chakra-ui/react'
-import { getClient, useRealtimeList } from '@client/supabase'
-import type { Database } from '@client/supabase/types/database'
-import { currency, dateFormat, dateFormFormat } from '@client/ui-components'
-import { previousFriday, startOfDay, subWeeks } from 'date-fns'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ORGANIZATION_ID } from '../../../_constants'
-import type { PrayerTime } from '../types'
-import { formatTime, getPrayerBackground } from '../utils/prayerUtils'
+import { Center, Flex, Grid, Text, VStack } from '@chakra-ui/react';
+import { getClient, useRealtimeList } from '@client/supabase';
+import type { Database } from '@client/supabase/types/database';
+import { currency, dateFormat, dateFormFormat } from '@client/ui-components';
+import { previousFriday, startOfDay, subWeeks } from 'date-fns';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ORGANIZATION_ID } from '../../../_constants';
+import type { PrayerTime } from '../types';
+import { formatTime, getPrayerBackground } from '../utils/prayerUtils';
 
 interface MainSlidesProps {
-  prayerTimes: PrayerTime[]
-  currentTime: Date
+  prayerTimes: PrayerTime[];
+  currentTime: Date;
 }
 
 export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
@@ -19,43 +19,81 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
     const lastFriday =
       currentDate.getDay() === 5
         ? startOfDay(currentDate)
-        : previousFriday(currentDate)
+        : previousFriday(currentDate);
 
     // Get the Friday two weeks before
-    const twoFridaysAgo = subWeeks(lastFriday, 1)
+    const twoFridaysAgo = subWeeks(lastFriday, 1);
 
     return {
       start: dateFormFormat(twoFridaysAgo),
       end: dateFormFormat(lastFriday),
-    }
-  }
+    };
+  };
 
-  const dateRange = getLastTwoFridaysToLastFriday(currentTime)
+  const getTodayDateRange = (currentDate: Date) => {
+    const today = startOfDay(currentDate);
+    const formattedToday = dateFormFormat(today);
+    return {
+      start: formattedToday,
+      end: formattedToday,
+    };
+  };
 
-  const { data: wallets } = useRealtimeList('wallets_without_events' as any, {
+  const { data: wallets } = useRealtimeList('wallets', {
     select: '',
     filters: [['eq', 'organization_id', ORGANIZATION_ID]],
-  })
-  const walletsData =
-    wallets as Database['public']['Views']['wallets_without_events']['Row'][]
-  const activePrayer = prayerTimes.find((p) => p.isActive)
+  });
+  const walletsData = wallets as Database['public']['Tables']['wallets']['Row'][];
+  const { data: boardConfigs } = useRealtimeList('board_configs', {
+    select: 'selected_wallet_ids, financial_summary_period',
+    pageSize: 1,
+    page: 1,
+    filters: [['eq', 'organization_id', ORGANIZATION_ID]],
+  });
+  const selectedWalletIds = boardConfigs[0]?.selected_wallet_ids as
+    | string[]
+    | null
+    | undefined;
+  const financialSummaryPeriod = boardConfigs[0]?.financial_summary_period as
+    | 'weekly_friday_to_friday'
+    | 'daily_today'
+    | null
+    | undefined;
+  const summaryPeriod = financialSummaryPeriod || 'weekly_friday_to_friday';
+  const currentDayKey = dateFormFormat(startOfDay(currentTime));
+  const dateRange = useMemo(() => {
+    const currentDayStart = new Date(`${currentDayKey}T00:00:00`);
+    if (summaryPeriod === 'daily_today') {
+      return getTodayDateRange(currentDayStart);
+    }
+    return getLastTwoFridaysToLastFriday(currentDayStart);
+  }, [currentDayKey, summaryPeriod]);
+  const filteredWallets = useMemo(() => {
+    if (!selectedWalletIds || selectedWalletIds.length === 0) {
+      return walletsData;
+    }
+    return walletsData.filter(
+      (wallet) => wallet.id && selectedWalletIds.includes(wallet.id)
+    );
+  }, [selectedWalletIds, walletsData]);
+  const activePrayer = prayerTimes.find((p) => p.isActive);
   const [walletSummary, setWalletSummary] = useState<
     | Record<
-        string,
-        {
-          total_income: number
-          total_expense: number
-          balance: number
-          comparation: number
-          isPositive: boolean
-        }
-      >
+      string,
+      {
+        total_income: number;
+        total_expense: number;
+        balance: number;
+        comparation: number;
+        isPositive: boolean;
+      }
+    >
     | undefined
-  >(undefined)
+  >(undefined);
 
   const getWalletSummary = useCallback(
     (walletId: string) => {
-      const supabase = getClient()
+      const supabase = getClient();
       supabase
         .rpc('get_wallet_summary', {
           start_date: dateRange.start,
@@ -64,9 +102,9 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
         })
         .then((res) => {
           if (res.data) {
-            const summary = res.data[0]
+            const summary = res.data[0];
             if (summary) {
-              const comparation = summary.total_income + summary.total_expense
+              const comparation = summary.total_income + summary.total_expense;
               setWalletSummary((prev) => ({
                 ...prev,
                 [walletId]: {
@@ -74,21 +112,21 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
                   comparation,
                   isPositive: comparation > 0,
                 },
-              }))
+              }));
             }
           }
-        })
+        });
     },
     [dateRange.end, dateRange.start]
-  )
+  );
 
   useEffect(() => {
-    walletsData.forEach((wallet) => {
+    filteredWallets.forEach((wallet) => {
       if (wallet.id) {
-        getWalletSummary(wallet.id)
+        getWalletSummary(wallet.id);
       }
-    })
-  }, [getWalletSummary, walletsData])
+    });
+  }, [filteredWallets, getWalletSummary]);
 
   const allWalletSummary = useMemo(() => {
     if (!walletSummary) {
@@ -96,24 +134,28 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
         total_income: 0,
         total_expense: 0,
         balance: 0,
-      }
+      };
     }
 
-    return Object.values(walletSummary).reduce(
+    return filteredWallets.reduce(
       (acc, summary) => {
-        return {
-          total_income: acc.total_income + summary.total_income,
-          total_expense: acc.total_expense + summary.total_expense,
-          balance: acc.balance + summary.balance,
+        const itemSummary = summary.id ? walletSummary[summary.id] : undefined;
+        if (!itemSummary) {
+          return acc;
         }
+        return {
+          total_income: acc.total_income + itemSummary.total_income,
+          total_expense: acc.total_expense + itemSummary.total_expense,
+          balance: acc.balance + itemSummary.balance,
+        };
       },
       {
         total_income: 0,
         total_expense: 0,
         balance: 0,
       }
-    )
-  }, [walletSummary])
+    );
+  }, [filteredWallets, walletSummary]);
 
   return (
     <Grid templateColumns="4fr 2fr" h="100%" w="100%" bgColor="gray.800">
@@ -205,8 +247,9 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
           }}
         >
           <Text position="relative" fontSize="lg" zIndex={1}>
-            Laporan Keuangan {dateFormat(new Date(dateRange.start))} -{' '}
-            {dateFormat(new Date(dateRange.end))}
+            {summaryPeriod === 'daily_today'
+              ? `Laporan Keuangan Hari Ini (${dateFormat(new Date(dateRange.start))})`
+              : `Laporan Keuangan ${dateFormat(new Date(dateRange.start))} - ${dateFormat(new Date(dateRange.end))}`}
           </Text>
         </Flex>
         <Flex
@@ -247,5 +290,5 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
         </Flex>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
