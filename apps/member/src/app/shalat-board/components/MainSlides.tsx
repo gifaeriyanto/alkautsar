@@ -43,7 +43,7 @@ export const MainSlides = ({ prayerTimes, currentTime }: MainSlidesProps) => {
     select: '',
     filters: [['eq', 'organization_id', ORGANIZATION_ID]],
   });
-  const walletsData = wallets as Database['public']['Tables']['wallets']['Row'][];
+  const walletsData: Database['public']['Tables']['wallets']['Row'][] = wallets;
   const { data: boardConfigs } = useRealtimeList('board_configs', {
     select: 'selected_wallet_ids, financial_summary_period',
     pageSize: 1,
